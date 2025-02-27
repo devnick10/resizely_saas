@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useClerk, useUser } from "@clerk/nextjs";
+import { useClerk, useUser, cl } from '@clerk/nextjs';
 import Image from "next/image";
 import Script from "next/script";
 import {
@@ -14,7 +14,7 @@ import {
   ImageIcon,
   LogInIcon,
   CoinsIcon,
-  
+
 } from "lucide-react";
 import axios from "axios";
 import { useCreditContext } from "@/context";
@@ -55,25 +55,6 @@ export default function AppLayout({
     fetchCredits();
   }, [user, setCredits]);
 
-  // ✅ Create user in DB if not exists
-  useEffect(() => {
-    if (!user) return;
-
-    const createUser = async () => {
-      try {
-        await axios.post(
-          "/api/users",
-          { username: user?.username, email: user?.emailAddresses[0].emailAddress },
-          { headers: { "Content-Type": "application/json" } }
-        );
-      } catch (error: any) {
-        toast.error(error.response?.data?.error || "Failed to create user");
-      }
-    };
-
-    createUser();
-  }, [user]);
-
   const handleSignOut = async () => {
     await signOut();
     router.push("/home");
@@ -92,25 +73,25 @@ export default function AppLayout({
         {/* Navbar */}
         <header className="w-full bg-base-200">
 
-          <div className="navbar max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="navbar max-w-7xl mx-auto px-2">
             <div className="flex-none lg:hidden">
               <label htmlFor="sidebar-drawer" className="btn btn-square btn-ghost drawer-button">
                 <MenuIcon />
               </label>
             </div>
             <div className="flex-1">
-              <Link href="/" className="btn text-primary btn-ghost normal-case text-2xl font-bold tracking-tight">
+              <Link href="/" className="btn text-blue-400 btn-ghost normal-case text-2xl font-bold tracking-tight">
                 Resizely
               </Link>
             </div>
-          {!user && <div className="flex space-x-2">
-          <Link href="/" className="text-white border-b-2 border-blue-500 px-4 py-2  hover:text-primary">
-             Home
-          </Link>
-          <Link href="/home" className="text-white border-b-2 border-blue-500 px-4 py-2  hover:text-primary">
-             Get Started
-          </Link>
-        </div>}
+              {!user && <div className="flex space-x-2">
+              <Link href="/" className="text-white border-b-2 border-blue-500 px-4 py-2  hover:text-primary">
+                Home
+              </Link>
+              <Link href="/home" className="text-white border-b-2 border-blue-500 px-4 py-2  hover:text-primary">
+                Get Started
+              </Link>
+            </div>}
             <div className="flex-none flex items-center space-x-4">
               {user ? (
                 <>
@@ -142,21 +123,21 @@ export default function AppLayout({
                 </>
               ) : (
                 <>
-                  Sign Up
-                  <button onClick={() => router.push("/sign-up")} className="btn btn-ghost btn-circle">
-                    <LogInIcon className="h-6 w-6" />
+                  <button onClick={() => router.push("/sign-up")} className="px-4 py-2 bg-blue-500 rounded-lg ml-2">
+                    Signup
                   </button>
                 </>
               )}
             </div>
           </div>
-          
+
         </header>
-        
+
 
         {/* Page Content */}
         <main className="flex-grow">
           <Script id="razorpay-checkout-js" src="https://checkout.razorpay.com/v1/checkout.js" />
+
           <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 my-8">{children}</div>
         </main>
       </div>
@@ -166,16 +147,15 @@ export default function AppLayout({
         <label htmlFor="sidebar-drawer" className="drawer-overlay"></label>
         <aside className="bg-base-200 w-64 h-full flex flex-col">
           <div className="flex items-center justify-between py-4 px-4">
-            <ImageIcon className="w-10 h-10 text-primary" /> 
+            <ImageIcon className="w-10 h-10 text-primary" />
           </div>
           <ul className="menu p-4 w-full text-base-content flex-grow">
             {sidebarItems.map((item) => (
               <li key={item.href} className="mb-2">
                 <Link
                   href={item.href}
-                  className={`flex items-center space-x-4 px-4 py-2 rounded-lg ${
-                    pathname === item.href ? "bg-primary text-white" : "hover:bg-base-300"
-                  }`}
+                  className={`flex items-center space-x-4 px-4 py-2 rounded-lg ${pathname === item.href ? "bg-primary text-white" : "hover:bg-base-300"
+                    }`}
                   onClick={() => setSidebarOpen(false)}
                 >
                   <item.icon className="w-6 h-6" />

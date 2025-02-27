@@ -5,11 +5,13 @@ const isPublicRoutes = createRouteMatcher([
     "/sign-in",
     "/sign-up",
     "/home", 
-    "/", 
+    "/",
+     
 ]);
 
 const isPublicApiRoute = createRouteMatcher([
-    "/api/videos",  
+    "/api/videos",
+    "/api/webhooks/signup",  
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
@@ -17,11 +19,6 @@ export default clerkMiddleware(async (auth, req) => {
     const currentUrl = new URL(req.url);
 
     const isAccessingVideoUpload = currentUrl.pathname === '/video-upload';
-
-
-   
-
-
 
     // Allow access to all public routes without authentication
     if (isPublicRoutes(req) || isPublicApiRoute(req)) {

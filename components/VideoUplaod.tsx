@@ -4,9 +4,10 @@ import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast';
 import Videos from '@/components/Videos';
+import { useCreditContext } from '@/context';
 
 function VideoUpload() {
-
+  
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -16,6 +17,7 @@ function VideoUpload() {
 
   const MAX_FILE_SIZE = 100 * 1024 * 1024;
 
+  const {credits } = useCreditContext();
 
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -36,7 +38,9 @@ function VideoUpload() {
     formData.append("originalSize", file.size.toString());
 
     try {
-
+      if (!credits) {
+        return toast.error("insufficient credit's plz buy.")
+      }
       const response = await axios.post("/api/video-upload", formData)
       if (response.status !== 200) {
         toast.error("failed to upload video")

@@ -17,14 +17,14 @@ function Home() {
     try {
       setLoading(true);
       const response = await axios.get("/api/videos");
-
+       toast.custom(response.data.message)
       if (Array.isArray(response.data)) {
         setVideos(response.data);
       } else {
         throw new Error("Unexpected response format");
       }
+    
     } catch (error) {
-      toast.error("Failed to fetch videos. Please try again.");
     } finally {
       setLoading(false);
     }

@@ -3,13 +3,14 @@ import prisma from "@/db"
 
 export  async function GET() {
   try {
-
+       
+    
     const videos = await prisma.video.findMany({
       orderBy: {
         createdAt: "desc",
       },
     });
-
+     
     if (!videos) {
       return NextResponse.json({message:"No videos yet."},{status:200})
     }

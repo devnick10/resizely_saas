@@ -4,6 +4,7 @@ import { CldImage } from 'next-cloudinary';
 import axios from 'axios';
 import { useCreditContext } from '@/context';
 import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 const socialFormats = {
   "instagram Square (1:1)": { width: 1080, height: 1080, aspectRatio: "1:1" },
@@ -21,9 +22,12 @@ export default function SocialShare() {
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [isTransforming, setIsTransforming] = useState<boolean>(false);
   const imageRef = useRef<HTMLImageElement>(null);
-  const { setCredits } = useCreditContext();
+  const {credits, setCredits } = useCreditContext();
+   
+  const router = useRouter()
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+
     const file = event.target.files?.[0];
     if (!file) return;
     
@@ -32,6 +36,9 @@ export default function SocialShare() {
     formData.append("file", file);
 
     try {
+      if (!credits) {
+        return toast.error("insufficient credit's plz buy.")
+      }
       const response = await axios.post("/api/image-upload", formData);
       if (!response.data.publicId) throw new Error("Failed to upload image");
       setUploadedImage(response.data.publicId);
@@ -45,7 +52,7 @@ export default function SocialShare() {
 
   const handleDownload = useCallback(async () => {
     if (!imageRef.current) return;
-
+ 
     try {
       const response = await fetch(imageRef.current.src);
       const blob = await response.blob();
@@ -64,6 +71,7 @@ export default function SocialShare() {
       if (res.status === 200) {
         setCredits(res.data.credit);
         toast.success("Credit deducted successfully!");
+        router.push("/social-share")
       }
     } catch (error:any) {
       toast.error("Failed to download image.");

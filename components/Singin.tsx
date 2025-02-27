@@ -29,13 +29,12 @@ export default function Signin() {
   async function submit(e: FormEvent) {
     e.preventDefault();
 
-    if (emailAddress.length >= 0 || password.length >= 0) {
+    if (!emailAddress || !password) {
       return toast.error("Please provide both fields.")
     }
 
 
     try {
-
       const result = await signIn?.create({
         identifier: emailAddress, password
       })
@@ -45,6 +44,7 @@ export default function Signin() {
       }
 
       if (result.status === "complete" && setActive) {
+        toast.success("Sign In successfully.")
         await setActive({ session: result.createdSessionId })
         router.push('/home')
       }
@@ -52,10 +52,6 @@ export default function Signin() {
     } catch (error: any) {
       setCerror(error.errors[0].message)
     }
-
-
-
-
 
   }
 

@@ -35,8 +35,8 @@ export default function Signup() {
 
     try {
 
-      if (emailAddress.length >= 0 || password.length >= 0) {
-        return toast.error("Please provide both fields.")
+      if (!emailAddress || !password || !username) {
+        return toast.error("Please provied all fields.")
       }
 
       // create user
@@ -46,9 +46,6 @@ export default function Signup() {
         password
 
       })
-
-
-
 
 
       // send verification code
@@ -166,7 +163,10 @@ export default function Signup() {
                     <Eye onClick={() => setShowPassword(true)} className='cursor-pointer' size={20} />
                   )}
                 </label>
+                {/* CAPTCHA Widget */}
+                <div id="clerk-captcha"></div>
                 <button type='submit' className='bg-blue-600 px-4 py-2 rounded-xl '>Sign Up</button>
+                
               </form>
               <button onClick={() => signUpWith('oauth_google')} className='w-full bg-blue-600 flex gap-2 items-center text-center justify-center px-4 py-2 rounded-xl '>
                 <Image src={'/google.png'} height={23} width={23} alt='' />
@@ -186,6 +186,7 @@ export default function Signup() {
             </form>
           )
           }
+
         </div>
       </div>
     </>

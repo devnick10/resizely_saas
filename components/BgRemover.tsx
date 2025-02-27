@@ -13,7 +13,7 @@ export default function BgRemover() {
   const [isTransforming, setIsTransforming] = useState<boolean>(false);
   const imageRef = useRef<HTMLImageElement>(null);
 
-  const { setCredits } = useCreditContext();
+  const { credits,setCredits } = useCreditContext();
 
   useEffect(() => {
     if (uploadedImage) setIsTransforming(true);
@@ -29,6 +29,11 @@ export default function BgRemover() {
     formData.append("file", file);
 
     try {
+
+      if (!credits) {
+        return toast.error("insufficient credit's plz buy.")
+      }
+      
       const response = await fetch("/api/image-upload", {
         method: "POST",
         body: formData,

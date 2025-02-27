@@ -20,7 +20,7 @@ export async function GET() {
     const userCredits = user.Credit[0]; // Assuming one Credit record per user
 
     if (!userCredits) {
-      return NextResponse.json({ error: "No credits found" }, { status: 404 });
+      return NextResponse.json({ error: "Insufficient credits" }, { status: 404 });
     }
 
     return NextResponse.json({ credits: userCredits.credits });

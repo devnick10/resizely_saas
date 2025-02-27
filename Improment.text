@@ -1,0 +1,7 @@
+// TASKS 
+
+// Implement webhooks for whever user sign with providers get details from clerk : usercreated event 
+
+
+//  1> install svix for signature ✅
+// create a usercreteed event on clear 
