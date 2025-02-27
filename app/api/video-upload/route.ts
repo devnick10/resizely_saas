@@ -15,7 +15,7 @@ interface CloudinaryUploadResult {
   public_id: string;
   bytes: number;
   duration?: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 
@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     return NextResponse.json(
-      { error: "Error while uploading video" ,error},
+      { error: "Error while uploading video"},
       { status: 500 }
     );
   } finally {
