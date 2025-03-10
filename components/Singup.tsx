@@ -8,7 +8,6 @@ import Image from 'next/image'
 import { FormEvent, useState } from 'react'
 import Loader from '@/components/Loader'
 import toast from 'react-hot-toast'
-import axios from 'axios'
 import Header from '@/components/header'
 
 
@@ -21,7 +20,7 @@ export default function Signup() {
   const [password, setPassword] = useState('');
   const [verification, setVerification] = useState(false);
   const [code, setCode] = useState('')
-  const [error, setError] = useState('')
+  const [error, setError] = useState<unknown>()
   const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter()
@@ -39,7 +38,6 @@ export default function Signup() {
         return toast.error("Please provied all fields.")
       }
 
-      // create user
 
       await signUp?.create({
         emailAddress: emailAddress,
@@ -55,9 +53,8 @@ export default function Signup() {
 
       setVerification(true)
 
-    } catch (error: any) {
-      console.log(JSON.stringify(error, null, 2));
-      setError(error.errors[0].message)
+    } catch (error) {
+      setError(error)
       toast.error(error);
 
     }
@@ -80,31 +77,15 @@ export default function Signup() {
       }
 
       if (completeSignup.status === "complete") {
-
-        const response = await axios.post('/api/users', { username, emailAddress }, {
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        })
-
-        if (response.status !== 200) {
-          throw new Error("Signup failed")
-        }
-
         await setActive({ session: completeSignup.createdSessionId })
         toast.success("verify successfully.")
-
         router.push('/social-share')
       }
 
-    } catch (error: any) {
+    } catch (error) {
       toast.error("Signup failed try again.");
-      setError(error.errors[0].message);
-
-      console.log(JSON.stringify(error, null, 2));
+      setError(error);
     }
-
-
   }
 
   // signup provider 
@@ -116,6 +97,9 @@ export default function Signup() {
     })
   }
 
+  if (error) {
+    toast.error("Sorry for inconvenience")
+  }
 
   return (
     <>
@@ -132,14 +116,13 @@ export default function Signup() {
         <div className='absolute top-0 bg-red-500 min-w-full'>
           <Header />
         </div>
-        <div className='flex  flex-col border-2 rounded-xl p-4 border-blue-500 justify-center items-center gap-5'>
+        {error ? <div>Enternal Servar Error</div> : <><div className='flex  flex-col border-2 rounded-xl p-4 border-blue-500 justify-center items-center gap-5'>
           <div>
             <h1 className='font-bold text-xl'>Sign Up</h1>
           </div>
           {!verification ? (
             <>
               <form className='flex flex-col gap-5' onSubmit={submit}>
-                {error && <div><h2>{error}</h2></div>}
                 <label className="input input-bordered flex items-center gap-2">
                   <MailIcon size={20} />
                   <input type="text" onChange={(e) => setEmailAddress(e.target.value)} className="grow" value={emailAddress} placeholder="Email" />
@@ -166,7 +149,7 @@ export default function Signup() {
                 {/* CAPTCHA Widget */}
                 <div id="clerk-captcha"></div>
                 <button type='submit' className='bg-blue-600 px-4 py-2 rounded-xl '>Sign Up</button>
-                
+
               </form>
               <button onClick={() => signUpWith('oauth_google')} className='w-full bg-blue-600 flex gap-2 items-center text-center justify-center px-4 py-2 rounded-xl '>
                 <Image src={'/google.png'} height={23} width={23} alt='' />
@@ -187,7 +170,7 @@ export default function Signup() {
           )
           }
 
-        </div>
+        </div></>}
       </div>
     </>
   );

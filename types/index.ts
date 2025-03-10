@@ -1,11 +1,12 @@
 export interface Video {
-    id: string
+    id: number
     title: string
-    description: string
+    description?: string | null
     publicId: string
-    originalSize: number
-    compressSize: number
+    originalSize: string
+    compressSize: string
     duration: number
     createdAt: Date
     updatedAt: Date
+    userId:string
 }

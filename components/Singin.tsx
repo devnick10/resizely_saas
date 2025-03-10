@@ -14,7 +14,7 @@ import Header from '@/components/header'
 export default function Signin() {
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
-  const [cError, setCerror] = useState('')
+  const [error, setError] = useState<unknown>()
   const [showPassword, setShowPassword] = useState(false);
 
   const { isLoaded, setActive, signIn } = useSignIn()
@@ -49,8 +49,8 @@ export default function Signin() {
         router.push('/home')
       }
 
-    } catch (error: any) {
-      setCerror(error.errors[0].message)
+    } catch (error) {
+      setError(error)
     }
 
   }
@@ -65,6 +65,9 @@ export default function Signin() {
     })
   }
 
+  if (error) {
+    toast.error("Sorry for inconvenience")
+  }
 
 
   return (
@@ -84,7 +87,6 @@ export default function Signin() {
           <div>
             <h1 className='text-xl font-bold'>Sign In</h1>
           </div>
-          {cError && <div><h2>{cError}</h2></div>}
           <form onSubmit={submit} className='flex flex-col gap-5' >
 
             <label className="input input-bordered flex items-center gap-2">
@@ -125,7 +127,6 @@ export default function Signin() {
           <p>If you don&apos;t have an account <Link className='font-bold border-b-2 mx-1' href={'/sign-up'}>Sign Up</Link></p>
         </div>
       </div>
-
     </>
 
   )

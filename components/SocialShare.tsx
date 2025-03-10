@@ -1,10 +1,11 @@
 "use client";
-import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { CldImage } from 'next-cloudinary';
-import axios from 'axios';
-import { useCreditContext } from '@/context';
-import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import { CldImage } from "next-cloudinary";
+import { useCreditContext } from "@/context";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { updateCredits } from "@/actions/updateCredits";
+import { imageUpload } from "@/actions/imageUpload";
 
 const socialFormats = {
   "instagram Square (1:1)": { width: 1080, height: 1080, aspectRatio: "1:1" },
@@ -22,78 +23,87 @@ export default function SocialShare() {
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [isTransforming, setIsTransforming] = useState<boolean>(false);
   const imageRef = useRef<HTMLImageElement>(null);
-  const {credits, setCredits } = useCreditContext();
-   
-  const router = useRouter()
+  const { credits, setCredits } = useCreditContext();
+  const router = useRouter();
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-
     const file = event.target.files?.[0];
     if (!file) return;
-    
+
     setIsUploading(true);
     const formData = new FormData();
     formData.append("file", file);
-
     try {
       if (!credits) {
-        return toast.error("insufficient credit's plz buy.")
+        toast.error("Insufficient credits, please buy more.");
+        return;
       }
-      const response = await axios.post("/api/image-upload", formData);
-      if (!response.data.publicId) throw new Error("Failed to upload image");
-      setUploadedImage(response.data.publicId);
+
+      const response = await imageUpload(formData);
+      if (!response.success) throw new Error("Failed to upload image");
+      if (response.publicId) {
+        setUploadedImage(response.publicId);
+      }
       toast.success("Image uploaded successfully!");
-    } catch (error:any) {
+    } catch (error) {
+      console.error(error);
       toast.error("Failed to upload image.");
     } finally {
       setIsUploading(false);
     }
   };
 
-  const handleDownload = useCallback(async () => {
-    if (!imageRef.current) return;
- 
+  const downloadImage = async (imageSrc: string) => {
     try {
-      const response = await fetch(imageRef.current.src);
+      const response = await fetch(imageSrc);
       const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
+      const url = URL.createObjectURL(blob);
+
       const link = document.createElement("a");
       link.href = url;
       link.download = "image.png";
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-
-      const res = await axios.get("/api/use-credit");
-      console.log(res.data.credit);
-      
-      if (res.status === 200) {
-        setCredits(res.data.credit);
-        toast.success("Credit deducted successfully!");
-        router.push("/social-share")
-      }
-    } catch (error:any) {
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error(error)
       toast.error("Failed to download image.");
     }
-  }, [setCredits]);
+  };
+
+  const handleDownload = useCallback(async () => {
+    if (!imageRef.current) return;
+
+    try {
+      await downloadImage(imageRef.current.src);
+
+      const res = await updateCredits();
+      if (res.success) {
+        setCredits(res.credits);
+        router.push("/social-share");
+      }
+    } catch (error) {
+      console.error(error)
+      toast.error("Failed to download image.");
+    }
+  }, [setCredits, router]);
 
   useEffect(() => {
-    if (uploadedImage) {
-      setIsTransforming(true);
-    }
+    if (uploadedImage) setIsTransforming(true);
   }, [selectedFormat, uploadedImage]);
 
+  
   return (
     <div className="container mx-auto p-4 max-w-4xl">
-      <h1 className="text-3xl font-bold mb-4 text-center">
+      <h1 className="sm:text-3xl text-2xl font-bold mb-4 text-center">
         Social Media Image Creator
       </h1>
-      <p className="font-bold mb-6 text-xl text-center">
+      <p className="font-bold mb-6 sm:text-xl text-center">
         Resize your photos for any social media platform with AI-powered content awareness – smart, seamless, and pixel-perfect!
       </p>
       <div className="card">
-        <div className="card-body">
+        <div className="card-body border-gray-500 border-t">
           <h2 className="card-title mb-4">Upload an Image</h2>
           <div className="form-control">
             <label className="label">

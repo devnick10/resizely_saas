@@ -35,11 +35,10 @@ export async function POST(request: NextRequest) {
     );
 
   try {
-    // Check if user has a credit entry, else create one
 
     const dbUser = await prisma.user.findUnique({
       where: { clerkUserId: userId },
-      include: { Credit: true }, // Include the Credit relation to get the user's credits
+      include: { Credit: true },
     });
 
     if (!dbUser || !dbUser.Credit) {
@@ -54,30 +53,28 @@ export async function POST(request: NextRequest) {
 
     let updatedCredits;
     if (userCredits) {
-      // Update existing credits
       updatedCredits = await prisma.credit.update({
-        where: {id:userCredits.id },
-        data: { credits: userCredits.credits + 10 },
+        where: { id: userCredits.id },
+        data: { credits: { increment: 10 } },
       });
     } else {
-      // Create a new credit record for the user
       updatedCredits = await prisma.credit.create({
-        data: { userId:Number(userId), credits: 10 },
+        data: { userId: Number(userId), credits: 10 },
       });
     }
-     
+
     if (!updatedCredits) {
-        return NextResponse.json({message:"credit's update failed"},{status:500})
+      return NextResponse.json({ message: "credit's update failed" }, { status: 500 })
     }
 
-    
+
     return NextResponse.json(
-      { message: "Payment verified successfully", isOk: true,updatedCredits:updatedCredits.credits},
+      { message: "Payment verified successfully", isOk: true, updatedCredits: updatedCredits.credits },
       { status: 200 }
     );
   } catch (error) {
     return NextResponse.json(
-      { message: "Failed to update credits", isOk: false ,error},
+      { message: "Failed to update credits", isOk: false, error },
       { status: 500 }
     );
   }

@@ -1,11 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
@@ -13,8 +8,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model video {
-  id           String   @id @default(cuid())
+model User {
+  id          Int      @id @default(autoincrement())
+  clerkUserId String   @unique 
+  username    String
+  email       String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  Credit      Credit[]
+  videos      Video[]
+}
+
+model Video {
+  id           Int      @id @default(autoincrement())
   title        String
   description  String?
   publicId     String
@@ -23,17 +29,8 @@ model video {
   duration     Float
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-}
-
-model User {
-  id            Int     @id @default(autoincrement())
-  clerkUserId   String  @unique // Store Clerk's userId here
-  username      String
-  email         String  @unique
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  Credit Credit[]
+  userId       String   
+  user         User     @relation(fields: [userId], references: [clerkUserId])
 }
 
 model Credit {

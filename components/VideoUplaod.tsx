@@ -1,30 +1,26 @@
 "use client"
 import React, { useState } from 'react'
-import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast';
 import Videos from '@/components/Videos';
 import { useCreditContext } from '@/context';
-
+import { videoUpload } from '@/actions/videoUpload';
 function VideoUpload() {
-  
+
   const [file, setFile] = useState<File | null>(null);
+  const [error, setError] = useState<unknown>();
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [isUploading, setIsUploading] = useState<boolean>(false);
-  
+
   const router = useRouter();
-
   const MAX_FILE_SIZE = 100 * 1024 * 1024;
-
-  const {credits } = useCreditContext();
-
+  const { credits } = useCreditContext();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
-    if (!file) return
 
+    if (!file) return
     if (file.size > MAX_FILE_SIZE) {
       toast.error("File size to large");
       return
@@ -41,29 +37,25 @@ function VideoUpload() {
       if (!credits) {
         return toast.error("insufficient credit's plz buy.")
       }
-      const response = await axios.post("/api/video-upload", formData)
-      if (response.status !== 200) {
+      
+      const response = await videoUpload(formData)
+      if (!response.success) {
         toast.error("failed to upload video")
         return
       }
-      console.log(response);
-      
-
       toast.success("Video uploaded.");
       router.push('/home')
     } catch (error) {
-
-      console.log(error);
+      setError(error)
       toast.error("failed to upload video")
-
     } finally {
       setIsUploading(false)
     }
-
-
-
   }
 
+  if (error) {
+    toast.error("Sorry for inconvenience")
+  }
 
   return (
     <div className='container  mx-auto p-4 max-w-4xl'>
@@ -108,15 +100,15 @@ function VideoUpload() {
 
           </div>
           <button
-          type='submit'
-          className='btn btn-primary'
-          disabled={isUploading}
+            type='submit'
+            className='btn btn-primary'
+            disabled={isUploading}
           >
-           {isUploading?"Uploading..":"Upload Video"}
+            {isUploading ? "Uploading.." : "Upload Video"}
           </button>
         </form>
       </div>
-         <Videos/>
+      <Videos />
     </div>
   )
 }

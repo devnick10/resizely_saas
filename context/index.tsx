@@ -8,7 +8,7 @@ interface IContext {
 
 const Context = createContext<IContext | undefined>(undefined);
 
-export function ContextProvider({ children }: { children: ReactNode | Promise<ReactNode> }) {
+export function ContextProvider({ children }: { children: ReactNode }) {
   const [credits, setCredits] = useState<number | undefined>(0);
 
   return (

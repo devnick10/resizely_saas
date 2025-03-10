@@ -1,10 +1,10 @@
-import Home from '@/components/Home'
+import Videos from '@/components/Videos'
 import React from 'react'
 
 function page() {
   return (
     <div>
-      <Home/>
+      <Videos/>
     </div>
   )
 }

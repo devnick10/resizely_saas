@@ -4,13 +4,10 @@ import { NextResponse } from 'next/server';
 const isPublicRoutes = createRouteMatcher([
     "/sign-in",
     "/sign-up",
-    "/home", 
     "/",
-     
 ]);
 
 const isPublicApiRoute = createRouteMatcher([
-    "/api/videos",
     "/api/webhooks/signup",  
 ]);
 
@@ -27,12 +24,12 @@ export default clerkMiddleware(async (auth, req) => {
 
     // Restrict /video-upload to authenticated users
     if (isAccessingVideoUpload && !userId) {
-        return NextResponse.redirect(new URL('/sign-in', req.url));
+        return NextResponse.redirect(new URL('/sign-up', req.url));
     }
 
     // Redirect unauthenticated users trying to access private pages
     if (!userId && !isPublicRoutes(req) && !isPublicApiRoute(req)) {
-        return NextResponse.redirect(new URL('/sign-in', req.url));
+        return NextResponse.redirect(new URL('/sign-up', req.url));
     }
 
     return NextResponse.next();

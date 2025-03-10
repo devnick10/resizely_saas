@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useClerk, useUser, cl } from '@clerk/nextjs';
+import { useClerk, useUser } from '@clerk/nextjs';
 import Image from "next/image";
 import Script from "next/script";
 import {
@@ -12,13 +12,11 @@ import {
   Share2Icon,
   UploadIcon,
   ImageIcon,
-  LogInIcon,
   CoinsIcon,
-
 } from "lucide-react";
-import axios from "axios";
 import { useCreditContext } from "@/context";
 import toast from "react-hot-toast";
+import { getCredits } from "@/actions/getCredits";
 
 const sidebarItems = [
   { href: "/home", icon: LayoutDashboardIcon, label: "Home Page" },
@@ -31,10 +29,12 @@ export default function AppLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [error, setError] = useState<unknown>();
   const pathname = usePathname();
   const router = useRouter();
   const { signOut } = useClerk();
   const { user } = useUser();
+
   const { credits, setCredits } = useCreditContext();
 
   // ✅ Fetch user credits
@@ -43,12 +43,13 @@ export default function AppLayout({
 
     const fetchCredits = async () => {
       try {
-        const response = await axios.get("/api/credits");
-        if (response.status === 200) {
-          setCredits(Number(response.data.credits));
+        const response = await getCredits(user.id)
+        if (response && response.success) {
+          setCredits(Number(response.credits));
         }
-      } catch (error: any) {
-        toast.error(error.response?.data?.error || "Failed to fetch credits");
+      } catch (error) {
+        setError(error)
+        toast.error("Failed to fetch credits");
       }
     };
 
@@ -57,8 +58,12 @@ export default function AppLayout({
 
   const handleSignOut = async () => {
     await signOut();
-    router.push("/home");
+    router.push("/");
   };
+
+  if (error) {
+    toast.error("Sorry for inconvenience")
+  }
 
   return (
     <div className="drawer lg:drawer-open">
@@ -80,11 +85,11 @@ export default function AppLayout({
               </label>
             </div>
             <div className="flex-1">
-              <Link href="/" className="btn text-blue-400 btn-ghost normal-case text-2xl font-bold tracking-tight">
+              <Link href="/" className="text-[1rem] btn text-blue-400 btn-ghost normal-case sm:text-xl font-bold tracking-tight">
                 Resizely
               </Link>
             </div>
-              {!user && <div className="flex space-x-2">
+            {!user && <div className="flex space-x-2">
               <Link href="/" className="text-white border-b-2 border-blue-500 px-4 py-2  hover:text-primary">
                 Home
               </Link>
@@ -92,18 +97,21 @@ export default function AppLayout({
                 Get Started
               </Link>
             </div>}
-            <div className="flex-none flex items-center space-x-4">
+            <div className="flex-none flex items-center space-x-2">
               {user ? (
                 <>
                   {/* Display User Credits */}
-                  <div className="flex gap-2 border-2 p-2 rounded-lg">
-                    <CoinsIcon className="text-warning" />
-                    <h1 className="text-warning">Credits</h1>
-                    {credits || 0}
+                  <div className="sm:block hidden">
+
+                    <div className=" flex gap-2 border-2 p-2 rounded-lg">
+                      <CoinsIcon className="text-warning" />
+                      <h1 className="text-warning">Credits</h1>
+                      {credits || 0}
+                    </div>
                   </div>
                   {/* User Avatar */}
                   <div className="avatar">
-                    <div className="w-8 h-8 rounded-full">
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full">
                       <Image
                         src={user.imageUrl}
                         width={23}
@@ -113,11 +121,11 @@ export default function AppLayout({
                     </div>
                   </div>
                   {/* Username / Email */}
-                  <span className="text-sm truncate max-w-xs lg:max-w-md">
-                    {user.username || user.emailAddresses[0].emailAddress}
+                  <span className="text-sm sm:text-[1rem] truncate max-w-xs lg:max-w-md">
+                    @{user.username || user.firstName || user.emailAddresses[0].emailAddress}
                   </span>
                   {/* Logout Button */}
-                  <button onClick={handleSignOut} className="btn btn-ghost btn-circle">
+                  <button onClick={handleSignOut} className=" sm:block hidden btn btn-ghost btn-circle">
                     <LogOutIcon className="h-6 w-6" />
                   </button>
                 </>
@@ -137,9 +145,11 @@ export default function AppLayout({
         {/* Page Content */}
         <main className="flex-grow">
           <Script id="razorpay-checkout-js" src="https://checkout.razorpay.com/v1/checkout.js" />
+          <div className="max-w-7xl mx-auto w-full min-h-dvh px-4 sm:px-6 lg:px-8 my-8" >   {children}
 
-          <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 my-8">{children}</div>
+          </div>
         </main>
+
       </div>
 
       {/* Sidebar */}
@@ -162,7 +172,19 @@ export default function AppLayout({
                   <span>{item.label}</span>
                 </Link>
               </li>
+
             ))}
+            <div className="block sm:hidden">
+              <div className=" flex items-center space-x-6 px-4 py-2 rounded-lg">
+                <CoinsIcon className="text-warning w-6 h-6" />
+                <div className="flex gap-2 font-semibold">
+                  <span className="text-warning ">Credits</span>
+                  <span className="rounded-full border-yellow-500 text-center border-2 w-6 h-6">
+                    {credits || 0}
+                  </span>
+                </div>
+              </div>
+            </div>
           </ul>
           {user && (
             <div className="p-4 flex flex-col gap-2">

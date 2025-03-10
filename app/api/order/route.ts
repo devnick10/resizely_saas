@@ -31,6 +31,6 @@ export async function POST(request: NextRequest) {
      return NextResponse.json({ orderId: order.id }, { status: 200 });
 
   } catch (error) {
-    return NextResponse.json({ error: "Payment failed", }, { status: 500 });
+    return NextResponse.json({ message: "Payment failed" ,error }, { status: 500 });
   }
 }

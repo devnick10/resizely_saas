@@ -1,34 +1,36 @@
 "use client"
 import React, { useState, useEffect, useCallback } from 'react'
-import axios from 'axios'
 import VideoCard from '@/components/VideoCard'
 import { Video } from '@/types'
+import { getVideos } from '@/actions/getVideos'
+import { getUser } from '@/actions/getUser'
+import toast from 'react-hot-toast'
 function Videos() {
+
   const [videos, setVideos] = useState<Video[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  const fetchVideos = useCallback(async () => {
-    try {
-      const response = await axios.get("api/videos")
-
-      if (Array.isArray(response.data)) {
-        setVideos(response.data)
-      } else {
-        throw new Error(" Unexpected response format");
-
-      }
-    } catch (error) {
-      setError("Failed to fetch videos")
-
-    } finally {
-      setLoading(false)
-    }
-  }, [])
+  const [error, setError] = useState<unknown>()
 
   useEffect(() => {
-    fetchVideos()
-  }, [fetchVideos])
+    const fetchVideos = async () => {
+      const { userId } = await getUser()
+      try {
+        if (!userId) return null
+
+        setLoading(true);
+        const { data } = await getVideos(userId);
+
+        setVideos(data || []);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVideos();
+  }, [setVideos]);
+
 
   const handleDownload = useCallback((url: string, title: string) => {
 
@@ -39,12 +41,16 @@ function Videos() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    
+
 
   }, [])
 
   if (loading) {
     return <div>Loading...</div>
+  }
+
+  if (error) {
+    toast.error("Sorry for inconvenience")
   }
 
   return (

@@ -12,8 +12,8 @@ function Landing() {
       <Header/>
       {/* Hero Section */}
       <section className="container mx-auto px-6 py-16 text-center">
-        <h1 className="text-5xl font-bold text-white mb-6">
-          Unleash the Power of AI for Your Media
+        <h1 className="sm:text-5xl text-2xl font-bold text-white mb-6">
+          Unleash the Power of AI <br />for Your Media
         </h1>
         <p className="text-xl text-white mb-8">
           Remove backgrounds, resize images, compress videos, and more with AI-powered precision.
@@ -36,7 +36,7 @@ function Landing() {
 
       {/* Features Section */}
       <section className="container mx-auto px-10 py-16">
-        <h2 className="text-3xl font-bold text-center text-white mb-12">
+        <h2 className="sm:text-3xl text-2xl font-bold text-center text-white mb-12">
           Our AI-Powered Services
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
