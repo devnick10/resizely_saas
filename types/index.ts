@@ -1,5 +1,7 @@
+import { z } from "zod"
+
 export interface Video {
-    id: number
+    id: string
     title: string
     description?: string | null
     publicId: string
@@ -10,3 +12,11 @@ export interface Video {
     updatedAt: Date
     userId:string
 }
+
+export const credentialsSchema = z.object({
+    email: z.string().email(),
+    username: z.string().min(6).max(30).optional(),
+    password: z.string().min(6).max(30),
+})
+
+export type CredentialsType = z.infer< typeof credentialsSchema>

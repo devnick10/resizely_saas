@@ -12,7 +12,7 @@ Resizely is a **credit-based** SaaS application designed to make media processin
 ✅ **Background Removal** – AI-powered background remover  
 ✅ **Credit-Based System** – Users get **2 free credits**, then can buy more  
 ✅ **Payment Integration** – Razorpay for secure transactions  
-✅ **Authentication** – Secure login with Clerk  
+✅ **Authentication** – Secure login with **NextAuth** (Google + Credentials)  
 ✅ **Optimized Performance** – Cloudinary for fast media processing  
 
 ---
@@ -22,8 +22,9 @@ Resizely is a **credit-based** SaaS application designed to make media processin
 - **Frontend & Backend:** Next.js (App Router)  
 - **Database:** Prisma + NeonDB  
 - **Media Processing:** Cloudinary  
-- **Authentication:** Clerk  
+- **Authentication:** NextAuth (Google & Credentials)  
 - **Payments:** Razorpay  
+- **Email (OTP, transactional):** Nodemailer (Mailtrap for dev)  
 - **UI Framework:** DaisyUI + TailwindCSS  
 - **State Management:** React Context  
 
@@ -51,17 +52,32 @@ yarn install
 Create a **.env.local** file in the root directory and add the following:  
 
 ```env
-NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloudinary_name
-CLOUDINARY_API_KEY=your_cloudinary_api_key
-CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+# Database
+DATABASE_URL="postgres://YourUserName:YourPassword@YourHostname:5432/YourDatabaseName"
 
-NEXT_PUBLIC_CLERK_FRONTEND_API=your_clerk_frontend_api
-CLERK_SECRET_KEY=your_clerk_secret_key
+# Cloudinary
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
 
+# Razorpay
 RAZOR_PAY_KEY_ID=your_razorpay_key_id
-RAZOR_PAY_KEY_SECRET=your_razorpay_key_secret
+NEXT_PUBLIC_RAZOR_PAY_KEY_ID=your_razorpay_key_id
+RAZOR_KEY_SECRET=your_razorpay_secret
 
-DATABASE_URL=your_neondb_prisma_connection_url
+# NextAuth
+NEXTAUTH_SECRET=your_random_secret_key
+NEXTAUTH_URL=http://localhost:3000
+
+# Google Auth (for NextAuth)
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+
+# SMTP (Mailtrap for development/testing)
+MAILTRAP_HOST=smtp.mailtrap.io
+MAILTRAP_PORTS=2525
+MAILTRAP_USERNAME=your_mailtrap_username
+MAILTRAP_PASSWORD=your_mailtrap_password
 ```
 
 ### 4️⃣ Migrate Database  
@@ -78,14 +94,13 @@ npm run dev
 yarn dev
 ```
 
-
 ---
 
 ## 📸 How It Works  
 
-1️⃣ **Sign Up/Login** via Clerk  
+1️⃣ **Sign Up/Login** via NextAuth (Google or Email/Password)  
 2️⃣ Get **2 free credits** (or buy more via Razorpay)  
-3️⃣ Upload an image/video  
+3️⃣ Upload an image or video  
 4️⃣ Choose resizing/compression options  
 5️⃣ Process & download the optimized media  
 
@@ -124,5 +139,4 @@ Have feedback or suggestions? Connect with me!
 
 ---
 
-Give it a ⭐ if you like this project! 🚀
-
+Give it a ⭐ if you like this project! 🚀  

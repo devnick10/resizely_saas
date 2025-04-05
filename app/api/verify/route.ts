@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
-import { auth } from "@clerk/nextjs/server";
 import prisma from "@/db";
+import { getUser } from "@/actions/getUser";
 
 const generatedSignature = (
   razorpayOrderId: string,
@@ -27,8 +27,8 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { userId } = await auth();
-  if (!userId)
+  const { email } = await getUser();
+  if (!email)
     return NextResponse.json(
       { message: "Unauthorized", isOk: false },
       { status: 401 }
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
   try {
 
     const dbUser = await prisma.user.findUnique({
-      where: { clerkUserId: userId },
+      where: { email },
       include: { Credit: true },
     });
 
@@ -51,17 +51,11 @@ export async function POST(request: NextRequest) {
 
     const userCredits = dbUser.Credit[0];
 
-    let updatedCredits;
-    if (userCredits) {
-      updatedCredits = await prisma.credit.update({
-        where: { id: userCredits.id },
-        data: { credits: { increment: 10 } },
-      });
-    } else {
-      updatedCredits = await prisma.credit.create({
-        data: { userId: Number(userId), credits: 10 },
-      });
-    }
+    const updatedCredits = await prisma.credit.update({
+      where: { id: userCredits.id },
+      data: { credits: { increment: 10 } },
+    });
+
 
     if (!updatedCredits) {
       return NextResponse.json({ message: "credit's update failed" }, { status: 500 })

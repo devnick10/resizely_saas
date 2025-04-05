@@ -1,7 +1,7 @@
 "use server";
 import { v2 } from "cloudinary";
 import prisma from "@/db";
-import { auth } from "@clerk/nextjs/server";
+import { getUser } from "./getUser";
 
 // Configure Cloudinary
 v2.config({
@@ -20,9 +20,9 @@ interface CloudinaryUploadResult {
 export async function videoUpload(data: FormData) {
   try {
 
-    const { userId } = await auth()
+    const { email } = await getUser()
 
-    if (!userId) {
+    if (!email) {
       return { success: false, error: "Unauthorize" };
     }
 
@@ -80,7 +80,7 @@ export async function videoUpload(data: FormData) {
         originalSize,
         compressSize: String(result.bytes),
         duration: result.duration || 0,
-        userId,
+        userId:email,
       },
     });
 

@@ -26,6 +26,7 @@ export default function SocialShare() {
   const { credits, setCredits } = useCreditContext();
   const router = useRouter();
 
+
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -93,7 +94,7 @@ export default function SocialShare() {
     if (uploadedImage) setIsTransforming(true);
   }, [selectedFormat, uploadedImage]);
 
-  
+
   return (
     <div className="container mx-auto p-4 max-w-4xl">
       <h1 className="sm:text-3xl text-2xl font-bold mb-4 text-center">

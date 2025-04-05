@@ -1,16 +1,16 @@
 "use server"
-import { auth } from '@clerk/nextjs/server';
 import prisma from '@/db';
+import { getUser } from './getUser';
 
 export async function updateCredits() {
     try {
-        const { userId } = await auth();
-        if (!userId) {
+        const { email } = await getUser();
+        if (!email) {
             return { error: 'Unauthorized' }
         }
 
         const dbUser = await prisma.user.findUnique({
-            where: { clerkUserId: userId },
+            where: { email },
             include: { Credit: true },
         });
 
