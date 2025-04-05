@@ -1,4 +1,4 @@
-import Landing from '@/components/Landing'
+import Landing from '@/components/pages/Landing'
 import React from 'react'
 
 function page() {

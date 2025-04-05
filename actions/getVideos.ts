@@ -1,11 +1,11 @@
 "use server"
 import prisma from "@/db";
 
-export async function getVideos(userId:string) {
+export async function getVideos(email:string) {
     try {
         const videos = await prisma.video.findMany({
             where:{
-                userId
+                userId:email
             }
         });
 

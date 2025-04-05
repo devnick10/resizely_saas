@@ -1,4 +1,4 @@
-import BgRemover from '@/components/BgRemover'
+import BgRemover from '@/components/pages/BgRemover'
 import React from 'react'
 
 function page() {

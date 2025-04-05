@@ -13,12 +13,12 @@ function Videos() {
 
   useEffect(() => {
     const fetchVideos = async () => {
-      const { userId } = await getUser()
+      const { email } = await getUser()
       try {
-        if (!userId) return null
+        if (!email) return null
 
         setLoading(true);
-        const { data } = await getVideos(userId);
+        const { data } = await getVideos(email);
 
         setVideos(data || []);
       } catch (error) {

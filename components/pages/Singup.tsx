@@ -1,7 +1,6 @@
 "use client"
-import { useSignUp } from '@clerk/nextjs'
+import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { OAuthStrategy } from '@clerk/types'
 import Link from 'next/link'
 import { MailIcon, KeyRound, User2, EyeOff, Eye } from "lucide-react"
 import Image from 'next/image'
@@ -9,11 +8,12 @@ import { FormEvent, useState } from 'react'
 import Loader from '@/components/Loader'
 import toast from 'react-hot-toast'
 import Header from '@/components/header'
+import { useLoader } from '@/hooks/useLoader'
+import { sendOTP } from '@/actions/sendOtp'
+import { verifyOtp } from '@/actions/verifyOtp'
 
 
 export default function Signup() {
-
-  const { isLoaded, signUp, setActive } = useSignUp()
 
   const [username, setUsername] = useState('');
   const [emailAddress, setEmailAddress] = useState('');
@@ -24,10 +24,9 @@ export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter()
+  const { loading, setLoading } = useLoader()
 
-
-
-  if (!isLoaded) return <Loader />
+  if (loading) return <Loader />
 
   async function submit(e: FormEvent) {
     e.preventDefault()
@@ -39,20 +38,15 @@ export default function Signup() {
       }
 
 
-      await signUp?.create({
-        emailAddress: emailAddress,
+      await signIn("credentials", {
+        email: emailAddress,
+        username,
         password
-
       })
 
-
-      // send verification code
-      await signUp?.prepareEmailAddressVerification({
-        strategy: 'email_code'
-      })
+      await sendOTP(emailAddress)
 
       setVerification(true)
-
     } catch (error) {
       setError(error)
       toast.error(error);
@@ -64,20 +58,20 @@ export default function Signup() {
   async function onPressVerify(e: FormEvent) {
     e.preventDefault()
 
-    if (!isLoaded) {
+    if (!loading) {
       return <Loader />
     }
 
     try {
 
-      const completeSignup = await signUp.attemptEmailAddressVerification({ code })
+      // const completeSignup = await signUp.attemptEmailAddressVerification({ code })
+      const verified = await verifyOtp(emailAddress, code)
 
-      if (completeSignup.status !== "complete") {
+      if (!verified) {
         return toast.error("Envalid verification code")
       }
 
-      if (completeSignup.status === "complete") {
-        await setActive({ session: completeSignup.createdSessionId })
+      if (verified) {
         toast.success("verify successfully.")
         router.push('/social-share')
       }
@@ -86,15 +80,6 @@ export default function Signup() {
       toast.error("Signup failed try again.");
       setError(error);
     }
-  }
-
-  // signup provider 
-  const signUpWith = (strategy: OAuthStrategy) => {
-    return signUp.authenticateWithRedirect({
-      strategy,
-      redirectUrl: '/sign-up/sso-callback',
-      redirectUrlComplete: '/home',
-    })
   }
 
   if (error) {
@@ -146,12 +131,11 @@ export default function Signup() {
                     <Eye onClick={() => setShowPassword(true)} className='cursor-pointer' size={20} />
                   )}
                 </label>
-                {/* CAPTCHA Widget */}
-                <div id="clerk-captcha"></div>
                 <button type='submit' className='bg-blue-600 px-4 py-2 rounded-xl '>Sign Up</button>
-
               </form>
-              <button onClick={() => signUpWith('oauth_google')} className='w-full bg-blue-600 flex gap-2 items-center text-center justify-center px-4 py-2 rounded-xl '>
+              <button onClick={ () => {
+                 signIn('google', { callbackUrl: "/home" })
+              }} className='w-full bg-blue-600 flex gap-2 items-center text-center justify-center px-4 py-2 rounded-xl '>
                 <Image src={'/google.png'} height={23} width={23} alt='' />
                 Sign Up With Google
               </button>

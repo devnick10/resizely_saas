@@ -17,6 +17,7 @@ function VideoUpload() {
   const MAX_FILE_SIZE = 100 * 1024 * 1024;
   const { credits } = useCreditContext();
 
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -37,7 +38,7 @@ function VideoUpload() {
       if (!credits) {
         return toast.error("insufficient credit's plz buy.")
       }
-      
+
       const response = await videoUpload(formData)
       if (!response.success) {
         toast.error("failed to upload video")

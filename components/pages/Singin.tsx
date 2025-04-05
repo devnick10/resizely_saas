@@ -1,5 +1,5 @@
 "use client"
-import { useSignIn } from '@clerk/nextjs'
+import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { MailIcon, KeyRound, EyeOff, Eye } from "lucide-react"
@@ -7,8 +7,8 @@ import Image from 'next/image'
 import { FormEvent, useState } from 'react'
 import Loader from '@/components/Loader'
 import toast from 'react-hot-toast'
-import { OAuthStrategy } from '@clerk/types';
 import Header from '@/components/header'
+import { useLoader } from '@/hooks/useLoader'
 
 
 export default function Signin() {
@@ -17,14 +17,8 @@ export default function Signin() {
   const [error, setError] = useState<unknown>()
   const [showPassword, setShowPassword] = useState(false);
 
-  const { isLoaded, setActive, signIn } = useSignIn()
-
   const router = useRouter()
-
-  if (!isLoaded) {
-    return <Loader />
-  }
-
+  const { loading, setLoading } = useLoader()
 
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -33,42 +27,37 @@ export default function Signin() {
       return toast.error("Please provide both fields.")
     }
 
-
+    setLoading(true)
     try {
-      const result = await signIn?.create({
-        identifier: emailAddress, password
+      const result = await signIn("credentials", {
+        email: emailAddress, password
       })
 
-      if (!result || result.status !== "complete") {
+      if (result?.error) {
         return toast.error("Invalid email or password.")
       }
 
-      if (result.status === "complete" && setActive) {
+      if (result?.ok) {
         toast.success("Sign In successfully.")
-        await setActive({ session: result.createdSessionId })
         router.push('/home')
       }
 
     } catch (error) {
       setError(error)
+    } finally {
+      setLoading(false)
     }
 
   }
 
 
-  // signup provider 
-  const signUpWith = (strategy: OAuthStrategy) => {
-    return signIn.authenticateWithRedirect({
-      strategy,
-      redirectUrl: '/sign-in/sso-callback',
-      redirectUrlComplete: '/home',
-    })
-  }
-
   if (error) {
     toast.error("Sorry for inconvenience")
   }
 
+  if (loading) {
+    return <Loader />
+  }
 
   return (
     <>
@@ -120,7 +109,9 @@ export default function Signin() {
             <button type='submit' className='bg-blue-600 px-4 py-2 rounded-xl '>Sign In</button>
 
           </form>
-          <button onClick={() => signUpWith('oauth_google')} className='min-w-[16rem] bg-blue-600 flex gap-2 items-center text-center justify-center px-4 py-2 rounded-xl '>
+          <button onClick={async () => {
+            await signIn("google", { callbackUrl: "/home" })
+          }} className='min-w-[16rem] bg-blue-600 flex gap-2 items-center text-center justify-center px-4 py-2 rounded-xl '>
             <Image src={'/google.png'} height={23} width={23} alt='' />
             Sign In With Google
           </button>

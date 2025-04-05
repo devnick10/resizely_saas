@@ -1,17 +1,16 @@
 "use server"
 import prisma from "@/db";
 
-export async function getCredits(userId:string) {
+export async function getCredits(email: string) {
     try {
 
-        
-        if (!userId) return {
+        if (!email) return {
             success: false,
             error: "Unauthorized"
         }
 
         const user = await prisma.user.findUnique({
-            where: { clerkUserId: userId },
+            where: { email },
             include: { Credit: true },
         });
 
@@ -22,7 +21,7 @@ export async function getCredits(userId:string) {
             }
         }
 
-        const userCredits = user.Credit[0]; // Assuming one Credit record per user
+        const userCredits = user.Credit[0];
 
         if (!userCredits) {
             return {
@@ -30,7 +29,7 @@ export async function getCredits(userId:string) {
                 error: "Insufficient credits"
             };
         }
-
+        
         return {
             success: true,
             credits: userCredits.credits
@@ -40,7 +39,7 @@ export async function getCredits(userId:string) {
         return {
             error,
             success: false,
-            message:"Something went wrong"
+            message: "Something went wrong"
         };
     }
 }
