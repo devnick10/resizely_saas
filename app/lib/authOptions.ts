@@ -81,6 +81,7 @@ export const authOptions = {
                         email: user.email
                     };
                 } catch (error) {
+                    console.error(error)
                     throw new Error("Failed to create user");
                 }
             }
@@ -118,7 +119,7 @@ export const authOptions = {
                             });
                         });
                     }
-                } catch (error: any) {
+                } catch (error) {
                     console.error("Error during Google sign-in:", error);
                     return false;
                 }

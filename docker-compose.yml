@@ -1,0 +1,35 @@
+
+services:
+
+    db:
+     image: postgres:alpine
+     container_name: postgres-db
+     restart: always
+     environment:
+       POSTGRES_USER: postgres
+       POSTGRES_PASSWORD: postgres
+       POSTGRES_DB: resizly
+     ports:
+       - "5432:5432"
+     volumes:
+       - postgres_data:/var/lib/postgresql/data
+    
+    app: 
+     build:
+      context: .
+      dockerfile: Dockerfile.dev
+      args:
+       - DATABASE_URL=postgresql://postgres:postgres@db:5432/cms?schema=public
+     container_name: resizly-app
+     ports:
+       - "3000:3000"
+     environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/resizly
+     depends_on:
+      - db     
+     volumes:
+       - .:/app
+       - /app/node_modules
+
+volumes:
+  postgres_data:

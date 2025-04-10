@@ -48,6 +48,7 @@ export default function BgRemover() {
       setIsUploading(false);
     }
   };
+  
   // Handle Image Download
   const handleDownload = useCallback(async () => {
     const { email } = await getUser();

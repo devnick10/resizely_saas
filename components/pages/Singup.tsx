@@ -37,7 +37,7 @@ export default function Signup() {
         return toast.error("Please provied all fields.")
       }
 
-
+      setLoading(true)
       await signIn("credentials", {
         email: emailAddress,
         username,
@@ -51,6 +51,8 @@ export default function Signup() {
       setError(error)
       toast.error(error);
 
+    } finally {
+      setLoading(true)
     }
   }
 
@@ -63,8 +65,7 @@ export default function Signup() {
     }
 
     try {
-
-      // const completeSignup = await signUp.attemptEmailAddressVerification({ code })
+      setLoading(true)
       const verified = await verifyOtp(emailAddress, code)
 
       if (!verified) {
@@ -79,6 +80,8 @@ export default function Signup() {
     } catch (error) {
       toast.error("Signup failed try again.");
       setError(error);
+    } finally {
+      setLoading(true)
     }
   }
 
@@ -133,8 +136,8 @@ export default function Signup() {
                 </label>
                 <button type='submit' className='bg-blue-600 px-4 py-2 rounded-xl '>Sign Up</button>
               </form>
-              <button onClick={ () => {
-                 signIn('google', { callbackUrl: "/home" })
+              <button onClick={() => {
+                signIn('google', { callbackUrl: "/home" })
               }} className='w-full bg-blue-600 flex gap-2 items-center text-center justify-center px-4 py-2 rounded-xl '>
                 <Image src={'/google.png'} height={23} width={23} alt='' />
                 Sign Up With Google
