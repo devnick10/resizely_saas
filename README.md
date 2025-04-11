@@ -2,7 +2,7 @@
 
 Resizely is a **credit-based** SaaS application designed to make media processing easy and efficient. Users can **resize images**, **compress videos**, and **remove backgrounds**, with a **credit system** that provides free credits and a seamless **Razorpay integration** for purchasing more.
 
-##### The app will be live at **http://localhost:3000** 🚀  
+##### The app will be live at **http://localhost:3000**  
 ---
 
 ## 🌟 Features  
@@ -14,6 +14,7 @@ Resizely is a **credit-based** SaaS application designed to make media processin
 ✅ **Payment Integration** – Razorpay for secure transactions  
 ✅ **Authentication** – Secure login with **NextAuth** (Google + Credentials)  
 ✅ **Optimized Performance** – Cloudinary for fast media processing  
+✅ **Containerized Deployment** – Docker support for easy setup  
 
 ---
 
@@ -27,6 +28,7 @@ Resizely is a **credit-based** SaaS application designed to make media processin
 - **Email (OTP, transactional):** Nodemailer (Mailtrap for dev)  
 - **UI Framework:** DaisyUI + TailwindCSS  
 - **State Management:** React Context  
+- **Containerization:** Docker + Docker Compose  
 
 ---
 
@@ -35,8 +37,8 @@ Resizely is a **credit-based** SaaS application designed to make media processin
 ### 1️⃣ Clone the Repository  
 
 ```sh
-git clone https://github.com/yourusername/resizely.git
-cd resizely
+git clone https://github.com/devnick10/resizely_saas.git
+cd resizely_saas
 ```
 
 ### 2️⃣ Install Dependencies  
@@ -80,18 +82,38 @@ MAILTRAP_USERNAME=your_mailtrap_username
 MAILTRAP_PASSWORD=your_mailtrap_password
 ```
 
-### 4️⃣ Migrate Database  
+---
 
-```sh
-npx prisma migrate dev --name init
+### 🐳 Docker Setup
+
+#### 🪪 Development
+
+Use Docker Compose to run the app in development mode:
+
+```bash
+docker-compose -f docker-compose.yml -f Dockerfile.dev up --build
 ```
 
-### 5️⃣ Run the Application  
+- Auto-reloads on code changes
+- Binds source code for live development
+- Exposes app at [http://localhost:3000](http://localhost:3000)
 
-```sh
-npm run dev
-# or
-yarn dev
+#### 🚀 Production
+
+To build and run a production-ready container:
+
+```bash
+docker-compose -f docker-compose.yml -f Dockerfile.prod up --build
+```
+
+This uses `Dockerfile.prod` to create a minimal image optimized for deployment.
+
+#### 🔁 Running Prisma Migrations
+
+After containers start, apply database migrations:
+
+```bash
+docker-compose exec app npx prisma migrate dev --name init
 ```
 
 ---
@@ -109,7 +131,6 @@ yarn dev
 ## 📌 Roadmap  
 
 🚀 **Upcoming Improvements:**  
-- ✅ Implement AI-based smart compression  
 - ✅ Add bulk upload support  
 - ✅ Improve UX & loading speeds  
 - ✅ More social media export options  
@@ -134,9 +155,10 @@ This project is **open-source** under the [MIT License](LICENSE).
 
 Have feedback or suggestions? Connect with me!  
 
-🐦 [Twitter/X](https://x.com/Nikhil10_02)  
+ ✖️ [Twitter/X](https://x.com/Nikhil10_02)  
 🔗 [LinkedIn](https://www.linkedin.com/in/nikhil-bhoyar-nb1010)  
 
 ---
 
-Give it a ⭐ if you like this project! 🚀  
+Give it a ⭐ if you like this project! 🚀
+
