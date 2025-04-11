@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
-import { useCreditContext } from "@/context";
 import { useSession } from "next-auth/react";
+import { usePayment } from "@/hooks/usePayment";
 declare global {
   interface Window {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -17,104 +16,44 @@ function Payment() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<unknown>();
   const { data } = useSession();
-  const router = useRouter();
-  const { setCredits } = useCreditContext();
+
+  const { options, paymentError, message } = usePayment(data?.user?.name, data?.user?.email)
   
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const createOrderId = useCallback(async () => {
-    try {
-      const response = await fetch("/api/order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: 50000 }), // ₹500 * 100 for paise
-      });
-      
-      if (!response.ok) {
-        throw new Error("Failed to create order. Please try again.");
-      }
-
-      const data = await response.json();
-      return data.orderId;
-    } catch (error) {
-      setError(error)
-      toast.error("Error creating order.");
-      return null;
-    }
-  }, []);
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const processPayment = useCallback(async () => {
+  const processPayment = async () => {
     setLoading(true);
     try {
       if (!data?.user) {
-        return ;
-      }
-      const orderId = await createOrderId();
-      if (!orderId) {
-        setLoading(false);
         return;
       }
-      
+
       if (!window.Razorpay) {
         toast.error("Razorpay SDK failed to load. Please refresh and try again.");
         setLoading(false);
         return;
       }
 
-      const options = {
-        key: process.env.NEXT_PUBLIC_RAZOR_PAY_KEY_ID!,
-        amount: 50000, // ₹500 * 100 for paise
-        currency: "INR",
-        name: "Resizly",
-        description: "Buy credits",
-        order_id: orderId,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        handler: async function (response: any) {
-          try {
-            const result = await fetch("/api/verify", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                orderCreationId: orderId,
-                razorpayPaymentId: response.razorpay_payment_id,
-                razorpayOrderId: response.razorpay_order_id,
-                razorpaySignature: response.razorpay_signature,
-              }),
-            });
+      if (paymentError) {
+        toast.error(message || "Internal server error.")
+        setError(message)
+        return
+      }
 
-            const res = await result.json();
-            if (res.isOk) {
-              router.push("/home");
-              setCredits(res.updatedCredits);
-              toast.success("Payment succeeded!");
-            } else {
-              toast.error(res.message);
-            }
-          } catch (error) {
-            setError(error)
-            toast.error("Payment verification failed. Please contact support.");
-          }
-        },
-        prefill: {
-          name: data.user?.name || "Guest",
-          email: data.user?.email || "guest@example.com",
-        },
-        theme: { color: "#3399cc" },
-      };
-      
       const paymentObject = new window.Razorpay(options);
       paymentObject.open();
+
     } catch (error) {
       setError(error)
       toast.error("Error processing payment. Please try again.");
     } finally {
       setLoading(false);
     }
-  }, [createOrderId, setCredits, router, data]);
+  };
+
   if (!data || !data.user) return null;
   if (error) {
     toast.error("Sorry for inconvenience")
   }
+
   return (
     <>
 

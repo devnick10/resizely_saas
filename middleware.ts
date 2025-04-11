@@ -14,7 +14,8 @@ export async function middleware(request: NextRequest) {
         '/video-upload',
         '/bg-remover',
         '/order',
-        '/verify'
+        '/verify',
+        '/payment'
     ]
 
     const isProtectedRoutes = privateRoutes.some((route) => pathname.startsWith(route))
@@ -32,6 +33,7 @@ export const config = {
         '/video-upload',
         '/bg-remover',
         '/api/order',
-        '/api/verify'
+        '/api/verify',
+        '/payment'
     ]
 }

@@ -57,8 +57,9 @@ export default function AppLayout({
   }, [data, setCredits]);
 
   const handleSignOut = async () => {
-    await signOut();
-    router.push("/");
+    await signOut({
+      callbackUrl:"/"
+    });
   };
 
   if (error) {
