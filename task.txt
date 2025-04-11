@@ -1,2 +1,0 @@
-// Testing Payment 
-// continue lecture 6.3
