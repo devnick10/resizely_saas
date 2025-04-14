@@ -22,5 +22,5 @@ jobs:
        run: npx prisma generate
       
      - name: Run Build
-       run:  npm run Build
+       run:  npm run build
     
