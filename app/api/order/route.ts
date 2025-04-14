@@ -2,10 +2,10 @@ import Razorpay from "razorpay";
 import { NextResponse, NextRequest } from "next/server";
 
 
-const razorpay = new Razorpay({
-  key_id: process.env.RAZOR_PAY_KEY_ID as string,
-  key_secret: process.env.RAZOR_KEY_SECRET as string,
-});
+// const razorpay = new Razorpay({
+//   key_id: process.env.RAZOR_PAY_KEY_ID as string,
+//   key_secret: process.env.RAZOR_KEY_SECRET as string,
+// });
 
 
 export async function POST(request: NextRequest) {
@@ -19,6 +19,21 @@ export async function POST(request: NextRequest) {
     if (!amount) {
       return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
     }
+
+    const keyId = process.env.RAZOR_PAY_KEY_ID;
+    const keySecret = process.env.RAZOR_KEY_SECRET;
+
+    if (!keyId || !keySecret) {
+      return NextResponse.json(
+        { error: "Razorpay keys are not defined" },
+        { status: 500 }
+      );
+    }
+
+    const razorpay = new Razorpay({
+      key_id: keyId,
+      key_secret: keySecret,
+    });
 
 
     const options = {
