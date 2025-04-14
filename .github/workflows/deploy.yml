@@ -26,3 +26,19 @@ jobs:
           file: ./docker/Dockerfile.prod
           push: true
           tags: devnick10/resizely:latest
+
+      - name: Verify Pushed Image
+        uses: docker pull devnick10/resizely:latest
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.SSH_HOST}}
+          username: ${{secrets.SSH_USERNAME}}
+          key: ${{secrets.SSH_KEY}}
+          script: |
+           sudo docker pull devnick10/resizely:latest
+           sudo docker stop resizely || true
+           sudo docker rm resizely || true
+           sudo docker run -d --name resizely -p 3000:3000 devnick10/resizely:latest 
+
