@@ -8,9 +8,6 @@ on:
 jobs:
   Build: 
    runs-on: ubuntu-latest
-   env:
-      RAZOR_KEY_SECRET: ${{ secrets.RAZOR_KEY_SECRET }}
-      RAZOR_PAY_KEY_ID: ${{ secrets.RAZOR_PAY_KEY_ID }}
    steps:
      - uses: actions/checkout@v3
      - name: Use Node.js
@@ -25,5 +22,8 @@ jobs:
        run: npx prisma generate
       
      - name: Run Build
+       env:
+        RAZOR_KEY_SECRET: ${{ secrets.RAZOR_KEY_SECRET }}
+        RAZOR_PAY_KEY_ID: ${{ secrets.RAZOR_PAY_KEY_ID }}
        run:  npm run build
     
