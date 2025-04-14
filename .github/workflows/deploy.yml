@@ -26,6 +26,3 @@ jobs:
           file: ./docker/Dockerfile.prod
           push: true
           tags: devnick10/resizely:latest
-
-      - name: Verify Pushed Image
-        uses: docker pull devnick10/resizely:latest
