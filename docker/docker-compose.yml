@@ -3,12 +3,12 @@ services:
 
     db:
      image: postgres:alpine
-     container_name: postgres-db
+     container_name: db
      restart: always
      environment:
        POSTGRES_USER: postgres
        POSTGRES_PASSWORD: postgres
-       POSTGRES_DB: resizly
+       POSTGRES_DB: resizely
      ports:
        - "5432:5432"
      volumes:
@@ -16,19 +16,20 @@ services:
     
     app: 
      build:
-      context: .
-      dockerfile: Dockerfile.dev
+      context: ../
+      dockerfile: docker/Dockerfile.dev
       args:
-       - DATABASE_URL=postgresql://postgres:postgres@db:5432/cms?schema=public
+       - DATABASE_URL=postgresql://postgres:postgres@db:5432/resizely
      container_name: resizly-app
      ports:
        - "3000:3000"
      environment:
-      DATABASE_URL: postgres://postgres:postgres@db:5432/resizly
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/resizely
+
      depends_on:
       - db     
      volumes:
-       - .:/app
+       - ../:/app
        - /app/node_modules
 
 volumes:
