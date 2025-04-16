@@ -14,6 +14,7 @@ Resizely is a **credit-based** SaaS application designed to make media processin
 ✅ **Payment Integration** – Razorpay for secure transactions  
 ✅ **Authentication** – Secure login with **NextAuth** (Google + Credentials)  
 ✅ **Optimized Performance** – Cloudinary for fast media processing  
+✅ **Modern UI with ShadCN** – Accessible and beautiful components  
 ✅ **Containerized Deployment** – Docker support for easy setup  
 
 ---
@@ -26,7 +27,7 @@ Resizely is a **credit-based** SaaS application designed to make media processin
 - **Authentication:** NextAuth (Google & Credentials)  
 - **Payments:** Razorpay  
 - **Email (OTP, transactional):** Nodemailer (Mailtrap for dev)  
-- **UI Framework:** DaisyUI + TailwindCSS  
+- **UI Framework:** **ShadCN UI + TailwindCSS**  
 - **State Management:** React Context  
 - **Containerization:** Docker + Docker Compose  
 
@@ -91,32 +92,19 @@ MAILTRAP_PASSWORD=your_mailtrap_password
 Use Docker Compose to run the app in development mode:
 
 ```bash
-docker-compose -f docker-compose.yml -f Dockerfile.dev up --build
+docker compose --env-file ./.env -f docker/docker-compose.yml up -d
 ```
 
-- Auto-reloads on code changes
-- Binds source code for live development
+- Auto-reloads on code changes  
+- Binds source code for live development  
 - Exposes app at [http://localhost:3000](http://localhost:3000)
 
-#### 🚀 Production
-
-To build and run a production-ready container:
-
+🛑 Stopping Services
+To stop all running services, run the following command in a terminal:
 ```bash
-docker-compose -f docker-compose.yml -f Dockerfile.prod up --build
+docker compose --env-file ./.env -f docker/docker-compose.yml down -v
 ```
 
-This uses `Dockerfile.prod` to create a minimal image optimized for deployment.
-
-#### 🔁 Running Prisma Migrations
-
-After containers start, apply database migrations:
-
-```bash
-docker-compose exec app npx prisma migrate dev --name init
-```
-
----
 
 ## 📸 How It Works  
 
@@ -155,10 +143,9 @@ This project is **open-source** under the [MIT License](LICENSE).
 
 Have feedback or suggestions? Connect with me!  
 
- ✖️ [Twitter/X](https://x.com/Nikhil10_02)  
+✖️ [Twitter/X](https://x.com/Nikhil10_02)  
 🔗 [LinkedIn](https://www.linkedin.com/in/nikhil-bhoyar-nb1010)  
 
 ---
 
 Give it a ⭐ if you like this project! 🚀
-
