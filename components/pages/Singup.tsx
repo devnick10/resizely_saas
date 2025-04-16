@@ -1,169 +1,212 @@
-"use client"
-import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { MailIcon, KeyRound, User2, EyeOff, Eye } from "lucide-react"
-import Image from 'next/image'
-import { FormEvent, useState } from 'react'
-import Loader from '@/components/Loader'
-import toast from 'react-hot-toast'
-import Header from '@/components/header'
-import { useLoader } from '@/hooks/useLoader'
-import { sendOTP } from '@/actions/sendOtp'
-import { verifyOtp } from '@/actions/verifyOtp'
+"use client";
 
+import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import toast from "react-hot-toast";
+import Image from "next/image";
+import Link from "next/link";
+import { Eye, EyeOff } from "lucide-react";
+
+import { sendOTP } from "@/actions/sendOtp";
+import { verifyOtp } from "@/actions/verifyOtp";
+
+import Header from "@/components/header";
+import Loader from "@/components/Loader";
+import { useLoader } from "@/hooks/useLoader";
+
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { Label} from "../ui/label";
 
 export default function Signup() {
-
-  const [username, setUsername] = useState('');
-  const [emailAddress, setEmailAddress] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [emailAddress, setEmailAddress] = useState("");
+  const [password, setPassword] = useState("");
   const [verification, setVerification] = useState(false);
-  const [code, setCode] = useState('')
-  const [error, setError] = useState<unknown>()
+  const [code, setCode] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState<unknown>();
 
-  const router = useRouter()
-  const { loading, setLoading } = useLoader()
+  const { loading, setLoading } = useLoader();
+  const router = useRouter();
 
-  if (loading) return <Loader />
+  if (loading) return <Loader />;
 
-  async function submit(e: FormEvent) {
-    e.preventDefault()
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
 
+    if (!emailAddress || !password || !username) {
+      return toast.error("Please provide all fields.");
+    }
+
+    setLoading(true);
     try {
-
-      if (!emailAddress || !password || !username) {
-        return toast.error("Please provied all fields.")
-      }
-
-      setLoading(true)
       await signIn("credentials", {
         email: emailAddress,
         username,
-        password
-      })
+        password,
+        redirect: false,
+      });
 
-      await sendOTP(emailAddress)
-
-      setVerification(true)
-    } catch (error) {
-      setError(error)
-      toast.error(error);
-
+      await sendOTP(emailAddress);
+      toast.success("OTP sent to your email.");
+      setVerification(true);
+    } catch (err) {
+      setError(err);
+      toast.error("Something went wrong.");
     } finally {
-      setLoading(true)
+      setLoading(false);
     }
-  }
+  };
 
-  //    verify email verification code
-  async function onPressVerify(e: FormEvent) {
-    e.preventDefault()
+  const handleVerify = async (e: FormEvent) => {
+    e.preventDefault();
 
-    if (!loading) {
-      return <Loader />
-    }
-
+    setLoading(true);
     try {
-      setLoading(true)
-      const verified = await verifyOtp(emailAddress, code)
+      const verified = await verifyOtp(emailAddress, code);
+      if (!verified) return toast.error("Invalid verification code.");
 
-      if (!verified) {
-        return toast.error("Envalid verification code")
-      }
-
-      if (verified) {
-        toast.success("verify successfully.")
-        router.push('/social-share')
-      }
-
-    } catch (error) {
-      toast.error("Signup failed try again.");
-      setError(error);
+      toast.success("Email verified successfully.");
+      router.push("/social-share");
+    } catch (err) {
+      setError(err);
+      toast.error("Signup failed, try again.");
     } finally {
-      setLoading(true)
+      setLoading(false);
     }
-  }
+  };
 
   if (error) {
-    toast.error("Sorry for inconvenience")
+    toast.error("Something went wrong.");
   }
 
   return (
     <>
       <Image
-        className='absolute bottom-0 '
-        src={'/bottomwave.svg'}
+        className="absolute bottom-0"
+        src="/bottomwave.svg"
+        alt=""
         width={0}
         height={0}
-        sizes='100vw'
-        alt=''
-        style={{ width: '100%', height: 'auto' }}
+        sizes="100vw"
+        style={{ width: "100%", height: "auto" }}
       />
-      <div className='relative flex justify-center  items-center min-w-full min-h-screen'>
-        <div className='absolute top-0 bg-red-500 min-w-full'>
+      <div className="relative flex justify-center items-center min-h-screen px-4">
+        <div className="absolute top-0 w-full">
           <Header />
         </div>
-        {error ? <div>Enternal Servar Error</div> : <><div className='flex  flex-col border-2 rounded-xl p-4 border-blue-500 justify-center items-center gap-5'>
-          <div>
-            <h1 className='font-bold text-xl'>Sign Up</h1>
-          </div>
-          {!verification ? (
-            <>
-              <form className='flex flex-col gap-5' onSubmit={submit}>
-                <label className="input input-bordered flex items-center gap-2">
-                  <MailIcon size={20} />
-                  <input type="text" onChange={(e) => setEmailAddress(e.target.value)} className="grow" value={emailAddress} placeholder="Email" />
-                </label>
-                <label className="input input-bordered flex items-center gap-2">
-                  <User2 size={20} />
-                  <input onChange={(e) => setUsername(e.target.value)} value={username} type="text" className="grow" placeholder="Username" />
-                </label>
-                <label className="input input-bordered flex items-center gap-2">
-                  <KeyRound size={20} />
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    placeholder='Password'
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-[10.5rem]"
-                    value={password}
-                  />
-                  {showPassword ? (
-                    <EyeOff onClick={() => setShowPassword(false)} className='cursor-pointer' size={20} />
-                  ) : (
-                    <Eye onClick={() => setShowPassword(true)} className='cursor-pointer' size={20} />
-                  )}
-                </label>
-                <button type='submit' className='bg-blue-600 px-4 py-2 rounded-xl '>Sign Up</button>
+
+        <Card className="w-full max-w-xs z-10">
+          <CardHeader>
+            <CardTitle className="text-xl text-center">Sign Up</CardTitle>
+          </CardHeader>
+
+          <CardContent className="space-y-4">
+            {!verification ? (
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-1">
+                  <Label>Email</Label>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="email"
+                      value={emailAddress}
+                      onChange={(e) => setEmailAddress(e.target.value)}
+                      placeholder="Enter your email"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <Label>Username</Label>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="text"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      placeholder="Choose a username"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <Label>Password</Label>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Choose a password"
+                      required
+                    />
+                    {showPassword ? (
+                      <EyeOff
+                        className="cursor-pointer"
+                        size={20}
+                        onClick={() => setShowPassword(false)}
+                      />
+                    ) : (
+                      <Eye
+                        className="cursor-pointer"
+                        size={20}
+                        onClick={() => setShowPassword(true)}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                <Button type="submit" className="text-md w-full">
+                  Sign Up
+                </Button>
               </form>
-              <button onClick={() => {
-                signIn('google', { callbackUrl: "/home" })
-              }} className='w-full bg-blue-600 flex gap-2 items-center text-center justify-center px-4 py-2 rounded-xl '>
-                <Image src={'/google.png'} height={23} width={23} alt='' />
-                Sign Up With Google
-              </button>
-              <p>Already have an account <Link className='font-bold border-b-2 mx-1' href={'/sign-in'}>Sign In</Link></p> </>
-          ) : (
+            ) : (
+              <form onSubmit={handleVerify} className="space-y-4">
+                <div className="space-y-1">
+                  <Label>Enter Verification Code</Label>
+                  <Input
+                    type="text"
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                    placeholder="Enter the code sent to your email"
+                    required
+                  />
+                </div>
+                <Button type="submit" className="w-full">
+                  Continue
+                </Button>
+              </form>
+            )}
 
-            <form className='flex flex-col gap-5' onSubmit={onPressVerify}>
-              <h1 className='text-center'>Enter email verification code</h1>
-              <label className="input input-bordered flex items-center gap-2">
+            {!verification && (
+              <Button
+                variant="outline"
+                className="w-full text-md flex gap-2"
+                onClick={() => signIn("google", { callbackUrl: "/home" })}
+              >
+                <Image src="https://res.cloudinary.com/dnr1sgjrx/image/upload/v1744802382/google_ysyp3i.png" width={20} height={20} alt="Google logo" />
+                Sign Up with Google
+              </Button>
+            )}
 
-                <input onChange={(e) => setCode(e.target.value)} value={code} type="text" className="grow" placeholder="code" />
-              </label>
-
-              <button type='submit' className='bg-blue-600 px-4 py-2 rounded-xl '>continue</button>
-            </form>
-          )
-          }
-
-        </div></>}
+            <p className="text-center text-sm">
+              Already have an account?
+              <Link href="/sign-in" className="ml-1 text-blue-600 font-medium underline">
+                Sign In
+              </Link>
+            </p>
+          </CardContent>
+        </Card>
       </div>
     </>
   );
 }
-
-
-
-
 

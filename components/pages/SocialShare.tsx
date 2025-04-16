@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { CldImage } from "next-cloudinary";
 import { useCreditContext } from "@/context";
@@ -6,6 +7,16 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { updateCredits } from "@/actions/updateCredits";
 import { imageUpload } from "@/actions/imageUpload";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 const socialFormats = {
   "instagram Square (1:1)": { width: 1080, height: 1080, aspectRatio: "1:1" },
@@ -25,7 +36,6 @@ export default function SocialShare() {
   const imageRef = useRef<HTMLImageElement>(null);
   const { credits, setCredits } = useCreditContext();
   const router = useRouter();
-
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -68,7 +78,7 @@ export default function SocialShare() {
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error(error)
+      console.error(error);
       toast.error("Failed to download image.");
     }
   };
@@ -85,7 +95,7 @@ export default function SocialShare() {
         router.push("/social-share");
       }
     } catch (error) {
-      console.error(error)
+      console.error(error);
       toast.error("Failed to download image.");
     }
   }, [setCredits, router]);
@@ -94,58 +104,51 @@ export default function SocialShare() {
     if (uploadedImage) setIsTransforming(true);
   }, [selectedFormat, uploadedImage]);
 
-
   return (
-    <div className="container mx-auto p-4 max-w-4xl">
-      <h1 className="sm:text-3xl text-2xl font-bold mb-4 text-center">
+    <div className="max-w-4xl mx-auto p-4">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-center">
         Social Media Image Creator
       </h1>
-      <p className="font-bold mb-6 sm:text-xl text-center">
-        Resize your photos for any social media platform with AI-powered content awareness – smart, seamless, and pixel-perfect!
+      <p className="text-center text-muted-foreground mb-6">
+        Resize your photos for any social media platform with AI-powered content awareness.
       </p>
-      <div className="card">
-        <div className="card-body border-gray-500 border-t">
-          <h2 className="card-title mb-4">Upload an Image</h2>
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">Choose an image file</span>
-            </label>
-            <input
-              type="file"
-              onChange={handleFileUpload}
-              className="file-input file-input-bordered file-input-primary w-full"
-            />
+
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle>Upload an Image</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <Label htmlFor="file">Choose an image file</Label>
+            <Input type="file" id="file" onChange={handleFileUpload} />
           </div>
 
-          {isUploading && (
-            <div className="mt-4">
-              <progress className="progress progress-primary w-full"></progress>
-            </div>
-          )}
+          {isUploading && <div className="animate-pulse text-sm">Uploading...</div>}
 
           {uploadedImage && (
-            <div className="mt-6">
-              <h2 className="card-title mb-4">Select Social Media Format</h2>
-              <div className="form-control">
-                <select
-                  className="select select-bordered w-full"
-                  value={selectedFormat}
-                  onChange={(e) => setSelectedFormat(e.target.value as SocialFormat)}
-                >
-                  {Object.keys(socialFormats).map((format) => (
-                    <option key={format} value={format}>
-                      {format}
-                    </option>
-                  ))}
-                </select>
+            <div className="space-y-6">
+              <div>
+                <Label htmlFor="format">Select Social Media Format</Label>
+                <Select value={selectedFormat} onValueChange={(val) => setSelectedFormat(val as SocialFormat)}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select a format" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.keys(socialFormats).map((format) => (
+                      <SelectItem key={format} value={format}>
+                        {format}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
-              <div className="mt-6 relative">
+              <div className="relative">
                 <h3 className="text-lg font-semibold mb-2">Preview:</h3>
                 <div className="flex justify-center">
                   {isTransforming && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-base-100 bg-opacity-50 z-10">
-                      <span className="loading loading-spinner loading-lg"></span>
+                    <div className="absolute inset-0 flex items-center justify-center bg-background/70 z-10">
+                      <span className="animate-spin w-6 h-6 border-4 border-blue-500 border-t-transparent rounded-full"></span>
                     </div>
                   )}
                   <CldImage
@@ -163,15 +166,13 @@ export default function SocialShare() {
                 </div>
               </div>
 
-              <div className="card-actions justify-end mt-6">
-                <button className="btn btn-primary" onClick={handleDownload}>
-                  Download for {selectedFormat}
-                </button>
+              <div className="flex justify-end">
+                <Button onClick={handleDownload}>Download for {selectedFormat}</Button>
               </div>
             </div>
           )}
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

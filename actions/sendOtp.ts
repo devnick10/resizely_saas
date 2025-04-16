@@ -1,5 +1,5 @@
 "use server"
-import { sendMail } from "@/helper/mailer"; // your nodemailer logic
+import { sendMail } from "@/helper/mailer"; 
 import prisma from "@/db";
 
 export async function sendOTP(email: string) {

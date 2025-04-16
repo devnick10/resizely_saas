@@ -1,152 +1,209 @@
-"use client";
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { CheckCircle, Zap, ImageIcon, Video, Scissors } from "lucide-react"
+import FeatureCard from "@/components/Feature-card"
+import Header from "@/components/header"
+import Footer from "@/components/Footer"
+import HeroImage from "@/components/Hero-image"
+import PricingCard2 from "../ui/pricing-card"
 
-import React from "react";
-import Link from "next/link";
-import Image from "next/image";
-import Header from "@/components/header";
-
-function Landing() {
-
+export default function Home() {
   return (
-    <div className="min-h-screen  bg-base-100">
-      <Header/>
+    <div className="flex min-h-screen flex-col">
+      <Header />
+
       {/* Hero Section */}
-      <section className="container mx-auto px-6 py-16 text-center">
-        <h1 className="sm:text-5xl text-2xl font-bold text-white mb-6">
-          Unleash the Power of AI <br />for Your Media
-        </h1>
-        <p className="text-xl text-white mb-8">
-          Remove backgrounds, resize images, compress videos, and more with AI-powered precision.
-        </p>
-        <div className="space-x-4">
-          <Link
-            href="/home"
-            className="btn btn-primary px-8 py-3 font-semibold"
-          >
-            Get Started
-          </Link>
-          <Link
-            href="#pricing"
-            className="btn text-white btn-outline px-8 py-3 font-semibold"
-          >
-            View Pricing
-          </Link>
+      <section className="relative py-20 md:py-32 overflow-hidden bg-gradient-to-b from-white to-gray-50">
+        <div className="container px-4 md:px-6 mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="flex flex-col gap-6">
+              <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary/10 text-primary hover:bg-primary/20 w-fit">
+                <Zap className="h-3.5 w-3.5 mr-1" />
+                Powered by AI
+              </div>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter">
+                Transform Your Media <span className="text-primary">Effortlessly</span>
+              </h1>
+              <p className="text-gray-500 md:text-xl max-w-[600px]">
+                Compress videos, remove backgrounds, and resize images for social media - all with the power of AI.
+                Start with 2 free credits today.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button size="lg" asChild>
+                  <Link href="/sign-up">Get Started Free</Link>
+                </Button>
+                <Button size="lg" variant="outline" asChild>
+                  <Link href="#learnmore">Learn More</Link>
+                </Button>
+              </div>
+              <div className="flex items-center gap-4 text-sm text-gray-500">
+                <div className="flex items-center gap-1">
+                  <CheckCircle className="h-4 w-4 text-primary" />
+                  <span>No credit card required</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <CheckCircle className="h-4 w-4 text-primary" />
+                  <span>Cancel anytime</span>
+                </div>
+              </div>
+            </div>
+            <div className="relative lg:h-[600px] flex items-center justify-center">
+              <HeroImage />
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="container mx-auto px-10 py-16">
-        <h2 className="sm:text-3xl text-2xl font-bold text-center text-white mb-12">
-          Our AI-Powered Services
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Feature 1: Background Removal */}
-          <div className="card bg-base-200 shadow-lg">
-            <div className="card-body items-center text-center">
-              <div className="mb-4">
-                <Image
-                  src="/bg-remove.png"
-                  width={1000}
-                  height={1000}
-                  sizes="fill"
-                  alt="Background Removal"
-                />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">Background Removal</h3>
-              <p className="text-white">
-                Effortlessly remove backgrounds from images with AI precision.
-              </p>
-            </div>
+      <section id="features" className="py-20 bg-white">
+        <div className="container px-4 md:px-6 mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Powerful Features</h2>
+            <p className="text-gray-500 md:text-lg max-w-[800px] mx-auto">
+              Resizely combines cutting-edge AI with intuitive design to make media processing simple and efficient.
+            </p>
           </div>
-
-          {/* Feature 2: Image Resizing */}
-          <div className="card bg-base-200 shadow-lg">
-            <div className="card-body items-center text-center">
-              <div className="mb-4">
-                <Image
-                  src="/resize.png"
-                  width={1000}
-                  height={1000}
-                  alt="Image Resizing"
-                />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">Image Resizing</h3>
-              <p className="text-white">
-                Resize images for any social media platform with AI content awareness.
-              </p>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <FeatureCard
+              src="https://res.cloudinary.com/dnr1sgjrx/image/upload/v1744802385/videocomp_kweghx.png"
+              icon={<Video className="h-8 w-8 text-primary" />}
+              title="Video Compression"
+              description="Reduce file sizes without sacrificing quality. Perfect for websites, social media, and email attachments."
+            />
+            <FeatureCard
+              src="https://res.cloudinary.com/dnr1sgjrx/image/upload/v1744802385/bg-remove_booi8p.png"
+              icon={<Scissors className="h-8 w-8 text-primary" />}
+              title="Background Removal"
+              description="Instantly remove backgrounds from images with our advanced AI. No more tedious manual editing."
+            />
+            <FeatureCard
+              src="https://res.cloudinary.com/dnr1sgjrx/image/upload/v1744802387/resize_jk2jwt.png"
+              icon={<ImageIcon className="h-8 w-8 text-primary" />}
+              title="Social Media Resizer"
+              description="Automatically resize your images for any social platform with AI that preserves the important parts."
+            />
           </div>
+        </div>
+      </section>
 
-          {/* Feature 3: Video Compression */}
-          <div className="card bg-base-200 shadow-lg">
-            <div className="card-body items-center text-center">
-              <div className="mb-4">
-                <Image
-                  src="/videocomp.png"
-                  width={1000}
-                  height={1000}
-                  alt="Video Compression"
-                />
+      {/* How It Works */}
+      <section id="learnmore" className="py-20 bg-gray-50">
+        <div className="container px-4 md:px-6 mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">How It Works</h2>
+            <p className="text-gray-500 md:text-lg max-w-[800px] mx-auto">
+              Resizely makes media processing simple with just three easy steps.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100 text-center">
+              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span className="text-primary font-bold text-xl">1</span>
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">Video Compression</h3>
-              <p className="text-white">
-                Compress videos without losing quality using AI-powered algorithms.
-              </p>
+              <h3 className="text-xl font-bold mb-3">Upload Your Media</h3>
+              <p className="text-gray-500">Drag and drop your videos or images onto our platform.</p>
+            </div>
+            <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100 text-center">
+              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span className="text-primary font-bold text-xl">2</span>
+              </div>
+              <h3 className="text-xl font-bold mb-3">Choose Your Options</h3>
+              <p className="text-gray-500">Select compression level, background removal, or social media platform.</p>
+            </div>
+            <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100 text-center">
+              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span className="text-primary font-bold text-xl">3</span>
+              </div>
+              <h3 className="text-xl font-bold mb-3">Download & Share</h3>
+              <p className="text-gray-500">Get your optimized media instantly and share it anywhere.</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="bg-base-200 p-10 py-16">
-        <div className="container mx-auto px-6">
-          <h2 className="text-3xl font-bold text-center text-white mb-12">
-            Pricing Plans
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Free Plan */}
-            <div className="card bg-base-100 shadow-lg">
-              <div className="card-body text-center">
-                <h3 className="text-2xl font-bold text-white mb-4">Free Plan</h3>
-                <p className="text-warning text-md mb-6">Get started with 5 free credits.</p>
-                <div className="text-4xl font-bold text-primary mb-6">₹0</div>
-                <Link
-                  href="/signup"
-                  className="btn btn-primary px-8 py-3 font-semibold"
-                >
-                  Sign Up
-                </Link>
-              </div>
-            </div>
-
-            {/* Pro Plan */}
-            <div className="card bg-base-100 shadow-lg">
-              <div className="card-body text-center">
-                <h3 className="text-2xl font-bold  text-white mb-4">Pro Plan</h3>
-                <p className="text-warning text-md mb-6">10 credits for just ₹500.</p>
-                <div className="text-4xl font-bold text-primary mb-6">₹500</div>
-                <Link
-                  href="/signup"
-                  className="btn btn-primary px-8 py-3 font-semibold"
-                >
-                  Upgrade Now
-                </Link>
-              </div>
-            </div>
+      <section id="pricing" className="py-20 bg-white">
+        <div className="container px-4 md:px-6 mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Simple Credit-Based Pricing</h2>
+            <p className="text-gray-500 md:text-lg max-w-[800px] mx-auto">
+              Start with 2 free credits. Purchase more credits as you need them. No subscriptions or hidden fees.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <PricingCard2
+              title="Starter"
+              price="Free"
+              description="Perfect for trying out Resizely"
+              features={[
+                "2 free credits",
+                "1 credit = 1 video compression",
+                "1 credit = 1 background removal",
+                "1 credit = 5 social media resizes",
+                "Credits never expire",
+                "Basic support",
+              ]}
+              buttonText="Get Started"
+              buttonVariant="outline"
+            />
+            <PricingCard2
+              title="Standard"
+              price="$20"
+              description="Most popular for individuals"
+              features={[
+                "20 credits",
+                "1 credit = 1 video compression",
+                "1 credit = 1 background removal",
+                "1 credit = 5 social media resizes",
+                "Credits never expire",
+                "Priority support",
+              ]}
+              buttonText="Buy Credits"
+              buttonVariant="default"
+              popular={true}
+            />
+            <PricingCard2
+              title="Pro"
+              price="$40"
+              description="Best value for professionals"
+              features={[
+                "60 credits",
+                "1 credit = 1 video compression",
+                "1 credit = 1 background removal",
+                "1 credit = 5 social media resizes",
+                "Credits never expire",
+                "Priority support",
+                "API access",
+              ]}
+              buttonText="Buy Credits"
+              buttonVariant="outline"
+            />
+          </div>
+          <div className="mt-12 text-center">
+            <p className="text-gray-500 mb-4">Need more credits? Contact us for custom enterprise packages.</p>
+            <Button variant="link" asChild>
+              <Link href="#">Contact Sales</Link>
+            </Button>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-base-200 py-8">
-        <div className="container mx-auto px-6 text-center">
-          <p className="text-base-content">
-            &copy; {new Date().getFullYear()} AI Studio. All rights reserved.
-          </p>
+      {/* CTA Section */}
+      <section className="py-20 bg-primary">
+        <div className="container px-4 md:px-6 mx-auto">
+          <div className="text-center max-w-[800px] mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Ready to Transform Your Media?</h2>
+            <p className="text-primary-foreground/80 md:text-lg mb-8">
+              Start with 2 free credits and experience the power of Resizely&#39s AI-powered media tools.
+            </p>
+            <Button size="lg" variant="secondary" asChild>
+              <Link href="/sign-up">Get Started for Free</Link>
+            </Button>
+          </div>
         </div>
-      </footer>
-    </div>
-  );
-}
+      </section>
 
-export default Landing;
+      <Footer />
+    </div>
+  )
+}

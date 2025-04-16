@@ -16,8 +16,8 @@ const generatedSignature = (
 };
 
 export async function POST(request: NextRequest) {
-  const { orderCreationId, razorpayPaymentId, razorpaySignature } =
-    await request.json();
+  const { orderCreationId, razorpayPaymentId, razorpaySignature, plan } = await request.json();
+
   const signature = generatedSignature(orderCreationId, razorpayPaymentId);
 
   if (signature !== razorpaySignature) {
@@ -41,19 +41,19 @@ export async function POST(request: NextRequest) {
       include: { Credit: true },
     });
 
-    if (!dbUser || !dbUser.Credit) {
+    if (!dbUser || !dbUser.Credit || !plan) {
       return NextResponse.json(
         { error: "User or credits not found" },
         { status: 404 }
       );
     }
 
-
     const userCredits = dbUser.Credit[0];
+    const incrementValue: number = plan === 171300 ? 20 : 60;
 
     const updatedCredits = await prisma.credit.update({
       where: { id: userCredits.id },
-      data: { credits: { increment: 10 } },
+      data: { credits: { increment: incrementValue } },
     });
 
 
@@ -63,7 +63,11 @@ export async function POST(request: NextRequest) {
 
 
     return NextResponse.json(
-      { message: "Payment verified successfully", isOk: true, updatedCredits: updatedCredits.credits },
+      { 
+        message: "Payment verified successfully",
+        isOk: true, 
+        updatedCredits: updatedCredits.credits 
+      },
       { status: 200 }
     );
   } catch (error) {
