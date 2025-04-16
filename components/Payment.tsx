@@ -1,10 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { Loader2 } from "lucide-react";
-import toast from "react-hot-toast";
-import { useSession } from "next-auth/react";
-import { usePayment } from "@/hooks/usePayment";
+import PricingCard from "./Pricing-card";
 declare global {
   interface Window {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -12,68 +8,73 @@ declare global {
   }
 }
 
-function Payment() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<unknown>();
-  const { data } = useSession();
-
-  const { options, paymentError, message } = usePayment(data?.user?.name, data?.user?.email)
+function Payment(){
   
-  const processPayment = async () => {
-    setLoading(true);
-    try {
-      if (!data?.user) {
-        return;
-      }
-
-      if (!window.Razorpay) {
-        toast.error("Razorpay SDK failed to load. Please refresh and try again.");
-        setLoading(false);
-        return;
-      }
-
-      if (paymentError) {
-        toast.error(message || "Internal server error.")
-        setError(message)
-        return
-      }
-
-      const paymentObject = new window.Razorpay(options);
-      paymentObject.open();
-
-    } catch (error) {
-      setError(error)
-      toast.error("Error processing payment. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (!data || !data.user) return null;
-  if (error) {
-    toast.error("Sorry for inconvenience")
-  }
-
   return (
     <>
-
-      <div className="container flex flex-col items-center justify-center p-4">
-        <div className="bg-white shadow-lg rounded-2xl p-6 text-center w-full max-w-sm">
-          <h2 className="text-2xl font-semibold text-primary mb-4">Buy Credits</h2>
-          <p className="text-gray-600">
-            Get <span className="font-bold">10 Credits</span> for just
-          </p>
-          <p className="text-3xl font-bold text-blue-600 my-3">₹500</p>
-
-          <button
-            onClick={processPayment}
-            disabled={loading}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl shadow-md w-full flex items-center justify-center"
-          >
-            {loading ? <Loader2 className="animate-spin w-5 h-5 mr-2" /> : "Buy Now"}
-          </button>
+      <section id="pricing" className="py-2 bg-white">
+        <div className="container px-4 md:px-6 mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Simple Credit-Based Pricing</h2>
+            <p className="text-gray-500 md:text-lg max-w-[800px] mx-auto">
+              Start with 2 free credits. Purchase more credits as you need them. No subscriptions or hidden fees.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <PricingCard
+              title="Starter"
+              price="Free"
+              description="Perfect for trying out Resizely"
+              features={[
+                "2 free credits",
+                "1 credit = 1 video compression",
+                "1 credit = 1 background removal",
+                "1 credit = 5 social media resizes",
+                "Credits never expire",
+                "Basic support",
+              ]}
+              buttonText="Get Started"
+              buttonVariant="outline"
+              free={true}
+            />
+            <div>
+              <PricingCard
+                title="Standard"
+                price="$20"
+                description="Most popular for individuals"
+                features={[
+                  "20 credits",
+                  "1 credit = 1 video compression",
+                  "1 credit = 1 background removal",
+                  "1 credit = 5 social media resizes",
+                  "Credits never expire",
+                  "Priority support",
+                ]}
+                buttonText="Buy Credits"
+                buttonVariant="default"
+                popular={true}
+              />
+            </div>
+            <PricingCard
+              title="Pro"
+              price="$40"
+              description="Best value for professionals"
+              features={[
+                "60 credits",
+                "1 credit = 1 video compression",
+                "1 credit = 1 background removal",
+                "1 credit = 5 social media resizes",
+                "Credits never expire",
+                "Priority support",
+                "API access",
+              ]}
+              buttonText="Buy Credits"
+              buttonVariant="outline"
+              pro={true}
+            />
+          </div>
         </div>
-      </div>
+      </section>
     </>
   );
 }
