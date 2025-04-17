@@ -22,6 +22,7 @@ export const sendMail = async (email: string, otp: string) => {
 
     return mailresponse
   } catch (error: any) {
+    console.log(error)
     throw new Error(error.message)
   }
 

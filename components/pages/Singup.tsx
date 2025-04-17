@@ -23,7 +23,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Label} from "../ui/label";
+import { Label } from "../ui/label";
+import { registerUser } from "@/actions/registerUser";
 
 export default function Signup() {
   const [username, setUsername] = useState("");
@@ -32,8 +33,6 @@ export default function Signup() {
   const [verification, setVerification] = useState(false);
   const [code, setCode] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState<unknown>();
-
   const { loading, setLoading } = useLoader();
   const router = useRouter();
 
@@ -48,9 +47,18 @@ export default function Signup() {
 
     setLoading(true);
     try {
+      const { success } = await registerUser({
+        email: emailAddress,
+        password,
+        username,
+      });
+
+      if (!success) {
+        throw new Error("Registration failed");
+      }
+
       await signIn("credentials", {
         email: emailAddress,
-        username,
         password,
         redirect: false,
       });
@@ -59,8 +67,9 @@ export default function Signup() {
       toast.success("OTP sent to your email.");
       setVerification(true);
     } catch (err) {
-      setError(err);
-      toast.error("Something went wrong.");
+      console.error(err);
+      const errorMessage = err instanceof Error ? err.message : "Something went wrong";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -77,16 +86,11 @@ export default function Signup() {
       toast.success("Email verified successfully.");
       router.push("/social-share");
     } catch (err) {
-      setError(err);
-      toast.error("Signup failed, try again.");
+      return toast.error("Signup failed, try again.");
     } finally {
       setLoading(false);
     }
   };
-
-  if (error) {
-    toast.error("Something went wrong.");
-  }
 
   return (
     <>

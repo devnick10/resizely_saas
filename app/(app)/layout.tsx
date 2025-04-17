@@ -65,7 +65,7 @@ export default function AppLayout({
 
   if (error) toast.error("Sorry for inconvenience");
   if (!data || !data.user) return null;
-
+ 
   return (
     <div className="flex min-h-screen">
       <Sheet open={open} onOpenChange={setOpen}>

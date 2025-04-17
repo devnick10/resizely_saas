@@ -26,69 +26,32 @@ export const authOptions = {
                 username: { label: "Username", type: "text", placeholder: "Username", },
                 password: { label: "Password", type: "password", placeholder: "Password", required: true }
             },
-            async authorize(credentials: CredentialsType | undefined) {
-
-                const { success, data } = credentialsSchema.safeParse(credentials)
+            async authorize(credentials: CredentialsType | undefined): Promise<User | null> {
+                const { success, data } = credentialsSchema.safeParse(credentials);
 
                 if (!success) {
-                    throw new Error("Missing email or password");
+                    return null;
                 }
 
                 const existingUser = await prisma.user.findUnique({
                     where: { email: data.email }
                 });
 
-
-                if (!existingUser) {
-                    throw new Error("No user found with this email.");
+                if (!existingUser || !existingUser.password) {
+                    throw new Error("User not found or invalid password setup");
                 }
 
-                if (existingUser) {
-                    if (existingUser.password) {
+                const isPasswordValid = await bcrypt.compare(data.password, existingUser.password);
 
-                        const isPasswordValid = await bcrypt.compare(data.password, existingUser.password);
-                        if (!isPasswordValid) {
-                            throw new Error("Invalid credentials");
-                        }
-
-                        return {
-                            id: existingUser.id,
-                            username: existingUser.username,
-                            email: existingUser.email
-                        }
-                    };
+                if (!isPasswordValid) {
+                    return null;
                 }
 
-                const hashedPassword = await bcrypt.hash(data.password, 10);
-
-                try {
-
-                    const { user } = await prisma.$transaction(async (tx) => {
-                        const user = await tx.user.create({
-                            data: {
-                                email: data.email,
-                                username: data.username || data.email.split("@")[0],
-                                password: hashedPassword
-                            },
-                        });
-                        await tx.credit.create({
-                            data: {
-                                userId: user.id
-                            },
-                        });
-
-                        return { user };
-                    });
-
-                    return {
-                        id: user.id,
-                        name: user.username,
-                        email: user.email
-                    };
-                } catch (error) {
-                    console.error(error)
-                    throw new Error("Failed to create user");
-                }
+                return {
+                    id: existingUser.id,
+                    name: existingUser.username || existingUser.email.split("@")[0],
+                    email: existingUser.email
+                };
             }
         }),
         GoogleProvider({
@@ -96,7 +59,7 @@ export const authOptions = {
             clientSecret: process.env.GOOGLE_CLIENT_SECRET || ""
         })
     ],
-    secret: process.env.NEXTAUTH_SECRET || "secret",
+    secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
         async signIn({ user, account }: { user: User; account: Account | null }): Promise<boolean> {
             if (account?.provider === "google") {
