@@ -2,7 +2,7 @@
 
 Resizely is a **credit-based** SaaS application designed to make media processing easy and efficient. Users can **resize images**, **compress videos**, and **remove backgrounds**, with a **credit system** that provides free credits and a seamless **Razorpay integration** for purchasing more.
 
-##### The app will be live at **http://localhost:3000**  
+##### The app will be live at **https://resizely.devnikhil.xyz**  
 ---
 
 ## 🌟 Features  
