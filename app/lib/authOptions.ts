@@ -38,6 +38,11 @@ export const authOptions = {
                     where: { email: data.email }
                 });
 
+
+                if (!existingUser) {
+                    throw new Error("No user found with this email.");
+                }
+
                 if (existingUser) {
                     if (existingUser.password) {
 
