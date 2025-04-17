@@ -86,6 +86,7 @@ export default function Signup() {
       toast.success("Email verified successfully.");
       router.push("/social-share");
     } catch (err) {
+      console.error(err)
       return toast.error("Signup failed, try again.");
     } finally {
       setLoading(false);
