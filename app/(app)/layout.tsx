@@ -1,4 +1,5 @@
 "use client";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -20,6 +21,7 @@ import { getCredits } from "@/actions/getCredits";
 import {
   Sheet,
   SheetContent,
+  SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -65,7 +67,8 @@ export default function AppLayout({
 
   if (error) toast.error("Sorry for inconvenience");
   if (!data || !data.user) return null;
- 
+
+
   return (
     <div className="flex min-h-screen">
       <Sheet open={open} onOpenChange={setOpen}>
@@ -74,7 +77,10 @@ export default function AppLayout({
             <MenuIcon className="h-10 w-10 " />
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-64 p-0">
+        <SheetContent side="left" className="w-64 p-0" >
+        <VisuallyHidden>
+          <SheetTitle>Sidebar Menu</SheetTitle>
+        </VisuallyHidden>
           <Sidebar pathname={pathname} setOpen={setOpen} credits={credits} />
         </SheetContent>
       </Sheet>
@@ -98,7 +104,7 @@ export default function AppLayout({
               </div>
             </div>
             <div className="flex items-center gap-2">
-              {data.user.image && (
+              {data.user.image ? (
                 <Image
                   src={data.user.image}
                   alt={data.user.name || "Avatar"}
@@ -106,19 +112,21 @@ export default function AppLayout({
                   height={32}
                   className="rounded-full"
                 />
-              )}
-              <span className="font-medium text-sm truncate max-w-[100px] sm:max-w-[150px]">
-                {data.user.name}
-              </span>
-              <Button
-                onClick={handleSignOut}
-                variant="outline"
-                size="icon"
-                className="shrink-0"
-              >
-                <LogOutIcon className="h-5 w-5" />
-              </Button>
-            </div>
+              ) : <div className="bg-slate-200 flex items-center justify-center p-2.5 sm:p-4  font-bold border border-black rounded-full w-4 h-4">
+                {data.user.name?.charAt(0).toUpperCase()}
+                </div>}
+                <span className="font-medium text-sm truncate max-w-[100px] sm:max-w-[150px]">
+                  {data.user.name || data.user.email?.split("@")[0]}
+                </span>
+                <Button
+                  onClick={handleSignOut}
+                  variant="outline"
+                  size="icon"
+                  className="shrink-0"
+                >
+                  <LogOutIcon className="h-5 w-5" />
+                </Button>
+              </div>
           </div>
         </header>
 
@@ -128,7 +136,7 @@ export default function AppLayout({
   );
 }
 
-function Sidebar({ pathname, setOpen, credits }: {pathname:string,setOpen:Dispatch<SetStateAction<boolean>>,credits?:number}) {
+function Sidebar({ pathname, setOpen, credits }: { pathname: string, setOpen: Dispatch<SetStateAction<boolean>>, credits?: number }) {
   const router = useRouter();
   return (
     <div className="flex pt-8 sm:pt-2 flex-col h-full justify-between">

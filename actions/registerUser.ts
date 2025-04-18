@@ -16,10 +16,10 @@ export async function registerUser({
     username,
 }: RegisterUserInput) {
 
-    const { success, data } = credentialsSchema.safeParse({ email, password, username })
+    const { success, data ,error} = credentialsSchema.safeParse({ email, password, username })
 
     if (!success) {
-        throw new Error("Invalid creadentials")
+        throw new Error(error.issues[0].message)
     }
 
     const existingUser = await prisma.user.findUnique({ where: { email } })
