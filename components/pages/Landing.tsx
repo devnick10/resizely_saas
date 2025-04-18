@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { CheckCircle, Zap, ImageIcon, Video, Scissors } from "lucide-react"
+import { CheckCircle, Zap} from "lucide-react"
 import FeatureCard from "@/components/Feature-card"
 import Header from "@/components/header"
 import Footer from "@/components/Footer"
@@ -187,7 +187,7 @@ export default function Home() {
           <div className="text-center max-w-[800px] mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Transform Your Media?</h2>
             <p className="text-primary-foreground/80 md:text-lg mb-8">
-              Start with 2 free credits and experience the power of Resizely's AI-powered media tools.
+              Start with 2 free credits and experience the power of Resizely&apos;s AI-powered media tools.
             </p>
             <Button size="lg" variant="secondary" asChild>
               <Link href="/sign-up">Get Started for Free</Link>
