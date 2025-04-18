@@ -16,7 +16,7 @@ interface PricingCardProps {
   buttonVariant: "default" | "outline" | "secondary";
   popular?: boolean;
   pro?: boolean;
-  free?:boolean
+  free?: boolean
 }
 
 export default function PricingCard({
@@ -35,13 +35,13 @@ export default function PricingCard({
   const { data } = useSession();
 
   const selectedPlan = pro ? Plan.Pro : Plan.Standard;
- 
+
   const { options, paymentError, message } = usePayment({
-    name:data?.user?.name,
-    email:data?.user?.email,
-    plan:selectedPlan
+    name: data?.user?.name,
+    email: data?.user?.email,
+    plan: selectedPlan
   });
-  
+
   const processPayment = async () => {
     setLoading(true);
 
@@ -79,27 +79,31 @@ export default function PricingCard({
 
   return (
     <div
-      className={`bg-white p-8 rounded-lg border ${popular ? "border-primary shadow-lg relative" : "border-gray-200 shadow-sm"
-        } flex flex-col h-full`}
+      className={`bg-white dark:bg-muted p-8 rounded-lg border ${popular
+          ? "border-primary shadow-lg relative"
+          : "border-gray-200 dark:border-gray-700 shadow-sm"
+        } flex flex-col h-full transition-colors`}
     >
       {popular && (
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-primary text-white text-xs font-bold py-1 px-3 rounded-full">
           Most Popular
         </div>
       )}
+
       <div className="mb-6">
-        <h3 className="text-xl font-bold mb-2">{title}</h3>
+        <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">{title}</h3>
         <div className="flex items-baseline mb-2">
-          <span className="text-3xl font-bold">{price}</span>
-          <span className="text-gray-500 ml-1">/month</span>
+          <span className="text-3xl font-bold text-gray-900 dark:text-white">{price}</span>
+          <span className="text-gray-500 dark:text-gray-400 ml-1">/month</span>
         </div>
-        <p className="text-gray-500">{description}</p>
+        <p className="text-gray-500 dark:text-gray-400">{description}</p>
       </div>
+
       <ul className="space-y-3 mb-8 flex-grow">
         {features.map((feature, index) => (
           <li key={index} className="flex items-start">
             <CheckCircle className="h-5 w-5 text-primary shrink-0 mr-2" />
-            <span>{feature}</span>
+            <span className="text-gray-700 dark:text-gray-200">{feature}</span>
           </li>
         ))}
       </ul>
@@ -107,16 +111,17 @@ export default function PricingCard({
       <Button
         variant={buttonVariant}
         className="w-full"
-        onClick={()=>{
+        onClick={() => {
           if (free) {
-            return toast.success("You already have free plan.")
+            return toast.success("You already have free plan.");
           }
-          processPayment()
+          processPayment();
         }}
         disabled={loading}
       >
         {loading ? "Processing..." : buttonText}
       </Button>
     </div>
+
   );
 }

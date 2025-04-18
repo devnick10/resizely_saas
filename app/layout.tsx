@@ -23,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <link rel="shortcut icon" href="/icon.png" type="image/png" />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

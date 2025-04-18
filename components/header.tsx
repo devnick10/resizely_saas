@@ -4,6 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
+import { ModeToggle } from "./ModeToggle"
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -34,6 +35,7 @@ export default function Header() {
           <Button asChild>
             <Link href="/sign-up">Sign up</Link>
           </Button>
+        <ModeToggle/>
         </div>
         <button
           className="md:hidden"

@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { ModeToggle } from "@/components/ModeToggle";
 
 const sidebarItems = [
   { href: "/home", icon: LayoutDashboardIcon, label: "Home Page" },
@@ -70,35 +71,35 @@ export default function AppLayout({
 
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-white dark:bg-background text-black dark:text-white transition-colors">
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
-          <Button variant="ghost" size="icon" className="lg:hidden m-2">
-            <MenuIcon className="h-10 w-10 " />
+          <Button variant="ghost" size="icon" className="lg:hidden m-2 dark:text-gray-200 dark:hover:bg-muted">
+            <MenuIcon className="h-10 w-10" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-64 p-0" >
-        <VisuallyHidden>
-          <SheetTitle>Sidebar Menu</SheetTitle>
-        </VisuallyHidden>
+        <SheetContent side="left" className="w-64 p-0 dark:bg-muted dark:border-gray-800">
+          <VisuallyHidden>
+            <SheetTitle>Sidebar Menu</SheetTitle>
+          </VisuallyHidden>
           <Sidebar pathname={pathname} setOpen={setOpen} credits={credits} />
         </SheetContent>
       </Sheet>
 
-      <aside className="hidden lg:flex flex-col w-64 border-r border-gray-200 bg-white pt-10">
+      <aside className="hidden lg:flex flex-col w-64 border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-muted pt-10">
         <Sidebar pathname={pathname} setOpen={setOpen} credits={credits} />
       </aside>
 
       <main className="flex-1">
         <Script id="razorpay-checkout-js" src="https://checkout.razorpay.com/v1/checkout.js" />
-        <header className="px-4 py-2 border-b border-gray-200 flex flex-wrap md:flex-nowrap justify-between items-center bg-white gap-4">
-          <Link href="/" className="text-xl font-bold text-blue-500">
+        <header className="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex flex-wrap md:flex-nowrap justify-between items-center bg-white dark:bg-muted gap-4">
+          <Link href="/" className="text-xl font-bold text-primary">
             Resizely
           </Link>
 
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 ml-auto">
             <div className="hidden sm:block flex items-center gap-4">
-              <div className="flex border border-black rounded-md p-2 items-center gap-2 text-yellow-500">
+              <div className="flex border border-black dark:border-gray-700 rounded-md p-2 items-center gap-2 text-yellow-500">
                 <CoinsIcon className="h-5 w-5" />
                 <span>{credits ?? 0} Credits</span>
               </div>
@@ -112,25 +113,29 @@ export default function AppLayout({
                   height={32}
                   className="rounded-full"
                 />
-              ) : <div className="bg-slate-200 flex items-center justify-center p-2.5 sm:p-4  font-bold border border-black rounded-full w-4 h-4">
-                {data.user.name?.charAt(0).toUpperCase()}
-                </div>}
-                <span className="font-medium text-sm truncate max-w-[100px] sm:max-w-[150px]">
-                  {data.user.name || data.user.email?.split("@")[0]}
-                </span>
-                <Button
-                  onClick={handleSignOut}
-                  variant="outline"
-                  size="icon"
-                  className="shrink-0"
-                >
-                  <LogOutIcon className="h-5 w-5" />
-                </Button>
-              </div>
+              ) : (
+                <div className="bg-gray-200 dark:bg-gray-600 flex items-center justify-center p-2.5 sm:p-4 font-bold border border-gray-300 dark:border-gray-600 rounded-full w-4 h-4">
+                  {data.user.name?.charAt(0).toUpperCase()}
+                </div>
+              )}
+              <span className="font-medium text-sm truncate max-w-[100px] sm:max-w-[150px] dark:text-gray-200">
+                {data.user.name || data.user.email?.split("@")[0]}
+              </span>
+              <Button
+                onClick={handleSignOut}
+                variant="outline"
+                size="icon"
+                className="shrink-0 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-800"
+              >
+                <LogOutIcon className="h-5 w-5" />
+              </Button>
+        <ModeToggle/>
+
+            </div>
           </div>
         </header>
 
-        <div className="p-6">{children}</div>
+        <div className="p-6 dark:bg-background">{children}</div>
       </main>
     </div>
   );
@@ -159,7 +164,7 @@ function Sidebar({ pathname, setOpen, credits }: { pathname: string, setOpen: Di
       <div className="p-4">
         <Separator className="mb-4" />
         <div className="sm:hidden block w-full flex items-center gap-4">
-          <div className="flex w-full justify-center border border-black rounded-md p-2 items-center gap-2 text-yellow-500">
+          <div className="flex border w-full justify-center border-black dark:border-gray-700 rounded-md p-2 items-center gap-2 text-yellow-500">
             <CoinsIcon className="h-5 w-5" />
             <span>{credits ?? 0} Credits</span>
           </div>
@@ -167,10 +172,10 @@ function Sidebar({ pathname, setOpen, credits }: { pathname: string, setOpen: Di
         <Separator className="mb-4" />
         <Button
           onClick={() => router.push("/payment")}
-          className="w-full mb-2"
+          className="w-full mb-2 border dark:border-gray-700"
           variant="secondary"
         >
-          <CoinsIcon className="w-4 h-4 mr-2" /> Buy Credits
+          <CoinsIcon className="w-4 h-4 mr-2 text-yellow-500" /> Buy Credits
         </Button>
         <Button
           onClick={() => signOut({ callbackUrl: "/" })}

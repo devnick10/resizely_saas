@@ -9,22 +9,22 @@ import PricingCard2 from "../ui/pricing-card"
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-white dark:bg-background text-black dark:text-white transition-colors">
       <Header />
 
       {/* Hero Section */}
-      <section className="relative py-20 md:py-32 overflow-hidden bg-gradient-to-b from-white to-gray-50">
+      <section className="relative py-20 md:py-32 overflow-hidden bg-gradient-to-b from-white to-gray-50 dark:from-background dark:to-background">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="flex flex-col gap-6">
-              <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary/10 text-primary hover:bg-primary/20 w-fit">
+              <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold border-transparent bg-primary/10 text-primary hover:bg-primary/20 w-fit">
                 <Zap className="h-3.5 w-3.5 mr-1" />
                 Powered by AI
               </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter">
                 Transform Your Media <span className="text-primary">Effortlessly</span>
               </h1>
-              <p className="text-gray-500 md:text-xl max-w-[600px]">
+              <p className="text-gray-600 dark:text-gray-400 md:text-xl max-w-[600px]">
                 Compress videos, remove backgrounds, and resize images for social media - all with the power of AI.
                 Start with 2 free credits today.
               </p>
@@ -36,7 +36,7 @@ export default function Home() {
                   <Link href="#learnmore">Learn More</Link>
                 </Button>
               </div>
-              <div className="flex items-center gap-4 text-sm text-gray-500">
+              <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
                 <div className="flex items-center gap-1">
                   <CheckCircle className="h-4 w-4 text-primary" />
                   <span>No credit card required</span>
@@ -55,30 +55,27 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 bg-white">
+      <section id="features" className="py-20 bg-white dark:bg-background">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Powerful Features</h2>
-            <p className="text-gray-500 md:text-lg max-w-[800px] mx-auto">
+            <p className="text-gray-600 dark:text-gray-400 md:text-lg max-w-[800px] mx-auto">
               Resizely combines cutting-edge AI with intuitive design to make media processing simple and efficient.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <FeatureCard
               src="https://res.cloudinary.com/dnr1sgjrx/image/upload/v1744802385/videocomp_kweghx.png"
-              icon={<Video className="h-8 w-8 text-primary" />}
               title="Video Compression"
               description="Reduce file sizes without sacrificing quality. Perfect for websites, social media, and email attachments."
             />
             <FeatureCard
               src="https://res.cloudinary.com/dnr1sgjrx/image/upload/v1744802385/bg-remove_booi8p.png"
-              icon={<Scissors className="h-8 w-8 text-primary" />}
               title="Background Removal"
               description="Instantly remove backgrounds from images with our advanced AI. No more tedious manual editing."
             />
             <FeatureCard
               src="https://res.cloudinary.com/dnr1sgjrx/image/upload/v1744802387/resize_jk2jwt.png"
-              icon={<ImageIcon className="h-8 w-8 text-primary" />}
               title="Social Media Resizer"
               description="Automatically resize your images for any social platform with AI that preserves the important parts."
             />
@@ -87,46 +84,42 @@ export default function Home() {
       </section>
 
       {/* How It Works */}
-      <section id="learnmore" className="py-20 bg-gray-50">
+      <section id="learnmore" className="py-20 bg-gray-50 dark:bg-muted/50">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">How It Works</h2>
-            <p className="text-gray-500 md:text-lg max-w-[800px] mx-auto">
+            <p className="text-gray-600 dark:text-gray-400 md:text-lg max-w-[800px] mx-auto">
               Resizely makes media processing simple with just three easy steps.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100 text-center">
-              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-primary font-bold text-xl">1</span>
+            {[1, 2, 3].map((step, idx) => (
+              <div key={idx} className="bg-white dark:bg-muted p-8 rounded-lg shadow-sm border border-gray-100 dark:border-gray-800 text-center">
+                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <span className="text-primary font-bold text-xl">{step}</span>
+                </div>
+                <h3 className="text-xl font-bold mb-3">
+                  {step === 1 ? "Upload Your Media" : step === 2 ? "Choose Your Options" : "Download & Share"}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  {step === 1
+                    ? "Drag and drop your videos or images onto our platform."
+                    : step === 2
+                      ? "Select compression level, background removal, or social media platform."
+                      : "Get your optimized media instantly and share it anywhere."}
+                </p>
               </div>
-              <h3 className="text-xl font-bold mb-3">Upload Your Media</h3>
-              <p className="text-gray-500">Drag and drop your videos or images onto our platform.</p>
-            </div>
-            <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100 text-center">
-              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-primary font-bold text-xl">2</span>
-              </div>
-              <h3 className="text-xl font-bold mb-3">Choose Your Options</h3>
-              <p className="text-gray-500">Select compression level, background removal, or social media platform.</p>
-            </div>
-            <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100 text-center">
-              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-primary font-bold text-xl">3</span>
-              </div>
-              <h3 className="text-xl font-bold mb-3">Download & Share</h3>
-              <p className="text-gray-500">Get your optimized media instantly and share it anywhere.</p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-20 bg-white">
+      <section id="pricing" className="py-20 bg-white dark:bg-background">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Simple Credit-Based Pricing</h2>
-            <p className="text-gray-500 md:text-lg max-w-[800px] mx-auto">
+            <p className="text-gray-600 dark:text-gray-400 md:text-lg max-w-[800px] mx-auto">
               Start with 2 free credits. Purchase more credits as you need them. No subscriptions or hidden fees.
             </p>
           </div>
@@ -180,7 +173,7 @@ export default function Home() {
             />
           </div>
           <div className="mt-12 text-center">
-            <p className="text-gray-500 mb-4">Need more credits? Contact us for custom enterprise packages.</p>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">Need more credits? Contact us for custom enterprise packages.</p>
             <Button variant="link" asChild>
               <Link href="#">Contact Sales</Link>
             </Button>
@@ -189,12 +182,12 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-primary">
+      <section className="py-20 bg-primary text-white">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="text-center max-w-[800px] mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Ready to Transform Your Media?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Transform Your Media?</h2>
             <p className="text-primary-foreground/80 md:text-lg mb-8">
-              Start with 2 free credits and experience the power of Resizely&#39s AI-powered media tools.
+              Start with 2 free credits and experience the power of Resizely's AI-powered media tools.
             </p>
             <Button size="lg" variant="secondary" asChild>
               <Link href="/sign-up">Get Started for Free</Link>
@@ -204,6 +197,5 @@ export default function Home() {
       </section>
 
       <Footer />
-    </div>
-  )
+    </div>)
 }
