@@ -13,7 +13,7 @@ export default function Home() {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative py-20 md:py-32 overflow-hidden bg-gradient-to-b from-white to-gray-50 dark:from-background dark:to-background">
+      <section className="relative py-20 md:py-20 overflow-hidden bg-gradient-to-b from-white to-gray-50 dark:from-background dark:to-background">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="flex flex-col gap-6">

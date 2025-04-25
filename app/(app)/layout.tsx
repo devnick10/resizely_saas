@@ -71,32 +71,31 @@ export default function AppLayout({
 
 
   return (
-    <div className="flex min-h-screen bg-white dark:bg-background text-black dark:text-white transition-colors">
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetTrigger asChild>
-          <Button variant="ghost" size="icon" className="lg:hidden m-2 dark:text-gray-200 dark:hover:bg-muted">
-            <MenuIcon className="h-10 w-10" />
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="left" className="w-64 p-0 dark:bg-muted dark:border-gray-800">
-          <VisuallyHidden>
-            <SheetTitle>Sidebar Menu</SheetTitle>
-          </VisuallyHidden>
-          <Sidebar pathname={pathname} setOpen={setOpen} credits={credits} />
-        </SheetContent>
-      </Sheet>
-
-      <aside className="hidden lg:flex flex-col w-64 border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-muted pt-10">
-        <Sidebar pathname={pathname} setOpen={setOpen} credits={credits} />
-      </aside>
-
-      <main className="flex-1">
-        <Script id="razorpay-checkout-js" src="https://checkout.razorpay.com/v1/checkout.js" />
-        <header className="px-4 py-2 border-b border-gray-200 dark:border-gray-800 flex flex-wrap md:flex-nowrap justify-between items-center bg-white dark:bg-muted gap-4">
-          <Link href="/" className="text-xl font-bold text-primary">
-            Resizely
-          </Link>
-
+    <div className="flex flex-col h-screen bg-white dark:bg-background text-black dark:text-white transition-colors">
+      <header className="shrink-0 overflow-hidden px-2 sm:px-6 py-2 border-b border-gray-200 dark:border-gray-500 flex md:flex-nowrap justify-between items-center bg-white dark:bg-muted w-full">
+        {/* Navbar left section */}
+        <div className="flex m-0 justify-center items-center">
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="lg:hidden m-2 dark:text-gray-200 dark:hover:bg-muted">
+                <MenuIcon className="h-10 w-10" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-64 p-0 dark:bg-muted dark:border-gray-800">
+              <VisuallyHidden>
+                <SheetTitle>Sidebar Menu</SheetTitle>
+              </VisuallyHidden>
+              <Sidebar pathname={pathname} setOpen={setOpen} credits={credits} />
+            </SheetContent>
+          </Sheet>
+          <div>
+            <Link href="/" className="text-xl font-bold text-primary">
+              Resizely
+            </Link>
+          </div>
+        </div>
+        {/* Navbar right section */}
+        <div className="flex">
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 ml-auto">
             <div className="hidden sm:block flex items-center gap-4">
               <div className="flex border border-black dark:border-gray-700 rounded-md p-2 items-center gap-2 text-yellow-500">
@@ -121,22 +120,34 @@ export default function AppLayout({
               <span className="font-medium text-sm truncate max-w-[100px] sm:max-w-[150px] dark:text-gray-200">
                 {data.user.name || data.user.email?.split("@")[0]}
               </span>
-              <Button
-                onClick={handleSignOut}
-                variant="outline"
-                size="icon"
-                className="shrink-0 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-800"
-              >
-                <LogOutIcon className="h-5 w-5" />
-              </Button>
-        <ModeToggle/>
-
+              <div className="hidden sm:block">
+                <Button
+                  onClick={handleSignOut}
+                  variant="outline"
+                  size="icon"
+                  className="shrink-0 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-800"
+                >
+                  <LogOutIcon className="h-5 w-5" />
+                </Button>
+              </div>
+              <ModeToggle />
             </div>
           </div>
-        </header>
-
-        <div className="p-6 dark:bg-background">{children}</div>
-      </main>
+        </div>
+      </header>
+      <div className="flex flex-1 overflow-hidden">
+        {/* Desktop sidebar */}
+        <aside className="hidden lg:flex flex-col w-64 border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-muted">
+          <Sidebar pathname={pathname} setOpen={setOpen} credits={credits} />
+        </aside>
+        {/* Main content */}
+        <main className="flex-1 overflow-auto w-full">
+          <Script id="razorpay-checkout-js" src="https://checkout.razorpay.com/v1/checkout.js" />
+          <div className="p-0 sm:p-4 md:p-6 dark:bg-background w-full h-full">
+            {children}
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
@@ -144,7 +155,7 @@ export default function AppLayout({
 function Sidebar({ pathname, setOpen, credits }: { pathname: string, setOpen: Dispatch<SetStateAction<boolean>>, credits?: number }) {
   const router = useRouter();
   return (
-    <div className="flex pt-8 sm:pt-2 flex-col h-full justify-between">
+    <div className="overflow-hidden flex pt-8 sm:pt-2 flex-col h-full justify-between">
       <nav className="flex flex-col gap-2 p-4">
         {sidebarItems.map((item) => (
           <Button

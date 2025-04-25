@@ -69,58 +69,55 @@ function VideoUpload() {
   }
 
   return (
-    <div className="container mx-auto p-4 max-w-4xl">
+    <div className="overflow-hidden w-full mx-auto p-4 max-w-4xl">
       <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-center">
         Upload Video
       </h1>
       <p className="text-center font-semibold mb-6">
         Video Compression Service – Currently for Videos up to 70MB (More Coming Soon!) 🚀
       </p>
+        <Card className="px-2">
+          <CardHeader>
+            <CardTitle>Upload a Video</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit}>
+              <div className="space-y-2">
+                <Label htmlFor="title">Title</Label>
+                <Input
+                  id="title"
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  required
+                />
+              </div>
 
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle>Upload a Video</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <div className="space-y-2">
-              <Label htmlFor="title">Title</Label>
-              <Input
-                id="title"
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-              />
-            </div>
+              <div className="space-y-2">
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+              </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="video">Video File</Label>
-              <Input
-                id="video"
-                type="file"
-                accept="video/*"
-                onChange={(e) => setFile(e.target.files?.[0] || null)}
-                required
-              />
-            </div>
-
-            <Button type="submit" disabled={isUploading} className="w-full">
-              {isUploading ? "Uploading..." : "Upload Video"}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-
+              <div className="space-y-2 mb-4">
+                <Label htmlFor="video">Video File</Label>
+                <Input
+                  id="video"
+                  type="file"
+                  accept="video/*"
+                  onChange={(e) => setFile(e.target.files?.[0] || null)}
+                  required
+                />
+              </div>
+              <Button type="submit" disabled={isUploading} className="w-full">
+                {isUploading ? "Uploading..." : "Upload Video"}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
       <div className="mt-8">
         <Videos />
       </div>

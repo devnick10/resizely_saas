@@ -5,6 +5,7 @@ import { Video } from '@/types'
 import { getVideos } from '@/actions/getVideos'
 import { getUser } from '@/actions/getUser'
 import toast from 'react-hot-toast'
+import Loader from './Loader'
 function Videos() {
 
   const [videos, setVideos] = useState<Video[]>([])
@@ -46,7 +47,7 @@ function Videos() {
   }, [])
 
   if (loading) {
-    return <div>Loading...</div>
+    return <Loader/>
   }
 
   if (error) {
