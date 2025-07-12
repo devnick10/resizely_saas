@@ -7,16 +7,17 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { updateCredits } from "@/actions/updateCredits";
 import { imageUpload } from "@/actions/imageUpload";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const socialFormats = {
   "instagram Square (1:1)": { width: 1080, height: 1080, aspectRatio: "1:1" },
@@ -30,14 +31,18 @@ type SocialFormat = keyof typeof socialFormats;
 
 export default function SocialShare() {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
-  const [selectedFormat, setSelectedFormat] = useState<SocialFormat>("instagram Square (1:1)");
+  const [selectedFormat, setSelectedFormat] = useState<SocialFormat>(
+    "instagram Square (1:1)",
+  );
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [isTransforming, setIsTransforming] = useState<boolean>(false);
   const imageRef = useRef<HTMLImageElement>(null);
   const { credits, setCredits } = useCreditContext();
   const router = useRouter();
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -110,7 +115,8 @@ export default function SocialShare() {
         Social Media Image Creator
       </h1>
       <p className="text-center text-muted-foreground mb-6">
-        Resize your photos for any social media platform with AI-powered content awareness.
+        Resize your photos for any social media platform with AI-powered content
+        awareness.
       </p>
 
       <Card className="w-full">
@@ -123,13 +129,20 @@ export default function SocialShare() {
             <Input type="file" id="file" onChange={handleFileUpload} />
           </div>
 
-          {isUploading && <div className="animate-pulse text-sm">Uploading...</div>}
+          {isUploading && (
+            <div className="animate-pulse text-sm">Uploading...</div>
+          )}
 
           {uploadedImage && (
             <div className="space-y-6">
               <div>
                 <Label htmlFor="format">Select Social Media Format</Label>
-                <Select value={selectedFormat} onValueChange={(val) => setSelectedFormat(val as SocialFormat)}>
+                <Select
+                  value={selectedFormat}
+                  onValueChange={(val) =>
+                    setSelectedFormat(val as SocialFormat)
+                  }
+                >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select a format" />
                   </SelectTrigger>
@@ -167,7 +180,9 @@ export default function SocialShare() {
               </div>
 
               <div className="flex justify-end">
-                <Button onClick={handleDownload}>Download for {selectedFormat}</Button>
+                <Button onClick={handleDownload}>
+                  Download for {selectedFormat}
+                </Button>
               </div>
             </div>
           )}

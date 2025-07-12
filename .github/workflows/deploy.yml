@@ -37,8 +37,7 @@ jobs:
           username: ${{secrets.SSH_USERNAME}}
           key: ${{secrets.SSH_KEY}}
           script: |
-           sudo docker pull devnick10/resizely:latest
-           sudo docker stop resizely || true
-           sudo docker rm resizely || true
-           sudo docker run -e DATABASE_URL ${{secrets.DATABASE_URL}} -d --name resizely -p 3000:3000 devnick10/resizely:latest 
-
+            sudo docker pull devnick10/resizely:latest
+            sudo docker stop resizely || true
+            sudo docker rm resizely || true
+            sudo docker run -e DATABASE_URL ${{secrets.DATABASE_URL}} -d --name resizely -p 3000:3000 devnick10/resizely:latest

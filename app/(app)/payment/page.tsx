@@ -1,10 +1,8 @@
-import Payment from '@/components/Payment'
-import React from 'react'
+import Payment from "@/components/Payment";
+import React from "react";
 
 function page() {
-  return (
-      <Payment/>
-  )
+  return <Payment />;
 }
 
-export default page
+export default page;

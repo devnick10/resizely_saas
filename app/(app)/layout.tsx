@@ -69,7 +69,6 @@ export default function AppLayout({
   if (error) toast.error("Sorry for inconvenience");
   if (!data || !data.user) return null;
 
-
   return (
     <div className="flex flex-col h-screen bg-white dark:bg-background text-black dark:text-white transition-colors">
       <header className="shrink-0 overflow-hidden px-2 sm:px-6 py-2 border-b border-gray-200 dark:border-gray-500 flex md:flex-nowrap justify-between items-center bg-white dark:bg-muted w-full">
@@ -77,15 +76,26 @@ export default function AppLayout({
         <div className="flex m-0 justify-center items-center">
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="lg:hidden m-2 dark:text-gray-200 dark:hover:bg-muted">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="lg:hidden m-2 dark:text-gray-200 dark:hover:bg-muted"
+              >
                 <MenuIcon className="h-10 w-10" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-64 p-0 dark:bg-muted dark:border-gray-800">
+            <SheetContent
+              side="left"
+              className="w-64 p-0 dark:bg-muted dark:border-gray-800"
+            >
               <VisuallyHidden>
                 <SheetTitle>Sidebar Menu</SheetTitle>
               </VisuallyHidden>
-              <Sidebar pathname={pathname} setOpen={setOpen} credits={credits} />
+              <Sidebar
+                pathname={pathname}
+                setOpen={setOpen}
+                credits={credits}
+              />
             </SheetContent>
           </Sheet>
           <div>
@@ -142,7 +152,10 @@ export default function AppLayout({
         </aside>
         {/* Main content */}
         <main className="flex-1 overflow-auto w-full">
-          <Script id="razorpay-checkout-js" src="https://checkout.razorpay.com/v1/checkout.js" />
+          <Script
+            id="razorpay-checkout-js"
+            src="https://checkout.razorpay.com/v1/checkout.js"
+          />
           <div className="p-0 sm:p-4 md:p-6 dark:bg-background w-full h-full">
             {children}
           </div>
@@ -152,7 +165,15 @@ export default function AppLayout({
   );
 }
 
-function Sidebar({ pathname, setOpen, credits }: { pathname: string, setOpen: Dispatch<SetStateAction<boolean>>, credits?: number }) {
+function Sidebar({
+  pathname,
+  setOpen,
+  credits,
+}: {
+  pathname: string;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  credits?: number;
+}) {
   const router = useRouter();
   return (
     <div className="overflow-hidden flex pt-8 sm:pt-2 flex-col h-full justify-between">

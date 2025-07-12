@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { createContext, useContext, useState, ReactNode } from "react";
 
 interface IContext {
@@ -17,7 +17,6 @@ export function ContextProvider({ children }: { children: ReactNode }) {
     </Context.Provider>
   );
 }
-
 
 export function useCreditContext() {
   const context = useContext(Context);

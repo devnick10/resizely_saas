@@ -19,8 +19,7 @@ interface CloudinaryUploadResult {
 
 export async function videoUpload(data: FormData) {
   try {
-
-    const { email } = await getUser()
+    const { email } = await getUser();
 
     if (!email) {
       return { success: false, error: "Unauthorize" };
@@ -65,10 +64,10 @@ export async function videoUpload(data: FormData) {
             } else {
               resolve(result as CloudinaryUploadResult);
             }
-          }
+          },
         );
         uploadStream.end(buffer);
-      }
+      },
     );
 
     // Save video details to the database
@@ -80,7 +79,7 @@ export async function videoUpload(data: FormData) {
         originalSize,
         compressSize: String(result.bytes),
         duration: result.duration || 0,
-        userId:email,
+        userId: email,
       },
     });
 

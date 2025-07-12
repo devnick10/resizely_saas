@@ -1,22 +1,21 @@
-"use client"
-import React, { useState, useEffect, useCallback } from 'react'
-import VideoCard from '@/components/VideoCard'
-import { Video } from '@/types'
-import { getVideos } from '@/actions/getVideos'
-import { getUser } from '@/actions/getUser'
-import toast from 'react-hot-toast'
-import Loader from './Loader'
+"use client";
+import React, { useState, useEffect, useCallback } from "react";
+import VideoCard from "@/components/VideoCard";
+import { Video } from "@/types";
+import { getVideos } from "@/actions/getVideos";
+import { getUser } from "@/actions/getUser";
+import toast from "react-hot-toast";
+import Loader from "./Loader";
 function Videos() {
-
-  const [videos, setVideos] = useState<Video[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<unknown>()
+  const [videos, setVideos] = useState<Video[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<unknown>();
 
   useEffect(() => {
     const fetchVideos = async () => {
-      const { email } = await getUser()
+      const { email } = await getUser();
       try {
-        if (!email) return null
+        if (!email) return null;
 
         setLoading(true);
         const { data } = await getVideos(email);
@@ -32,9 +31,7 @@ function Videos() {
     fetchVideos();
   }, [setVideos]);
 
-
   const handleDownload = useCallback((url: string, title: string) => {
-
     const link = document.createElement("a");
     link.href = url;
     link.setAttribute("download", `${title}.mp4`);
@@ -42,16 +39,14 @@ function Videos() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-
-
-  }, [])
+  }, []);
 
   if (loading) {
-    return <Loader/>
+    return <Loader />;
   }
 
   if (error) {
-    toast.error("Sorry for inconvenience")
+    toast.error("Sorry for inconvenience");
   }
 
   return (
@@ -63,19 +58,17 @@ function Videos() {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {
-            videos.map((video) => (
-              <VideoCard
-                key={video.id}
-                video={video}
-                onDownload={handleDownload}
-              />
-            ))
-          }
+          {videos.map((video) => (
+            <VideoCard
+              key={video.id}
+              video={video}
+              onDownload={handleDownload}
+            />
+          ))}
         </div>
       )}
     </div>
   );
 }
 
-export default Videos
+export default Videos;

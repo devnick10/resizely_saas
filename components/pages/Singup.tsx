@@ -15,12 +15,7 @@ import Header from "@/components/header";
 import Loader from "@/components/Loader";
 import { useLoader } from "@/hooks/useLoader";
 
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
@@ -68,7 +63,8 @@ export default function Signup() {
       setVerification(true);
     } catch (err) {
       console.error(err);
-      const errorMessage = err instanceof Error ? err.message : "Something went wrong";
+      const errorMessage =
+        err instanceof Error ? err.message : "Something went wrong";
       toast.error(errorMessage);
     } finally {
       setLoading(false);
@@ -86,7 +82,7 @@ export default function Signup() {
       toast.success("Email verified successfully.");
       router.push("/social-share");
     } catch (err) {
-      console.error(err)
+      console.error(err);
       return toast.error("Signup failed, try again.");
     } finally {
       setLoading(false);
@@ -197,14 +193,22 @@ export default function Signup() {
                 className="w-full text-md flex gap-2"
                 onClick={() => signIn("google", { callbackUrl: "/home" })}
               >
-                <Image src="https://res.cloudinary.com/dnr1sgjrx/image/upload/v1744802382/google_ysyp3i.png" width={20} height={20} alt="Google logo" />
+                <Image
+                  src="https://res.cloudinary.com/dnr1sgjrx/image/upload/v1744802382/google_ysyp3i.png"
+                  width={20}
+                  height={20}
+                  alt="Google logo"
+                />
                 Sign Up with Google
               </Button>
             )}
 
             <p className="text-center text-sm">
               Already have an account?
-              <Link href="/sign-in" className="ml-1 text-blue-600 font-medium underline">
+              <Link
+                href="/sign-in"
+                className="ml-1 text-blue-600 font-medium underline"
+              >
                 Sign In
               </Link>
             </p>
@@ -214,4 +218,3 @@ export default function Signup() {
     </>
   );
 }
-

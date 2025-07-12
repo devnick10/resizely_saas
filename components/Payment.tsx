@@ -8,16 +8,18 @@ declare global {
   }
 }
 
-function Payment(){
-  
+function Payment() {
   return (
     <>
       <section id="pricing" className="py-2 bg-white">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Simple Credit-Based Pricing</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Simple Credit-Based Pricing
+            </h2>
             <p className="text-gray-500 md:text-lg max-w-[800px] mx-auto">
-              Start with 2 free credits. Purchase more credits as you need them. No subscriptions or hidden fees.
+              Start with 2 free credits. Purchase more credits as you need them.
+              No subscriptions or hidden fees.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

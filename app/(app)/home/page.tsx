@@ -1,10 +1,8 @@
-import Videos from '@/components/Videos'
-import React from 'react'
+import Videos from "@/components/Videos";
+import React from "react";
 
 function page() {
-  return (
-      <Videos/>
-  )
+  return <Videos />;
 }
 
-export default page
+export default page;

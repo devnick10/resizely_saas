@@ -6,12 +6,7 @@ import toast from "react-hot-toast";
 import Videos from "@/components/Videos";
 import { useCreditContext } from "@/context";
 import { videoUpload } from "@/actions/videoUpload";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -74,50 +69,51 @@ function VideoUpload() {
         Upload Video
       </h1>
       <p className="text-center font-semibold mb-6">
-        Video Compression Service – Currently for Videos up to 70MB (More Coming Soon!) 🚀
+        Video Compression Service – Currently for Videos up to 70MB (More Coming
+        Soon!) 🚀
       </p>
-        <Card className="px-2">
-          <CardHeader>
-            <CardTitle>Upload a Video</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit}>
-              <div className="space-y-2">
-                <Label htmlFor="title">Title</Label>
-                <Input
-                  id="title"
-                  type="text"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  required
-                />
-              </div>
+      <Card className="px-2">
+        <CardHeader>
+          <CardTitle>Upload a Video</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit}>
+            <div className="space-y-2">
+              <Label htmlFor="title">Title</Label>
+              <Input
+                id="title"
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+              />
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
-                <Textarea
-                  id="description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </div>
 
-              <div className="space-y-2 mb-4">
-                <Label htmlFor="video">Video File</Label>
-                <Input
-                  id="video"
-                  type="file"
-                  accept="video/*"
-                  onChange={(e) => setFile(e.target.files?.[0] || null)}
-                  required
-                />
-              </div>
-              <Button type="submit" disabled={isUploading} className="w-full">
-                {isUploading ? "Uploading..." : "Upload Video"}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+            <div className="space-y-2 mb-4">
+              <Label htmlFor="video">Video File</Label>
+              <Input
+                id="video"
+                type="file"
+                accept="video/*"
+                onChange={(e) => setFile(e.target.files?.[0] || null)}
+                required
+              />
+            </div>
+            <Button type="submit" disabled={isUploading} className="w-full">
+              {isUploading ? "Uploading..." : "Upload Video"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
       <div className="mt-8">
         <Videos />
       </div>

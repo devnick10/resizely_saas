@@ -2,10 +2,11 @@
 
 Resizely is a **credit-based** SaaS application designed to make media processing easy and efficient. Users can **resize images**, **compress videos**, and **remove backgrounds**, with a **credit system** that provides free credits and a seamless **Razorpay integration** for purchasing more.
 
-##### The app will be live at **https://resizely.devnikhil.xyz**  
+##### The app will be live at **https://resizely.devnikhil.xyz**
+
 ---
 
-## 🌟 Features  
+## 🌟 Features
 
 ✅ **Image Resizing** – Optimize images for social media & web  
 ✅ **Video Compression** – Reduce video sizes without quality loss  
@@ -15,34 +16,34 @@ Resizely is a **credit-based** SaaS application designed to make media processin
 ✅ **Authentication** – Secure login with **NextAuth** (Google + Credentials)  
 ✅ **Optimized Performance** – Cloudinary for fast media processing  
 ✅ **Modern UI with ShadCN** – Accessible and beautiful components  
-✅ **Containerized Deployment** – Docker support for easy setup  
+✅ **Containerized Deployment** – Docker support for easy setup
 
 ---
 
-## 🛠️ Tech Stack  
+## 🛠️ Tech Stack
 
-- **Frontend & Backend:** Next.js (App Router)  
-- **Database:** Prisma + NeonDB  
-- **Media Processing:** Cloudinary  
-- **Authentication:** NextAuth (Google & Credentials)  
-- **Payments:** Razorpay  
-- **Email (OTP, transactional):** Nodemailer (Mailtrap for dev)  
-- **UI Framework:** **ShadCN UI + TailwindCSS**  
-- **State Management:** React Context  
-- **Containerization:** Docker + Docker Compose  
+- **Frontend & Backend:** Next.js (App Router)
+- **Database:** Prisma + NeonDB
+- **Media Processing:** Cloudinary
+- **Authentication:** NextAuth (Google & Credentials)
+- **Payments:** Razorpay
+- **Email (OTP, transactional):** Nodemailer (Mailtrap for dev)
+- **UI Framework:** **ShadCN UI + TailwindCSS**
+- **State Management:** React Context
+- **Containerization:** Docker + Docker Compose
 
 ---
 
-## 🚀 Getting Started  
+## 🚀 Getting Started
 
-### 1️⃣ Clone the Repository  
+### 1️⃣ Clone the Repository
 
 ```sh
 git clone https://github.com/devnick10/resizely_saas.git
 cd resizely_saas
 ```
 
-### 2️⃣ Install Dependencies  
+### 2️⃣ Install Dependencies
 
 ```sh
 npm install
@@ -50,9 +51,9 @@ npm install
 yarn install
 ```
 
-### 3️⃣ Set Up Environment Variables  
+### 3️⃣ Set Up Environment Variables
 
-Create a **.env.local** file in the root directory and add the following:  
+Create a **.env.local** file in the root directory and add the following:
 
 ```env
 # Database
@@ -95,56 +96,57 @@ Use Docker Compose to run the app in development mode:
 docker compose --env-file ./.env -f docker/docker-compose.yml up -d
 ```
 
-- Auto-reloads on code changes  
-- Binds source code for live development  
+- Auto-reloads on code changes
+- Binds source code for live development
 - Exposes app at [http://localhost:3000](http://localhost:3000)
 
 🛑 Stopping Services
 To stop all running services, run the following command in a terminal:
+
 ```bash
 docker compose --env-file ./.env -f docker/docker-compose.yml down -v
 ```
 
-
-## 📸 How It Works  
+## 📸 How It Works
 
 1️⃣ **Sign Up/Login** via NextAuth (Google or Email/Password)  
 2️⃣ Get **2 free credits** (or buy more via Razorpay)  
 3️⃣ Upload an image or video  
 4️⃣ Choose resizing/compression options  
-5️⃣ Process & download the optimized media  
+5️⃣ Process & download the optimized media
 
 ---
 
-## 📌 Roadmap  
+## 📌 Roadmap
 
-🚀 **Upcoming Improvements:**  
-- ✅ Add bulk upload support  
-- ✅ Improve UX & loading speeds  
-- ✅ More social media export options  
+🚀 **Upcoming Improvements:**
+
+- ✅ Add bulk upload support
+- ✅ Improve UX & loading speeds
+- ✅ More social media export options
 
 ---
 
-## 🛠 Contributing  
+## 🛠 Contributing
 
 🔹 Fork the repo & create a new branch  
 🔹 Make your changes & push to your branch  
-🔹 Open a Pull Request 🎉  
+🔹 Open a Pull Request 🎉
 
 ---
 
-## 📝 License  
+## 📝 License
 
-This project is **open-source** under the [MIT License](LICENSE).  
+This project is **open-source** under the [MIT License](LICENSE).
 
 ---
 
-## 📬 Contact  
+## 📬 Contact
 
-Have feedback or suggestions? Connect with me!  
+Have feedback or suggestions? Connect with me!
 
 ✖️ [Twitter/X](https://x.com/Nikhil10_02)  
-🔗 [LinkedIn](https://www.linkedin.com/in/nikhil-bhoyar-nb1010)  
+🔗 [LinkedIn](https://www.linkedin.com/in/nikhil-bhoyar-nb1010)
 
 ---
 

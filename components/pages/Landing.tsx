@@ -1,11 +1,11 @@
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { CheckCircle, Zap} from "lucide-react"
-import FeatureCard from "@/components/Feature-card"
-import Header from "@/components/header"
-import Footer from "@/components/Footer"
-import HeroImage from "@/components/Hero-image"
-import PricingCard2 from "../ui/pricing-card"
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { CheckCircle, Zap } from "lucide-react";
+import FeatureCard from "@/components/Feature-card";
+import Header from "@/components/header";
+import Footer from "@/components/Footer";
+import HeroImage from "@/components/Hero-image";
+import PricingCard2 from "../ui/pricing-card";
 
 export default function Home() {
   return (
@@ -22,11 +22,13 @@ export default function Home() {
                 Powered by AI
               </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter">
-                Transform Your Media <span className="text-primary">Effortlessly</span>
+                Transform Your Media{" "}
+                <span className="text-primary">Effortlessly</span>
               </h1>
               <p className="text-gray-600 dark:text-gray-400 md:text-xl max-w-[600px]">
-                Compress videos, remove backgrounds, and resize images for social media - all with the power of AI.
-                Start with 2 free credits today.
+                Compress videos, remove backgrounds, and resize images for
+                social media - all with the power of AI. Start with 2 free
+                credits today.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button size="lg" asChild>
@@ -58,9 +60,12 @@ export default function Home() {
       <section id="features" className="py-20 bg-white dark:bg-background">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Powerful Features</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Powerful Features
+            </h2>
             <p className="text-gray-600 dark:text-gray-400 md:text-lg max-w-[800px] mx-auto">
-              Resizely combines cutting-edge AI with intuitive design to make media processing simple and efficient.
+              Resizely combines cutting-edge AI with intuitive design to make
+              media processing simple and efficient.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -87,19 +92,28 @@ export default function Home() {
       <section id="learnmore" className="py-20 bg-gray-50 dark:bg-muted/50">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">How It Works</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              How It Works
+            </h2>
             <p className="text-gray-600 dark:text-gray-400 md:text-lg max-w-[800px] mx-auto">
               Resizely makes media processing simple with just three easy steps.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[1, 2, 3].map((step, idx) => (
-              <div key={idx} className="bg-white dark:bg-muted p-8 rounded-lg shadow-sm border border-gray-100 dark:border-gray-800 text-center">
+              <div
+                key={idx}
+                className="bg-white dark:bg-muted p-8 rounded-lg shadow-sm border border-gray-100 dark:border-gray-800 text-center"
+              >
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
                   <span className="text-primary font-bold text-xl">{step}</span>
                 </div>
                 <h3 className="text-xl font-bold mb-3">
-                  {step === 1 ? "Upload Your Media" : step === 2 ? "Choose Your Options" : "Download & Share"}
+                  {step === 1
+                    ? "Upload Your Media"
+                    : step === 2
+                      ? "Choose Your Options"
+                      : "Download & Share"}
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400">
                   {step === 1
@@ -118,9 +132,12 @@ export default function Home() {
       <section id="pricing" className="py-20 bg-white dark:bg-background">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Simple Credit-Based Pricing</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Simple Credit-Based Pricing
+            </h2>
             <p className="text-gray-600 dark:text-gray-400 md:text-lg max-w-[800px] mx-auto">
-              Start with 2 free credits. Purchase more credits as you need them. No subscriptions or hidden fees.
+              Start with 2 free credits. Purchase more credits as you need them.
+              No subscriptions or hidden fees.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -173,7 +190,9 @@ export default function Home() {
             />
           </div>
           <div className="mt-12 text-center">
-            <p className="text-gray-600 dark:text-gray-400 mb-4">Need more credits? Contact us for custom enterprise packages.</p>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">
+              Need more credits? Contact us for custom enterprise packages.
+            </p>
             <Button variant="link" asChild>
               <Link href="#">Contact Sales</Link>
             </Button>
@@ -185,9 +204,12 @@ export default function Home() {
       <section className="py-20 bg-primary text-white">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="text-center max-w-[800px] mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Transform Your Media?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Ready to Transform Your Media?
+            </h2>
             <p className="text-primary-foreground/80 md:text-lg mb-8">
-              Start with 2 free credits and experience the power of Resizely&apos;s AI-powered media tools.
+              Start with 2 free credits and experience the power of
+              Resizely&apos;s AI-powered media tools.
             </p>
             <Button size="lg" variant="secondary" asChild>
               <Link href="/sign-up">Get Started for Free</Link>
@@ -197,5 +219,6 @@ export default function Home() {
       </section>
 
       <Footer />
-    </div>)
+    </div>
+  );
 }

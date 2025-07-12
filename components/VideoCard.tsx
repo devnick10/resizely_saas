@@ -1,26 +1,32 @@
-"use client"
+"use client";
 
-import React, { useCallback, useEffect, useState } from "react"
-import { getCldImageUrl, getCldVideoUrl } from "next-cloudinary"
-import { Download, Clock, FileDown, FileUp } from "lucide-react"
-import { filesize } from "filesize"
-import dayjs from "dayjs"
-import relativeTime from "dayjs/plugin/relativeTime"
-import Image from "next/image"
-import { Video } from "@/types"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import React, { useCallback, useEffect, useState } from "react";
+import { getCldImageUrl, getCldVideoUrl } from "next-cloudinary";
+import { Download, Clock, FileDown, FileUp } from "lucide-react";
+import { filesize } from "filesize";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import Image from "next/image";
+import { Video } from "@/types";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
-dayjs.extend(relativeTime)
+dayjs.extend(relativeTime);
 
 interface VideoCardProps {
-  video: Video
-  onDownload: (url: string, title: string) => void
+  video: Video;
+  onDownload: (url: string, title: string) => void;
 }
 
 const VideoCard: React.FC<VideoCardProps> = ({ video, onDownload }) => {
-  const [isHovered, setIsHovered] = useState(false)
-  const [previewError, setPreviewError] = useState(false)
+  const [isHovered, setIsHovered] = useState(false);
+  const [previewError, setPreviewError] = useState(false);
 
   const getThumbnailUrl = useCallback(
     (publicId: string) =>
@@ -34,8 +40,8 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onDownload }) => {
         quality: "auto",
         assetType: "video",
       }),
-    []
-  )
+    [],
+  );
 
   const getFullVideoUrl = useCallback(
     (publicId: string) =>
@@ -44,8 +50,8 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onDownload }) => {
         width: 1920,
         height: 1080,
       }),
-    []
-  )
+    [],
+  );
 
   const getPreviewVideoUrl = useCallback(
     (publicId: string) =>
@@ -55,24 +61,24 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onDownload }) => {
         height: 225,
         rawTransformations: ["e_preview:duration_10:max_seg_9:min_seg_dur_1"],
       }),
-    []
-  )
+    [],
+  );
 
-  const formatSize = (size: number) => filesize(size)
+  const formatSize = (size: number) => filesize(size);
 
   const formatDuration = (seconds: number) => {
-    const min = Math.floor(seconds / 60)
-    const sec = Math.round(seconds % 60)
-    return `${min}:${sec.toString().padStart(2, "0")}`
-  }
+    const min = Math.floor(seconds / 60);
+    const sec = Math.round(seconds % 60);
+    return `${min}:${sec.toString().padStart(2, "0")}`;
+  };
 
   const compressionPercentage = Math.round(
-    (1 - Number(video.compressSize) / Number(video.originalSize)) * 100
-  )
+    (1 - Number(video.compressSize) / Number(video.originalSize)) * 100,
+  );
 
   useEffect(() => {
-    setPreviewError(false)
-  }, [isHovered])
+    setPreviewError(false);
+  }, [isHovered]);
 
   return (
     <Card
@@ -114,7 +120,9 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onDownload }) => {
       <CardContent className="p-4 space-y-2">
         <CardTitle className="text-base font-semibold">{video.title}</CardTitle>
         <p className="text-sm text-muted-foreground">{video.description}</p>
-        <p className="text-xs text-muted-foreground">Uploaded {dayjs(video.createdAt).fromNow()}</p>
+        <p className="text-xs text-muted-foreground">
+          Uploaded {dayjs(video.createdAt).fromNow()}
+        </p>
 
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div className="flex items-center gap-2">
@@ -136,18 +144,23 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onDownload }) => {
 
       <CardFooter className="px-4 pb-4 flex justify-between items-center">
         <span className="text-sm">
-          Compression: <span className="font-semibold text-green-600">{compressionPercentage}%</span>
+          Compression:{" "}
+          <span className="font-semibold text-green-600">
+            {compressionPercentage}%
+          </span>
         </span>
         <Button
           size="sm"
           variant="default"
-          onClick={() => onDownload(getFullVideoUrl(video.publicId), video.title)}
+          onClick={() =>
+            onDownload(getFullVideoUrl(video.publicId), video.title)
+          }
         >
           <Download className="w-4 h-4 mr-1" /> Download
         </Button>
       </CardFooter>
     </Card>
-  )
-}
+  );
+};
 
-export default VideoCard
+export default VideoCard;

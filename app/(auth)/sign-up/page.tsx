@@ -1,12 +1,12 @@
-import Signup from '@/components/pages/Singup'
-import React from 'react'
+import Signup from "@/components/pages/Singup";
+import React from "react";
 
 function page() {
   return (
     <div>
-      <Signup/>
+      <Signup />
     </div>
-  )
+  );
 }
 
-export default page
+export default page;

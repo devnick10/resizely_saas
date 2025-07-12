@@ -1,8 +1,6 @@
-import nodeMailer from "nodemailer"
+import nodeMailer from "nodemailer";
 
 export const sendMail = async (email: string, otp: string) => {
-
-
   try {
     const transport = nodeMailer.createTransport({
       host: process.env.MAILTRAP_HOST,
@@ -11,24 +9,21 @@ export const sendMail = async (email: string, otp: string) => {
         user: process.env.MAILTRAP_USERNAME,
         pass: process.env.MAILTRAP_PASSWORD,
       },
-    })
+    });
 
     const mailresponse = await transport.sendMail({
       from: "Resizly",
       to: email,
       subject: "Your Resizly OTP Code",
       html: generateEmailTemplate(otp),
-    })
+    });
 
-    return mailresponse
+    return mailresponse;
   } catch (error: any) {
-    console.log(error)
-    throw new Error(error.message)
+    console.log(error);
+    throw new Error(error.message);
   }
-
-
-
-}
+};
 
 function generateEmailTemplate(otp: string) {
   return `
@@ -64,5 +59,5 @@ function generateEmailTemplate(otp: string) {
       </table>
     </body>
   </html>
-    `
+    `;
 }

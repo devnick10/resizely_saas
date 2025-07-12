@@ -6,7 +6,7 @@ import { useCreditContext } from "@/context";
 
 export enum Plan {
   Pro = 342700,
-  Standard = 171300
+  Standard = 171300,
 }
 
 interface IUserPaymentProps {
@@ -22,7 +22,11 @@ interface UsePaymentResult {
   message: string | undefined;
 }
 
-export function usePayment({ name, email, plan }: IUserPaymentProps): UsePaymentResult {
+export function usePayment({
+  name,
+  email,
+  plan,
+}: IUserPaymentProps): UsePaymentResult {
   const [options, setOptions] = useState<any | null>(null);
   const [paymentError, setPaymentError] = useState(false);
   const [loading, setLoading] = useState(true);

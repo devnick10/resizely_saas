@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Menu, X } from "lucide-react"
-import { ModeToggle } from "./ModeToggle"
+import { useState } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Menu, X } from "lucide-react";
+import { ModeToggle } from "./ModeToggle";
 
 export default function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <header className=" overflow-hidden sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -18,13 +18,22 @@ export default function Header() {
           </span>
         </Link>
         <nav className="hidden md:flex gap-6">
-          <Link href="/" className="text-md font-medium hover:text-primary transition-colors">
+          <Link
+            href="/"
+            className="text-md font-medium hover:text-primary transition-colors"
+          >
             Home
           </Link>
-          <Link href="/#features" className="text-md font-medium hover:text-primary transition-colors">
+          <Link
+            href="/#features"
+            className="text-md font-medium hover:text-primary transition-colors"
+          >
             Features
           </Link>
-          <Link href="/#pricing" className="text-md font-medium hover:text-primary transition-colors">
+          <Link
+            href="/#pricing"
+            className="text-md font-medium hover:text-primary transition-colors"
+          >
             Pricing
           </Link>
         </nav>
@@ -35,14 +44,18 @@ export default function Header() {
           <Button asChild>
             <Link href="/sign-up">Sign up</Link>
           </Button>
-        <ModeToggle/>
+          <ModeToggle />
         </div>
         <button
           className="md:hidden"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
         >
-          {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          {isMenuOpen ? (
+            <X className="h-6 w-6" />
+          ) : (
+            <Menu className="h-6 w-6" />
+          )}
         </button>
       </div>
       {isMenuOpen && (
@@ -78,6 +91,5 @@ export default function Header() {
         </div>
       )}
     </header>
-  )
+  );
 }
-

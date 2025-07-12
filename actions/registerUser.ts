@@ -1,57 +1,58 @@
-'use server'
+"use server";
 
-import bcrypt from 'bcrypt'
-import prisma from '@/db'
-import { credentialsSchema } from '@/types'
+import bcrypt from "bcrypt";
+import prisma from "@/db";
+import { credentialsSchema } from "@/types";
 
 interface RegisterUserInput {
-    email: string;
-    password: string;
-    username: string;
+  email: string;
+  password: string;
+  username: string;
 }
 
 export async function registerUser({
+  email,
+  password,
+  username,
+}: RegisterUserInput) {
+  const { success, data, error } = credentialsSchema.safeParse({
     email,
     password,
     username,
-}: RegisterUserInput) {
+  });
 
-    const { success, data ,error} = credentialsSchema.safeParse({ email, password, username })
+  if (!success) {
+    throw new Error(error.issues[0].message);
+  }
 
-    if (!success) {
-        throw new Error(error.issues[0].message)
-    }
+  const existingUser = await prisma.user.findUnique({ where: { email } });
+  if (existingUser) {
+    throw new Error("User already exists");
+  }
 
-    const existingUser = await prisma.user.findUnique({ where: { email } })
-    if (existingUser) {
-        throw new Error('User already exists')
-    }
+  const hashedPassword = await bcrypt.hash(password, 10);
 
-    const hashedPassword = await bcrypt.hash(password, 10)
+  try {
+    const user = await prisma.$transaction(async (tx) => {
+      const user = await tx.user.create({
+        data: {
+          email: data.email,
+          username: data.username || data.email.split("@")[0],
+          password: hashedPassword,
+        },
+      });
+      await tx.credit.create({
+        data: {
+          userId: user.id,
+        },
+      });
 
-    try {
-        const user = await prisma.$transaction(async (tx) => {
-            const user = await tx.user.create({
-                data: {
-                    email: data.email,
-                    username: data.username || data.email.split("@")[0],
-                    password: hashedPassword
-                },
-            });
-            await tx.credit.create({
-                data: {
-                    userId: user.id
-                },
-            });
+      return user;
+    });
 
-            return user;
-        });
-
-        return { success: true, user }
-
-
-    } catch (error) {
-        console.error("Signup failed:", error)
-        throw new Error("Signup failed");
-    }
+    return { success: true, user };
+  } catch (error) {
+    console.error("Signup failed:", error);
+    throw new Error("Signup failed");
+  }
 }

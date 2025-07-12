@@ -22,7 +22,9 @@ export default function BgRemover() {
   const imageRef = useRef<HTMLImageElement>(null);
   const { credits, setCredits } = useCreditContext();
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -93,7 +95,8 @@ export default function BgRemover() {
         AI Background Remover
       </h1>
       <p className="text-center text-muted-foreground mb-6 sm:text-lg">
-        Upload an image and let AI remove the background. Download the final result instantly!
+        Upload an image and let AI remove the background. Download the final
+        result instantly!
       </p>
 
       <Card>

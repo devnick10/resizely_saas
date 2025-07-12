@@ -132,13 +132,21 @@ export default function Signin() {
               className="w-full flex text-md gap-2"
               onClick={() => signIn("google", { callbackUrl: "/home" })}
             >
-              <Image src="https://res.cloudinary.com/dnr1sgjrx/image/upload/v1744802382/google_ysyp3i.png" width={20} height={20} alt="Google logo" />
+              <Image
+                src="https://res.cloudinary.com/dnr1sgjrx/image/upload/v1744802382/google_ysyp3i.png"
+                width={20}
+                height={20}
+                alt="Google logo"
+              />
               Sign In with Google
             </Button>
 
             <p className="text-center text-sm">
               Don&apos;t have an account?
-              <Link href="/sign-up" className="ml-1 text-blue-600 font-medium underline">
+              <Link
+                href="/sign-up"
+                className="ml-1 text-blue-600 font-medium underline"
+              >
                 Sign Up
               </Link>
             </p>
@@ -148,6 +156,3 @@ export default function Signin() {
     </>
   );
 }
-
-
-
