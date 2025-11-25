@@ -63,8 +63,8 @@ export default function HeroImage() {
               <div className="bg-gray-100 dark:bg-gray-700 rounded-lg h-20 w-full overflow-hidden relative">
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
-                    <div className="text-primary font-bold">1 Credit</div>
-                    <div className="text-xs text-gray-500 dark:text-gray-300">
+                    <div className="dark:text-white font-bold">1 Credit</div>
+                    <div className="text-xs text-neutral-800 dark:text-neutral-200">
                       Per Compression
                     </div>
                   </div>
