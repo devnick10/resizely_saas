@@ -1,14 +1,17 @@
-"use server";
+import "server-only";
 import prisma from "@/db";
+import { getUser } from "./getUser";
 
-export async function getCredits(email: string) {
+export async function getCredits() {
+  const { email } = await getUser();
+  if (!email) {
+    return {
+      success: false,
+      error: "Email not found",
+    };
+  }
+
   try {
-    if (!email)
-      return {
-        success: false,
-        error: "Unauthorized",
-      };
-
     const user = await prisma.user.findUnique({
       where: { email },
       include: { Credit: true },
@@ -23,13 +26,6 @@ export async function getCredits(email: string) {
 
     const userCredits = user.Credit[0];
 
-    if (!userCredits) {
-      return {
-        success: false,
-        error: "Insufficient credits",
-      };
-    }
-
     return {
       success: true,
       credits: userCredits.credits,
@@ -38,7 +34,7 @@ export async function getCredits(email: string) {
     return {
       error,
       success: false,
-      message: "Something went wrong",
+      message: "Failed to fetch user credits",
     };
   }
 }

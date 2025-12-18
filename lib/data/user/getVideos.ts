@@ -1,11 +1,13 @@
-"use server";
+import "server-only";
 import prisma from "@/db";
+import { getUser } from "./getUser";
 
-export async function getVideos(email: string) {
+export async function getVideos() {
+  const { id } = await getUser();
   try {
     const videos = await prisma.video.findMany({
       where: {
-        userId: email,
+        userId: id,
       },
     });
 
@@ -24,7 +26,7 @@ export async function getVideos(email: string) {
     return {
       error,
       success: false,
-      message: "Error while fetching videos",
+      message: "Failed to fetch user videos",
     };
   }
 }
