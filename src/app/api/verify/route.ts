@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
-import prisma from "@/db"
+import prisma from "@/db";
 import { getUser } from "@/lib/data/user/getUser";
 
 const generatedSignature = (
