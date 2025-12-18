@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/db";
 import { JWT } from "next-auth/jwt";
 import { Account, Session } from "next-auth";
-import { CredentialsType, credentialsSchema } from "@/types";
+import { CredentialsType, credentialsSchema } from "@/schema";
 import GoogleProvider from "next-auth/providers/google";
 import { User } from "next-auth";
 declare module "next-auth" {

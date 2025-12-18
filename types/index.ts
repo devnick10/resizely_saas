@@ -1,4 +1,9 @@
-import { z } from "zod";
+export interface User {
+  id?: string;
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+}
 
 export interface Video {
   id: string;
@@ -13,17 +18,8 @@ export interface Video {
   userId: string;
 }
 
-export const credentialsSchema = z.object({
-  email: z.string().email({ message: "Invalid email address" }),
-  username: z
-    .string()
-    .min(6, { message: "username must be at least 6 characters." })
-    .max(30)
-    .optional(),
-  password: z
-    .string()
-    .min(6, { message: "Password must be at least 6 characters." })
-    .max(30),
-});
-
-export type CredentialsType = z.infer<typeof credentialsSchema>;
+export interface RegisterUserInput {
+  email: string;
+  password: string;
+  username: string;
+}

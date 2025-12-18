@@ -94,9 +94,9 @@ export default function SocialShare() {
     try {
       await downloadImage(imageRef.current.src);
 
-      const res = await updateCredits();
-      if (res.success) {
-        setCredits(res.credits);
+      const data = await updateCredits();
+      if ("credits" in data) {
+        setCredits(data.credits);
         router.push("/social-share");
       }
     } catch (error) {

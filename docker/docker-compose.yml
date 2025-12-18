@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   db:
     image: postgres:alpine
@@ -13,22 +15,20 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   app:
+    container_name: resizely-app
     build:
       context: ../
       dockerfile: docker/Dockerfile.dev
-      args:
-        - DATABASE_URL=postgresql://postgres:postgres@db:5432/resizely
-    container_name: resizly-app
     ports:
       - "3000:3000"
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/resizely
-
     depends_on:
       - db
     volumes:
       - ../:/app
       - /app/node_modules
+    restart: always
 
 volumes:
   postgres_data:

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import Videos from "@/components/Videos";
+import Videos from "@/components/dashboard/Videos";
 import { useCreditContext } from "@/context";
 import { videoUpload } from "@/actions/videoUpload";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

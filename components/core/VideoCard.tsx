@@ -1,13 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
-import { getCldImageUrl, getCldVideoUrl } from "next-cloudinary";
-import { Download, Clock, FileDown, FileUp } from "lucide-react";
-import { filesize } from "filesize";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import Image from "next/image";
-import { Video } from "@/types";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -15,54 +8,51 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Video } from "@/types";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import { filesize } from "filesize";
+import { Clock, Download, FileDown, FileUp } from "lucide-react";
+import { getCldImageUrl, getCldVideoUrl } from "next-cloudinary";
+import Image from "next/image";
+import React, { useEffect, useMemo, useState } from "react";
 
 dayjs.extend(relativeTime);
 
 interface VideoCardProps {
   video: Video;
-  onDownload: (url: string, title: string) => void;
 }
 
-const VideoCard: React.FC<VideoCardProps> = ({ video, onDownload }) => {
+const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [previewError, setPreviewError] = useState(false);
 
-  const getThumbnailUrl = useCallback(
-    (publicId: string) =>
-      getCldImageUrl({
-        src: publicId,
-        width: 400,
-        height: 225,
-        crop: "fill",
-        gravity: "auto",
-        format: "jpg",
-        quality: "auto",
-        assetType: "video",
-      }),
-    [],
-  );
+  const getThumbnailUrl = (publicId: string) =>
+    getCldImageUrl({
+      src: publicId,
+      width: 400,
+      height: 225,
+      crop: "fill",
+      gravity: "auto",
+      format: "jpg",
+      quality: "auto",
+      assetType: "video",
+    });
 
-  const getFullVideoUrl = useCallback(
-    (publicId: string) =>
-      getCldVideoUrl({
-        src: publicId,
-        width: 1920,
-        height: 1080,
-      }),
-    [],
-  );
+  const getFullVideoUrl = (publicId: string) =>
+    getCldVideoUrl({
+      src: publicId,
+      width: 1920,
+      height: 1080,
+    });
 
-  const getPreviewVideoUrl = useCallback(
-    (publicId: string) =>
-      getCldVideoUrl({
-        src: publicId,
-        width: 400,
-        height: 225,
-        rawTransformations: ["e_preview:duration_10:max_seg_9:min_seg_dur_1"],
-      }),
-    [],
-  );
+  const getPreviewVideoUrl = (publicId: string) =>
+    getCldVideoUrl({
+      src: publicId,
+      width: 400,
+      height: 225,
+      rawTransformations: ["e_preview:duration_10:max_seg_9:min_seg_dur_1"],
+    });
 
   const formatSize = (size: number) => filesize(size);
 
@@ -72,13 +62,27 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onDownload }) => {
     return `${min}:${sec.toString().padStart(2, "0")}`;
   };
 
-  const compressionPercentage = Math.round(
-    (1 - Number(video.compressSize) / Number(video.originalSize)) * 100,
+  const compressionPercentage = useMemo(
+    () =>
+      Math.round(
+        (1 - Number(video.compressSize) / Number(video.originalSize)) * 100,
+      ),
+    [video],
   );
 
   useEffect(() => {
     setPreviewError(false);
   }, [isHovered]);
+
+  const handleDownload = (url: string, title: string) => {
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `${title}.mp4`);
+    link.setAttribute("target", "_blank");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <Card
@@ -153,7 +157,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onDownload }) => {
           size="sm"
           variant="default"
           onClick={() =>
-            onDownload(getFullVideoUrl(video.publicId), video.title)
+            handleDownload(getFullVideoUrl(video.publicId), video.title)
           }
         >
           <Download className="w-4 h-4 mr-1" /> Download

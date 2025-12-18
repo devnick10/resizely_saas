@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
-import { metadata as data } from "@/app/lib/metadata";
+import { metadata as data } from "@/lib/metadata";
 const geistSans = Poppins({
   variable: "--font-geist-sans",
   subsets: ["latin"],

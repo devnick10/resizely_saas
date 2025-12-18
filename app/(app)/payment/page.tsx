@@ -1,4 +1,4 @@
-import Payment from "@/components/Payment";
+import Payment from "@/components/landing/Payment";
 import React from "react";
 
 function page() {

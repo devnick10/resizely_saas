@@ -5,7 +5,7 @@ import { CldImage } from "next-cloudinary";
 import Image from "next/image";
 import { useCreditContext } from "@/context";
 import toast from "react-hot-toast";
-import { getUser } from "@/actions/getUser";
+import { getUser } from "@/lib/data/user/getUser";
 import { updateCredits } from "@/actions/updateCredits";
 import { imageUpload } from "@/actions/imageUpload";
 import { Button } from "@/components/ui/button";
@@ -71,7 +71,7 @@ export default function BgRemover() {
       window.URL.revokeObjectURL(url);
 
       const data = await updateCredits();
-      if (data?.credits !== undefined) {
+      if ("credits" in data) {
         setCredits(data.credits);
       }
     } catch (error) {

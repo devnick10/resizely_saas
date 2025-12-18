@@ -11,8 +11,8 @@ import { Eye, EyeOff } from "lucide-react";
 import { sendOTP } from "@/actions/sendOtp";
 import { verifyOtp } from "@/actions/verifyOtp";
 
-import Header from "@/components/header";
-import Loader from "@/components/Loader";
+import Header from "@/components/core/header";
+import Loader from "@/components/core/Loader";
 import { useLoader } from "@/hooks/useLoader";
 
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
@@ -76,8 +76,8 @@ export default function Signup() {
 
     setLoading(true);
     try {
-      const verified = await verifyOtp(emailAddress, code);
-      if (!verified) return toast.error("Invalid verification code.");
+      const {success} = await verifyOtp(emailAddress, code);
+      if (!success) return toast.error("Invalid verification code.");
 
       toast.success("Email verified successfully.");
       router.push("/social-share");

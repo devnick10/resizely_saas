@@ -1,8 +1,6 @@
-import Videos from "@/components/Videos";
+import Videos from "@/components/dashboard/Videos";
 import React from "react";
 
-function page() {
+export default function page() {
   return <Videos />;
 }
-
-export default page;

@@ -8,8 +8,8 @@ import { useState, FormEvent } from "react";
 import toast from "react-hot-toast";
 import { EyeOff, Eye } from "lucide-react";
 
-import Header from "@/components/header";
-import Loader from "@/components/Loader";
+import Header from "@/components/core/header";
+import Loader from "@/components/core/Loader";
 import { useLoader } from "@/hooks/useLoader";
 
 import { Input } from "@/components/ui/input";

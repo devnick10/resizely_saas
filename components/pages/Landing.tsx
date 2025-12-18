@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Zap } from "lucide-react";
-import FeatureCard from "@/components/Feature-card";
-import Header from "@/components/header";
-import Footer from "@/components/Footer";
-import HeroImage from "@/components/Hero-image";
+import FeatureCard from "@/components/landing/Feature-card";
+import Header from "@/components/core/header";
+import Footer from "@/components/core/Footer";
+import HeroImage from "@/components/landing/Hero-image";
 import PricingCard2 from "../ui/pricing-card";
 
 export default function Home() {
