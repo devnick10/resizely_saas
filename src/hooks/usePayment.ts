@@ -12,9 +12,9 @@ interface UserPayment {
 }
 
 interface VerifyPaymentHandler {
-  razorpay_payment_id: string,
-  razorpay_order_id: string,
-  razorpay_signature: string,
+  razorpay_payment_id: string;
+  razorpay_order_id: string;
+  razorpay_signature: string;
 }
 
 interface PaymentOptions {
@@ -51,7 +51,7 @@ export function usePayment({
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<string>();
 
-  const { setCredits } = useCreditsStore(state=>state);
+  const { setCredits } = useCreditsStore((state) => state);
   const router = useRouter();
 
   useEffect(() => {

@@ -10,19 +10,19 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
       <RootStoreProvider>
-          <Toaster />
-          <Script
-            src="https://checkout.razorpay.com/v1/checkout.js"
-            strategy="beforeInteractive"
-          />
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-          </ThemeProvider>
+        <Toaster />
+        <Script
+          src="https://checkout.razorpay.com/v1/checkout.js"
+          strategy="beforeInteractive"
+        />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
       </RootStoreProvider>
     </SessionProvider>
   );
