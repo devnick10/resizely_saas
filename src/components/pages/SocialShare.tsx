@@ -37,7 +37,7 @@ export default function SocialShare() {
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [isTransforming, setIsTransforming] = useState<boolean>(false);
   const imageRef = useRef<HTMLImageElement>(null);
-  const { credits, setCredits } = useCreditsStore(state=>state);
+  const { credits, setCredits } = useCreditsStore((state) => state);
   const router = useRouter();
 
   const handleFileUpload = async (
