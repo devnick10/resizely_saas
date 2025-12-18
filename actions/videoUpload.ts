@@ -1,7 +1,7 @@
 "use server";
 import { v2 } from "cloudinary";
 import prisma from "@/db";
-import { getUser } from "./getUser";
+import { getUser } from "../lib/data/user/getUser";
 
 // Configure Cloudinary
 v2.config({
@@ -20,10 +20,6 @@ interface CloudinaryUploadResult {
 export async function videoUpload(data: FormData) {
   try {
     const { email } = await getUser();
-
-    if (!email) {
-      return { success: false, error: "Unauthorize" };
-    }
 
     // Validate Cloudinary credentials
     if (
@@ -79,7 +75,7 @@ export async function videoUpload(data: FormData) {
         originalSize,
         compressSize: String(result.bytes),
         duration: result.duration || 0,
-        userId: email,
+        userId: email!,
       },
     });
 

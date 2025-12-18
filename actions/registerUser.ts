@@ -1,29 +1,17 @@
 "use server";
 
-import bcrypt from "bcrypt";
 import prisma from "@/db";
-import { credentialsSchema } from "@/types";
-
-interface RegisterUserInput {
-  email: string;
-  password: string;
-  username: string;
-}
+import { registerUserValidation } from "@/schema";
+import { RegisterUserInput } from "@/types";
+import bcrypt from "bcrypt";
 
 export async function registerUser({
   email,
   password,
   username,
 }: RegisterUserInput) {
-  const { success, data, error } = credentialsSchema.safeParse({
-    email,
-    password,
-    username,
-  });
 
-  if (!success) {
-    throw new Error(error.issues[0].message);
-  }
+  registerUserValidation({ email, password, username })
 
   const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser) {
@@ -36,8 +24,8 @@ export async function registerUser({
     const user = await prisma.$transaction(async (tx) => {
       const user = await tx.user.create({
         data: {
-          email: data.email,
-          username: data.username || data.email.split("@")[0],
+          email: email,
+          username: username || email.split("@")[0],
           password: hashedPassword,
         },
       });
