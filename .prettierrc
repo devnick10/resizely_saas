@@ -1,6 +1,4 @@
 {
   "tabWidth": 2,
-  "puglin": [
-    "prettier-plugin-tailwindcss"
-  ]
+  "puglin": ["prettier-plugin-tailwindcss"]
 }
