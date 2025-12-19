@@ -2,16 +2,16 @@ import Link from "next/link";
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-gray-50 dark:bg-background border-t dark:border-gray-800 py-12 md:py-16">
-      <div className="container px-4 md:px-6 mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="border-t bg-gray-50 py-12 dark:border-gray-800 dark:bg-background md:py-16">
+      <div className="container mx-auto px-4 md:px-6">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div>
-            <Link href="/" className="inline-block mb-4">
-              <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+            <Link href="/" className="mb-4 inline-block">
+              <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-xl font-bold text-transparent">
                 Resizely
               </span>
             </Link>
-            <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
+            <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
               Transform your media effortlessly with AI-powered tools for
               compression, background removal, and social media optimization.
             </p>
@@ -93,7 +93,7 @@ export const Footer: React.FC = () => {
             },
           ].map((section, idx) => (
             <div key={idx}>
-              <h3 className="font-bold mb-4 text-gray-900 dark:text-white">
+              <h3 className="mb-4 font-bold text-gray-900 dark:text-white">
                 {section.title}
               </h3>
               <ul className="space-y-2">
@@ -112,7 +112,7 @@ export const Footer: React.FC = () => {
           ))}
         </div>
 
-        <div className="border-t border-gray-200 dark:border-gray-800 mt-12 pt-8 text-center text-gray-500 dark:text-gray-400 text-sm">
+        <div className="mt-12 border-t border-gray-200 pt-8 text-center text-sm text-gray-500 dark:border-gray-800 dark:text-gray-400">
           <p>
             &copy; {new Date().getFullYear()} Resizely. All rights reserved.
           </p>

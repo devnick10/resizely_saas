@@ -69,35 +69,35 @@ export const PricingCard: React.FC<PricingCardProps> = (props) => {
 
   return (
     <div
-      className={`bg-white dark:bg-muted p-8 rounded-lg border ${
+      className={`rounded-lg border bg-white p-8 dark:bg-muted ${
         props.popular
-          ? "border-primary shadow-lg relative"
-          : "border-gray-200 dark:border-gray-700 shadow-sm"
-      } flex flex-col h-full transition-colors`}
+          ? "relative border-primary shadow-lg"
+          : "border-gray-200 shadow-sm dark:border-gray-700"
+      } flex h-full flex-col transition-colors`}
     >
       {props.popular && (
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-primary text-white text-xs font-bold py-1 px-3 rounded-full">
+        <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-primary px-3 py-1 text-xs font-bold text-white">
           Most Popular
         </div>
       )}
 
       <div className="mb-6">
-        <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">
+        <h3 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">
           {props.title}
         </h3>
-        <div className="flex items-baseline mb-2">
+        <div className="mb-2 flex items-baseline">
           <span className="text-3xl font-bold text-gray-900 dark:text-white">
             {props.price}
           </span>
-          <span className="text-gray-500 dark:text-gray-400 ml-1">/month</span>
+          <span className="ml-1 text-gray-500 dark:text-gray-400">/month</span>
         </div>
         <p className="text-gray-500 dark:text-gray-400">{props.description}</p>
       </div>
 
-      <ul className="space-y-3 mb-8 flex-grow">
+      <ul className="mb-8 flex-grow space-y-3">
         {props.features.map((feature, index) => (
           <li key={index} className="flex items-start">
-            <CheckCircle className="h-5 w-5 text-primary shrink-0 mr-2" />
+            <CheckCircle className="mr-2 h-5 w-5 shrink-0 text-primary" />
             <span className="text-gray-700 dark:text-gray-200">{feature}</span>
           </li>
         ))}

@@ -21,7 +21,7 @@ export const ModeToggle: React.FC = () => {
   return (
     <Button variant="outline" size="icon" onClick={toggleTheme}>
       <Sun className="h-[1.2rem] w-[1.2rem] transition-all dark:hidden" />
-      <Moon className="h-[1.2rem] w-[1.2rem] transition-all hidden dark:block" />
+      <Moon className="hidden h-[1.2rem] w-[1.2rem] transition-all dark:block" />
       <span className="sr-only">Toggle theme</span>
     </Button>
   );

@@ -71,14 +71,14 @@ export const Signin: React.FC = () => {
         sizes="100vw"
         style={{ width: "100%", height: "auto" }}
       />
-      <div className="relative min-h-screen flex items-center justify-center px-4">
+      <div className="relative flex min-h-screen items-center justify-center px-4">
         <div className="absolute top-0 w-full">
           <Header />
         </div>
 
-        <Card className="w-full max-w-xs z-10">
+        <Card className="z-10 w-full max-w-xs">
           <CardHeader>
-            <CardTitle className="text-xl text-center">Sign In</CardTitle>
+            <CardTitle className="text-center text-xl">Sign In</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <form onSubmit={submit} className="space-y-4">
@@ -122,14 +122,14 @@ export const Signin: React.FC = () => {
                 </div>
               </div>
 
-              <Button type="submit" className="w-full text-md">
+              <Button type="submit" className="text-md w-full">
                 Sign In
               </Button>
             </form>
 
             <Button
               variant="outline"
-              className="w-full flex text-md gap-2"
+              className="text-md flex w-full gap-2"
               onClick={() => signIn("google", { callbackUrl: "/home" })}
             >
               <Image
@@ -145,7 +145,7 @@ export const Signin: React.FC = () => {
               Don&apos;t have an account?
               <Link
                 href="/sign-up"
-                className="ml-1 text-blue-600 font-medium underline"
+                className="ml-1 font-medium text-blue-600 underline"
               >
                 Sign Up
               </Link>

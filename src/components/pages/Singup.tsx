@@ -100,14 +100,14 @@ export const Signup: React.FC = () => {
         sizes="100vw"
         style={{ width: "100%", height: "auto" }}
       />
-      <div className="relative flex justify-center items-center min-h-screen px-4">
+      <div className="relative flex min-h-screen items-center justify-center px-4">
         <div className="absolute top-0 w-full">
           <Header />
         </div>
 
-        <Card className="w-full max-w-xs z-10">
+        <Card className="z-10 w-full max-w-xs">
           <CardHeader>
-            <CardTitle className="text-xl text-center">Sign Up</CardTitle>
+            <CardTitle className="text-center text-xl">Sign Up</CardTitle>
           </CardHeader>
 
           <CardContent className="space-y-4">
@@ -190,7 +190,7 @@ export const Signup: React.FC = () => {
             {!verification && (
               <Button
                 variant="outline"
-                className="w-full text-md flex gap-2"
+                className="text-md flex w-full gap-2"
                 onClick={() => signIn("google", { callbackUrl: "/home" })}
               >
                 <Image
@@ -207,7 +207,7 @@ export const Signup: React.FC = () => {
               Already have an account?
               <Link
                 href="/sign-in"
-                className="ml-1 text-blue-600 font-medium underline"
+                className="ml-1 font-medium text-blue-600 underline"
               >
                 Sign In
               </Link>

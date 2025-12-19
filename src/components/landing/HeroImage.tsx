@@ -11,29 +11,29 @@ export const HeroImage: React.FC = () => {
 
   if (!mounted) {
     return (
-      <div className="w-full h-[400px] bg-gray-100 rounded-lg animate-pulse"></div>
+      <div className="h-[400px] w-full animate-pulse rounded-lg bg-gray-100"></div>
     );
   }
 
   return (
-    <div className="relative w-full max-w-[600px] mx-auto">
+    <div className="relative mx-auto w-full max-w-[600px]">
       {/* Background decorative element */}
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/10 rounded-lg transform rotate-3 scale-95"></div>
+      <div className="absolute inset-0 rotate-3 scale-95 transform rounded-lg bg-gradient-to-r from-primary/20 to-primary/10"></div>
 
       {/* Main container */}
-      <div className="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700">
+      <div className="relative overflow-hidden rounded-lg border border-gray-100 bg-white shadow-xl dark:border-gray-700 dark:bg-gray-800">
         {/* Window header */}
-        <div className="h-12 bg-gray-50 dark:bg-gray-900 border-b flex items-center px-4">
+        <div className="flex h-12 items-center border-b bg-gray-50 px-4 dark:bg-gray-900">
           <div className="flex space-x-2">
-            <div className="w-3 h-3 rounded-full bg-red-400"></div>
-            <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-            <div className="w-3 h-3 rounded-full bg-green-400"></div>
+            <div className="h-3 w-3 rounded-full bg-red-400"></div>
+            <div className="h-3 w-3 rounded-full bg-yellow-400"></div>
+            <div className="h-3 w-3 rounded-full bg-green-400"></div>
           </div>
         </div>
 
         {/* Content */}
         <div className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {/* Left column */}
             <div className="flex flex-col gap-4">
               <div
@@ -42,9 +42,9 @@ export const HeroImage: React.FC = () => {
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}
-                className="bg-gray-100 dark:bg-gray-700 rounded-lg h-40 w-full overflow-hidden relative"
+                className="relative h-40 w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-700"
               >
-                <div className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                <div className="absolute bottom-2 left-2 rounded bg-black/70 px-2 py-1 text-xs text-white">
                   Original: 24MB
                 </div>
               </div>
@@ -54,16 +54,16 @@ export const HeroImage: React.FC = () => {
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}
-                className="bg-gray-100 dark:bg-gray-700 rounded-lg h-40 w-full overflow-hidden relative"
+                className="relative h-40 w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-700"
               >
-                <div className="absolute bottom-2 left-2 bg-primary/70 text-white text-xs px-2 py-1 rounded">
+                <div className="absolute bottom-2 left-2 rounded bg-primary/70 px-2 py-1 text-xs text-white">
                   Compressed: 4MB
                 </div>
               </div>
-              <div className="bg-gray-100 dark:bg-gray-700 rounded-lg h-20 w-full overflow-hidden relative">
+              <div className="relative h-20 w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-700">
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
-                    <div className="dark:text-white font-bold">1 Credit</div>
+                    <div className="font-bold dark:text-white">1 Credit</div>
                     <div className="text-xs text-neutral-800 dark:text-neutral-200">
                       Per Compression
                     </div>
@@ -80,10 +80,10 @@ export const HeroImage: React.FC = () => {
                   backgroundSize: "cover",
                   backgroundPosition: "top",
                 }}
-                className="bg-gray-100 dark:bg-gray-700 rounded-lg h-40 w-full overflow-hidden relative"
+                className="relative h-40 w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-700"
               >
                 <div className="absolute inset-0 flex items-center justify-center text-gray-400 dark:text-gray-600"></div>
-                <div className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                <div className="absolute bottom-2 left-2 rounded bg-black/70 px-2 py-1 text-xs text-white">
                   With Background
                 </div>
               </div>
@@ -93,16 +93,16 @@ export const HeroImage: React.FC = () => {
                   backgroundSize: "cover",
                   backgroundPosition: "top",
                 }}
-                className="bg-gray-100 dark:bg-gray-700 rounded-lg h-40 w-full overflow-hidden relative"
+                className="relative h-40 w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-700"
               >
                 <div className="absolute inset-0 flex items-center justify-center text-gray-400 dark:text-gray-600"></div>
-                <div className="absolute bottom-2 left-2 bg-primary/70 text-white text-xs px-2 py-1 rounded">
+                <div className="absolute bottom-2 left-2 rounded bg-primary/70 px-2 py-1 text-xs text-white">
                   Background Removed
                 </div>
               </div>
 
-              <div className="bg-gray-100 dark:bg-gray-700 rounded-lg h-20 w-full overflow-hidden grid grid-cols-3 gap-2">
-                <div className="bg-white dark:bg-gray-600 rounded shadow-sm flex flex-col items-center justify-center">
+              <div className="grid h-20 w-full grid-cols-3 gap-2 overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-700">
+                <div className="flex flex-col items-center justify-center rounded bg-white shadow-sm dark:bg-gray-600">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     x="0px"
@@ -159,9 +159,9 @@ export const HeroImage: React.FC = () => {
                       d="M30,37H18c-3.859,0-7-3.14-7-7V18c0-3.86,3.141-7,7-7h12c3.859,0,7,3.14,7,7v12	C37,33.86,33.859,37,30,37z M18,13c-2.757,0-5,2.243-5,5v12c0,2.757,2.243,5,5,5h12c2.757,0,5-2.243,5-5V18c0-2.757-2.243-5-5-5H18z"
                     ></path>
                   </svg>
-                  <div className="text-xs text-center">Instagram</div>
+                  <div className="text-center text-xs">Instagram</div>
                 </div>
-                <div className="bg-white dark:bg-gray-600 rounded shadow-sm flex flex-col items-center justify-center">
+                <div className="flex flex-col items-center justify-center rounded bg-white shadow-sm dark:bg-gray-600">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     x="0px"
@@ -172,9 +172,9 @@ export const HeroImage: React.FC = () => {
                   >
                     <path d="M 11 4 C 7.134 4 4 7.134 4 11 L 4 39 C 4 42.866 7.134 46 11 46 L 39 46 C 42.866 46 46 42.866 46 39 L 46 11 C 46 7.134 42.866 4 39 4 L 11 4 z M 13.085938 13 L 21.023438 13 L 26.660156 21.009766 L 33.5 13 L 36 13 L 27.789062 22.613281 L 37.914062 37 L 29.978516 37 L 23.4375 27.707031 L 15.5 37 L 13 37 L 22.308594 26.103516 L 13.085938 13 z M 16.914062 15 L 31.021484 35 L 34.085938 35 L 19.978516 15 L 16.914062 15 z"></path>
                   </svg>
-                  <div className="text-xs text-center">Twitter</div>
+                  <div className="text-center text-xs">Twitter</div>
                 </div>
-                <div className="bg-white dark:bg-gray-600 rounded shadow-sm flex flex-col items-center justify-center">
+                <div className="flex flex-col items-center justify-center rounded bg-white shadow-sm dark:bg-gray-600">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     x="0px"
@@ -192,7 +192,7 @@ export const HeroImage: React.FC = () => {
                       d="M12 19H17V36H12zM14.485 17h-.028C12.965 17 12 15.888 12 14.499 12 13.08 12.995 12 14.514 12c1.521 0 2.458 1.08 2.486 2.499C17 15.887 16.035 17 14.485 17zM36 36h-5v-9.099c0-2.198-1.225-3.698-3.192-3.698-1.501 0-2.313 1.012-2.707 1.99C24.957 25.543 25 26.511 25 27v9h-5V19h5v2.616C25.721 20.5 26.85 19 29.738 19c3.578 0 6.261 2.25 6.261 7.274L36 36 36 36z"
                     ></path>
                   </svg>
-                  <div className="text-xs text-center">LinkedIn</div>
+                  <div className="text-center text-xs">LinkedIn</div>
                 </div>
               </div>
             </div>

@@ -46,23 +46,23 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
 
   return (
     <Card
-      className="transition-shadow duration-300 shadow hover:shadow-lg"
+      className="shadow transition-shadow duration-300 hover:shadow-lg"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <CardHeader className="p-0 relative aspect-video overflow-hidden rounded-t-md">
+      <CardHeader className="relative aspect-video overflow-hidden rounded-t-md p-0">
         {isHovered && (
           <video
             src={getPreviewVideoUrl(String(video.publicId))}
             autoPlay
             muted
             loop
-            className="w-full h-full object-cover"
+            className="h-full w-full object-cover"
             onError={() => setPreviewError(true)}
           />
         )}
         {previewError && (
-          <div className="w-full h-full flex items-center justify-center bg-muted">
+          <div className="flex h-full w-full items-center justify-center bg-muted">
             <p className="text-sm text-destructive">Preview not available</p>
           </div>
         )}
@@ -71,15 +71,15 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
           alt={video.title}
           width={400}
           height={225}
-          className="w-full h-full object-cover"
+          className="h-full w-full object-cover"
         />
-        <div className="absolute bottom-2 right-2 bg-background/80 px-2 py-1 rounded text-sm flex items-center gap-1 text-foreground">
+        <div className="absolute bottom-2 right-2 flex items-center gap-1 rounded bg-background/80 px-2 py-1 text-sm text-foreground">
           <Clock size={14} />
           {formatDuration(video.duration)}
         </div>
       </CardHeader>
 
-      <CardContent className="p-4 space-y-2">
+      <CardContent className="space-y-2 p-4">
         <CardTitle className="text-base font-semibold">{video.title}</CardTitle>
         <p className="text-sm text-muted-foreground">{video.description}</p>
         <p className="text-xs text-muted-foreground">
@@ -104,7 +104,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
         </div>
       </CardContent>
 
-      <CardFooter className="px-4 pb-4 flex justify-between items-center">
+      <CardFooter className="flex items-center justify-between px-4 pb-4">
         <span className="text-sm">
           Compression:{" "}
           <span className="font-semibold text-green-600">
@@ -118,7 +118,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
             handleDownload(getFullVideoUrl(video.publicId), video.title)
           }
         >
-          <Download className="w-4 h-4 mr-1" /> Download
+          <Download className="mr-1 h-4 w-4" /> Download
         </Button>
       </CardFooter>
     </Card>

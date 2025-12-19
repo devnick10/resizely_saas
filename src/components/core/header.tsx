@@ -11,25 +11,25 @@ export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className=" overflow-hidden sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full overflow-hidden border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4 md:px-6">
         <Link href="/" className="flex items-center gap-2">
-          <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+          <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-2xl font-bold text-transparent">
             Resizely
           </span>
         </Link>
-        <nav className="hidden md:flex gap-6">
+        <nav className="hidden gap-6 md:flex">
           {navItems.map((item, idx) => (
             <Link
               key={idx}
               href={item.hrf}
-              className="text-md font-medium hover:text-primary transition-colors"
+              className="text-md font-medium transition-colors hover:text-primary"
             >
               {item.title}
             </Link>
           ))}
         </nav>
-        <div className="hidden md:flex gap-4">
+        <div className="hidden gap-4 md:flex">
           <Button variant="ghost" asChild>
             <Link href="/sign-in">Sign in</Link>
           </Button>
@@ -51,18 +51,18 @@ export const Header: React.FC = () => {
         </button>
       </div>
       {isMenuOpen && (
-        <div className="md:hidden p-4 pt-0 bg-background border-b">
+        <div className="border-b bg-background p-4 pt-0 md:hidden">
           <nav className="flex flex-col gap-4 py-4">
             <Link
               href="/#features"
-              className="text-sm font-medium hover:text-primary transition-colors"
+              className="text-sm font-medium transition-colors hover:text-primary"
               onClick={() => setIsMenuOpen(false)}
             >
               Features
             </Link>
             <Link
               href="/#pricing"
-              className="text-sm font-medium hover:text-primary transition-colors"
+              className="text-sm font-medium transition-colors hover:text-primary"
               onClick={() => setIsMenuOpen(false)}
             >
               Pricing

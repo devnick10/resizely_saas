@@ -10,28 +10,28 @@ import React from "react";
 
 export const Landing: React.FC = () => {
   return (
-    <div className="flex min-h-screen flex-col bg-white dark:bg-background text-black dark:text-white transition-colors">
+    <div className="flex min-h-screen flex-col bg-white text-black transition-colors dark:bg-background dark:text-white">
       <Header />
 
       {/* Hero Section */}
-      <section className="relative py-20 md:py-20 overflow-hidden bg-gradient-to-b from-white to-gray-50 dark:from-background dark:to-background">
-        <div className="container px-4 md:px-6 mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <section className="relative overflow-hidden bg-gradient-to-b from-white to-gray-50 py-20 dark:from-background dark:to-background md:py-20">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
             <div className="flex flex-col gap-6">
-              <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold border-transparent bg-primary/10 text-primary hover:bg-primary/20 w-fit">
-                <Zap className="h-3.5 w-3.5 mr-1" />
+              <div className="inline-flex w-fit items-center rounded-full border border-transparent bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary hover:bg-primary/20">
+                <Zap className="mr-1 h-3.5 w-3.5" />
                 Powered by AI
               </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter">
+              <h1 className="text-4xl font-bold tracking-tighter md:text-5xl lg:text-6xl">
                 Transform Your Media{" "}
                 <span className="text-primary">Effortlessly</span>
               </h1>
-              <p className="text-gray-600 dark:text-gray-400 md:text-xl max-w-[600px]">
+              <p className="max-w-[600px] text-gray-600 dark:text-gray-400 md:text-xl">
                 Compress videos, remove backgrounds, and resize images for
                 social media - all with the power of AI. Start with 2 free
                 credits today.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col gap-4 sm:flex-row">
                 <Button size="lg" asChild>
                   <Link href="/sign-up">Get Started Free</Link>
                 </Button>
@@ -50,7 +50,7 @@ export const Landing: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="relative lg:h-[600px] flex items-center justify-center">
+            <div className="relative flex items-center justify-center lg:h-[600px]">
               <HeroImage />
             </div>
           </div>
@@ -58,18 +58,18 @@ export const Landing: React.FC = () => {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 bg-white dark:bg-background">
-        <div className="container px-4 md:px-6 mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+      <section id="features" className="bg-white py-20 dark:bg-background">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="mb-16 text-center">
+            <h2 className="mb-4 text-3xl font-bold md:text-4xl">
               Powerful Features
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 md:text-lg max-w-[800px] mx-auto">
+            <p className="mx-auto max-w-[800px] text-gray-600 dark:text-gray-400 md:text-lg">
               Resizely combines cutting-edge AI with intuitive design to make
               media processing simple and efficient.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             <FeatureCard
               src="https://res.cloudinary.com/dnr1sgjrx/image/upload/v1744802385/videocomp_kweghx.png"
               title="Video Compression"
@@ -90,26 +90,26 @@ export const Landing: React.FC = () => {
       </section>
 
       {/* How It Works */}
-      <section id="learnmore" className="py-20 bg-gray-50 dark:bg-muted/50">
-        <div className="container px-4 md:px-6 mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+      <section id="learnmore" className="bg-gray-50 py-20 dark:bg-muted/50">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="mb-16 text-center">
+            <h2 className="mb-4 text-3xl font-bold md:text-4xl">
               How It Works
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 md:text-lg max-w-[800px] mx-auto">
+            <p className="mx-auto max-w-[800px] text-gray-600 dark:text-gray-400 md:text-lg">
               Resizely makes media processing simple with just three easy steps.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             {[1, 2, 3].map((step, idx) => (
               <div
                 key={idx}
-                className="bg-white dark:bg-muted p-8 rounded-lg shadow-sm border border-gray-100 dark:border-gray-800 text-center"
+                className="rounded-lg border border-gray-100 bg-white p-8 text-center shadow-sm dark:border-gray-800 dark:bg-muted"
               >
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <span className="text-primary font-bold text-xl">{step}</span>
+                <div className="mx-auto mb-6 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                  <span className="text-xl font-bold text-primary">{step}</span>
                 </div>
-                <h3 className="text-xl font-bold mb-3">
+                <h3 className="mb-3 text-xl font-bold">
                   {step === 1
                     ? "Upload Your Media"
                     : step === 2
@@ -130,18 +130,18 @@ export const Landing: React.FC = () => {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-20 bg-white dark:bg-background">
-        <div className="container px-4 md:px-6 mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+      <section id="pricing" className="bg-white py-20 dark:bg-background">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="mb-16 text-center">
+            <h2 className="mb-4 text-3xl font-bold md:text-4xl">
               Simple Credit-Based Pricing
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 md:text-lg max-w-[800px] mx-auto">
+            <p className="mx-auto max-w-[800px] text-gray-600 dark:text-gray-400 md:text-lg">
               Start with 2 free credits. Purchase more credits as you need them.
               No subscriptions or hidden fees.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             <PricingCard
               title="Starter"
               price="Free"
@@ -191,7 +191,7 @@ export const Landing: React.FC = () => {
             />
           </div>
           <div className="mt-12 text-center">
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
+            <p className="mb-4 text-gray-600 dark:text-gray-400">
               Need more credits? Contact us for custom enterprise packages.
             </p>
             <Button variant="link" asChild>
@@ -202,13 +202,13 @@ export const Landing: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-primary text-white">
-        <div className="container px-4 md:px-6 mx-auto">
-          <div className="text-center max-w-[800px] mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+      <section className="bg-primary py-20 text-white">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="mx-auto max-w-[800px] text-center">
+            <h2 className="mb-4 text-3xl font-bold md:text-4xl">
               Ready to Transform Your Media?
             </h2>
-            <p className="text-primary-foreground/80 md:text-lg mb-8">
+            <p className="mb-8 text-primary-foreground/80 md:text-lg">
               Start with 2 free credits and experience the power of
               Resizely&apos;s AI-powered media tools.
             </p>

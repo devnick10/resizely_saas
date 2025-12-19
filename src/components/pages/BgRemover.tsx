@@ -25,11 +25,11 @@ export const BgRemover: React.FC = () => {
   if (error) toast.error("Something went wrong");
 
   return (
-    <div className="container mx-auto p-4 max-w-4xl">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-center">
+    <div className="container mx-auto max-w-4xl p-4">
+      <h1 className="mb-4 text-center text-2xl font-bold sm:text-3xl">
         AI Background Remover
       </h1>
-      <p className="text-center text-muted-foreground mb-6 sm:text-lg">
+      <p className="mb-6 text-center text-muted-foreground sm:text-lg">
         Upload an image and let AI remove the background. Download the final
         result instantly!
       </p>
@@ -58,20 +58,20 @@ export const BgRemover: React.FC = () => {
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">Before & After Preview:</h3>
 
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div className="border rounded-lg p-2 bg-muted">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="rounded-lg border bg-muted p-2">
                   <Image
                     src={originalImage}
                     alt="Original"
                     width={400}
                     height={400}
-                    className="rounded-lg mx-auto"
+                    className="mx-auto rounded-lg"
                   />
                 </div>
-                <div className="border rounded-lg p-2 bg-muted relative">
+                <div className="relative rounded-lg border bg-muted p-2">
                   {isTransforming && (
-                    <div className="absolute inset-0 bg-white/60 flex items-center justify-center rounded-lg z-10">
-                      <span className="animate-spin border-4 border-blue-500 border-t-transparent rounded-full h-10 w-10"></span>
+                    <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-white/60">
+                      <span className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></span>
                     </div>
                   )}
                   <CldImage
@@ -83,7 +83,7 @@ export const BgRemover: React.FC = () => {
                     removeBackground
                     ref={imageRef}
                     onLoad={() => setIsTransforming(false)}
-                    className="rounded-lg mx-auto"
+                    className="mx-auto rounded-lg"
                   />
                 </div>
               </div>

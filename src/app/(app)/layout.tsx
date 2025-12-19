@@ -13,16 +13,16 @@ export default async function AppLayout({
 
   return (
     <DataBoundary user={user} credits={credits!}>
-      <div className="flex flex-col h-screen bg-white dark:bg-background text-black dark:text-white transition-colors">
+      <div className="flex h-screen flex-col bg-white text-black transition-colors dark:bg-background dark:text-white">
         <Navbar />
         <div className="flex flex-1 overflow-hidden">
           {/* Desktop sidebar */}
-          <aside className="hidden lg:flex flex-col w-64 border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-muted">
+          <aside className="hidden w-64 flex-col border-r border-gray-200 bg-white dark:border-gray-800 dark:bg-muted lg:flex">
             <Sidebar />
           </aside>
           {/* Main content */}
-          <main className="flex-1 overflow-auto w-full">
-            <div className="p-0 sm:p-4 md:p-6 dark:bg-background w-full h-full">
+          <main className="w-full flex-1 overflow-auto">
+            <div className="h-full w-full p-0 dark:bg-background sm:p-4 md:p-6">
               {children}
             </div>
           </main>

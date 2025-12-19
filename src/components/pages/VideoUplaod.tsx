@@ -6,11 +6,11 @@ import { Loader } from "../core/Loader";
 
 export const VideoUpload: React.FC = () => {
   return (
-    <div className="overflow-hidden w-full mx-auto p-4 max-w-4xl">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-center">
+    <div className="mx-auto w-full max-w-4xl overflow-hidden p-4">
+      <h1 className="mb-4 text-center text-2xl font-bold sm:text-3xl">
         Upload Video
       </h1>
-      <p className="text-center font-semibold mb-6">
+      <p className="mb-6 text-center font-semibold">
         Video Compression Service – Currently for Videos up to 70MB (More Coming
         Soon!) 🚀
       </p>

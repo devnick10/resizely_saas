@@ -47,7 +47,7 @@ export const VIdeoUploadForm: React.FC = () => {
         />
       </div>
 
-      <div className="space-y-2 mb-4">
+      <div className="mb-4 space-y-2">
         <Label htmlFor="video">Video File</Label>
         <Input
           id="video"

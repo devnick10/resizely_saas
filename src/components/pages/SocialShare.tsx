@@ -103,11 +103,11 @@ export const SocialShare: React.FC = () => {
   }, [selectedFormat, uploadedImage]);
 
   return (
-    <div className=" max-w-4xl mx-auto p-4">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-center">
+    <div className="mx-auto max-w-4xl p-4">
+      <h1 className="mb-2 text-center text-2xl font-bold sm:text-3xl">
         Social Media Image Creator
       </h1>
-      <p className="text-center text-muted-foreground mb-6">
+      <p className="mb-6 text-center text-muted-foreground">
         Resize your photos for any social media platform with AI-powered content
         awareness.
       </p>
@@ -150,11 +150,11 @@ export const SocialShare: React.FC = () => {
               </div>
 
               <div className="relative">
-                <h3 className="text-lg font-semibold mb-2">Preview:</h3>
+                <h3 className="mb-2 text-lg font-semibold">Preview:</h3>
                 <div className="flex justify-center">
                   {isTransforming && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-background/70 z-10">
-                      <span className="animate-spin w-6 h-6 border-4 border-blue-500 border-t-transparent rounded-full"></span>
+                    <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/70">
+                      <span className="h-6 w-6 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></span>
                     </div>
                   )}
                   <CldImage
