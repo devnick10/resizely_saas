@@ -1,4 +1,5 @@
-import { useCreditsStore } from "@/components/core/storeProvider";
+"use client";
+import { useCreditsStore, useUserStore } from "@/stores/hooks";
 import { Plan } from "@/types";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -6,8 +7,6 @@ import toast from "react-hot-toast";
 import { createOrderId } from "../helper/createOrderId";
 
 interface UserPayment {
-  name?: string;
-  email?: string;
   plan: Plan;
 }
 
@@ -41,17 +40,15 @@ interface UsePaymentResult {
   message: string | undefined;
 }
 
-export function usePayment({
-  name,
-  email,
-  plan,
-}: UserPayment): UsePaymentResult {
+export function usePayment({ plan }: UserPayment): UsePaymentResult {
+  const { setCredits } = useCreditsStore((state) => state);
+  const { user } = useUserStore((state) => state);
+
   const [options, setOptions] = useState<PaymentOptions | null>(null);
   const [paymentError, setPaymentError] = useState(false);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<string>();
 
-  const { setCredits } = useCreditsStore((state) => state);
   const router = useRouter();
 
   useEffect(() => {
@@ -106,8 +103,8 @@ export function usePayment({
         order_id: orderId,
         handler: verifyPaymentHandler,
         prefill: {
-          name: name || "Guest",
-          email: email || "guest@example.com",
+          name: user?.name || "Guest",
+          email: user?.email || "guest@example.com",
         },
         theme: { color: "#3399cc" },
       };
@@ -117,7 +114,7 @@ export function usePayment({
     };
 
     fetchOrder();
-  }, [name, email, plan, router, setCredits]);
+  }, [user, plan, router, setCredits]);
 
   return { message, loading, paymentError, options };
 }

@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Zap } from "lucide-react";
-import FeatureCard from "@/components/landing/FeatureCard";
-import Header from "@/components/core/header";
-import Footer from "@/components/core/Footer";
-import HeroImage from "@/components/landing/HeroImage";
-import PricingCard2 from "../landing/PricingCard";
+import { FeatureCard } from "@/components/landing/FeatureCard";
+import { Header } from "@/components/core/header";
+import { Footer } from "@/components/core/Footer";
+import { HeroImage } from "@/components/landing/HeroImage";
+import { PricingCard } from "../landing/PricingCard";
+import React from "react";
 
-export default function Home() {
+export const Landing: React.FC = () => {
   return (
     <div className="flex min-h-screen flex-col bg-white dark:bg-background text-black dark:text-white transition-colors">
       <Header />
@@ -141,7 +142,7 @@ export default function Home() {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <PricingCard2
+            <PricingCard
               title="Starter"
               price="Free"
               description="Perfect for trying out Resizely"
@@ -156,7 +157,7 @@ export default function Home() {
               buttonText="Get Started"
               buttonVariant="outline"
             />
-            <PricingCard2
+            <PricingCard
               title="Standard"
               price="$20"
               description="Most popular for individuals"
@@ -172,7 +173,7 @@ export default function Home() {
               buttonVariant="default"
               popular={true}
             />
-            <PricingCard2
+            <PricingCard
               title="Pro"
               price="$40"
               description="Best value for professionals"
@@ -221,4 +222,4 @@ export default function Home() {
       <Footer />
     </div>
   );
-}
+};

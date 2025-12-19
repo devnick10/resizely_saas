@@ -13,13 +13,9 @@ import { CoinsIcon, LogOutIcon, MenuIcon } from "lucide-react";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  useCreditsStore,
-  useNavbarStore,
-  useUserStore,
-} from "../core/storeProvider";
+import { useCreditsStore, useNavbarStore, useUserStore } from "@/stores/hooks";
 
-export const Navbar = () => {
+export const Navbar: React.FC = () => {
   const { isOpen, setIsOpen } = useNavbarStore((state) => state);
   const { credits } = useCreditsStore((state) => state);
   const { user } = useUserStore((state) => state);

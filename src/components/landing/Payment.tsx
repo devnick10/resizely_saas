@@ -1,4 +1,5 @@
-import PricingCard from "../dashboard/PricingCard";
+import React from "react";
+import { PricingCard } from "../dashboard/PricingCard";
 declare global {
   interface Window {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -6,7 +7,7 @@ declare global {
   }
 }
 
-function Payment() {
+export const Payment: React.FC = () => {
   return (
     <>
       <section id="pricing" className="py-2 bg-white">
@@ -77,6 +78,4 @@ function Payment() {
       </section>
     </>
   );
-}
-
-export default Payment;
+};

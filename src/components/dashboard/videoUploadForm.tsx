@@ -9,10 +9,11 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 export const VIdeoUploadForm: React.FC = () => {
+  const { isUploading, uploadVideo, error } = useVideoUpload();
+
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const { isUploading, uploadVideo, error } = useVideoUpload();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -1,12 +1,9 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
-
-import { createNavbarStore, NavbarStore } from "@/stores/navbarStore";
-
-import { useStore } from "zustand";
-import { createCreditsStore, CreditsStore } from "@/stores/creditStore";
-import { createUserStore, UserStore } from "@/stores/userStore";
+import { createCreditsStore } from "@/stores/creditStore";
+import { createNavbarStore } from "@/stores/navbarStore";
+import { createUserStore } from "@/stores/userStore";
+import { createContext, useState } from "react";
 
 type RootStore = {
   // update when add a new store
@@ -15,7 +12,7 @@ type RootStore = {
   userStore: ReturnType<typeof createUserStore>;
 };
 
-const RootStoreContext = createContext<RootStore | null>(null);
+export const RootStoreContext = createContext<RootStore | null>(null);
 
 export function RootStoreProvider({ children }: { children: React.ReactNode }) {
   const [stores] = useState<RootStore>(() => ({
@@ -30,25 +27,4 @@ export function RootStoreProvider({ children }: { children: React.ReactNode }) {
       {children}
     </RootStoreContext.Provider>
   );
-}
-
-export function useNavbarStore<T>(selector: (s: NavbarStore) => T) {
-  const ctx = useContext(RootStoreContext);
-  if (!ctx) throw new Error("Missing RootStoreProvider");
-
-  return useStore(ctx.navbarStore, selector);
-}
-
-export function useCreditsStore<T>(selector: (s: CreditsStore) => T) {
-  const ctx = useContext(RootStoreContext);
-  if (!ctx) throw new Error("Missing RootStoreProvider");
-
-  return useStore(ctx.creditsStore, selector);
-}
-
-export function useUserStore<T>(selector: (s: UserStore) => T) {
-  const ctx = useContext(RootStoreContext);
-  if (!ctx) throw new Error("Missing RootStoreProvider");
-
-  return useStore(ctx.userStore, selector);
 }

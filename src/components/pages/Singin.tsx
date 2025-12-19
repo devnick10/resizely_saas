@@ -8,8 +8,8 @@ import { useState, FormEvent } from "react";
 import toast from "react-hot-toast";
 import { EyeOff, Eye } from "lucide-react";
 
-import Header from "@/components/core/header";
-import Loader from "@/components/core/Loader";
+import { Header } from "@/components/core/header";
+import { Loader } from "@/components/core/Loader";
 import { useLoader } from "@/hooks/useLoader";
 
 import { Input } from "@/components/ui/input";
@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export default function Signin() {
+export const Signin: React.FC = () => {
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -155,4 +155,4 @@ export default function Signin() {
       </div>
     </>
   );
-}
+};

@@ -11,8 +11,8 @@ import { Eye, EyeOff } from "lucide-react";
 import { sendOTP } from "@/actions/sendOtp";
 import { verifyOtp } from "@/actions/verifyOtp";
 
-import Header from "@/components/core/header";
-import Loader from "@/components/core/Loader";
+import { Header } from "@/components/core/header";
+import { Loader } from "@/components/core/Loader";
 import { useLoader } from "@/hooks/useLoader";
 
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
@@ -21,7 +21,7 @@ import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { registerUser } from "@/actions/registerUser";
 
-export default function Signup() {
+export const Signup: React.FC = () => {
   const [username, setUsername] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
@@ -217,4 +217,4 @@ export default function Signup() {
       </div>
     </>
   );
-}
+};

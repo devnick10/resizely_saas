@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export function ModeToggle() {
+export const ModeToggle: React.FC = () => {
   const { setTheme, theme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -25,4 +25,4 @@ export function ModeToggle() {
       <span className="sr-only">Toggle theme</span>
     </Button>
   );
-}
+};

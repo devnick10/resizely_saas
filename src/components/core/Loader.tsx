@@ -1,6 +1,6 @@
 import React from "react";
 
-function Loader() {
+export const Loader: React.FC = () => {
   return (
     <div className="min-h-screen min-w-full flex flex-col text-xl justify-center items-center">
       {" "}
@@ -8,6 +8,4 @@ function Loader() {
       <h1>Loading</h1>
     </div>
   );
-}
-
-export default Loader;
+};

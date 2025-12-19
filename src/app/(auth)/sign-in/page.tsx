@@ -1,12 +1,10 @@
-import Signin from "@/components/pages/Singin";
 import React from "react";
+import { Signin } from "@/components/pages/Singin";
 
-function page() {
+export default function Page() {
   return (
     <div>
       <Signin />
     </div>
   );
 }
-
-export default page;

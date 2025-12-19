@@ -1,21 +1,21 @@
 "use client";
-import { useEffect } from "react";
-import { useCreditsStore, useUserStore } from "./storeProvider";
 import { User } from "@/types";
+import type { PropsWithChildren } from "react";
+import { useEffect } from "react";
+import { useCreditsStore, useUserStore } from "@/stores/hooks";
 
-interface DataBoundaryProps {
-  children: React.ReactNode;
+interface DataBoundaryProps extends PropsWithChildren {
   user: User | null;
   credits: number;
 }
 
-export function DataBoundary({ children, user, credits }: DataBoundaryProps) {
+export const DataBoundary: React.FC<DataBoundaryProps> = (props) => {
   const { setUser } = useUserStore((s) => s);
   const { setCredits } = useCreditsStore((s) => s);
   useEffect(() => {
-    setUser(user);
-    setCredits(credits);
-  }, [user, setUser, credits, setCredits]);
+    setUser(props.user);
+    setCredits(props.credits);
+  }, [props, setUser, setCredits]);
 
-  return <>{children}</>;
-}
+  return <>{props.children}</>;
+};

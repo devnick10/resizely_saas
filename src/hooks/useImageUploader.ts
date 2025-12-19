@@ -4,9 +4,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
 import { imageUpload } from "@/actions/imageUpload";
 import { updateCredits } from "@/actions/updateCredits";
-import { useCreditsStore } from "@/components/core/storeProvider";
+import { useCreditsStore } from "@/stores/hooks";
 
 export function useImageUpload() {
+  const { credits, setCredits } = useCreditsStore((state) => state);
+
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [originalImage, setOriginalImage] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -14,7 +16,6 @@ export function useImageUpload() {
   const [error, setError] = useState<unknown>(null);
 
   const imageRef = useRef<HTMLImageElement>(null);
-  const { credits, setCredits } = useCreditsStore((state) => state);
 
   const handleFileUpload = async (
     event: React.ChangeEvent<HTMLInputElement>,

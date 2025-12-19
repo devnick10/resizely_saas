@@ -9,7 +9,7 @@ import { CldImage } from "next-cloudinary";
 import Image from "next/image";
 import toast from "react-hot-toast";
 
-export default function BgRemover() {
+export const BgRemover: React.FC = () => {
   const {
     uploadedImage,
     originalImage,
@@ -97,4 +97,4 @@ export default function BgRemover() {
       </Card>
     </div>
   );
-}
+};

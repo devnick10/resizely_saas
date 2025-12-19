@@ -5,8 +5,9 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { ModeToggle } from "./ModeToggle";
+import { navItems } from "@/constants";
 
-export default function Header() {
+export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -18,24 +19,15 @@ export default function Header() {
           </span>
         </Link>
         <nav className="hidden md:flex gap-6">
-          <Link
-            href="/"
-            className="text-md font-medium hover:text-primary transition-colors"
-          >
-            Home
-          </Link>
-          <Link
-            href="/#features"
-            className="text-md font-medium hover:text-primary transition-colors"
-          >
-            Features
-          </Link>
-          <Link
-            href="/#pricing"
-            className="text-md font-medium hover:text-primary transition-colors"
-          >
-            Pricing
-          </Link>
+          {navItems.map((item, idx) => (
+            <Link
+              key={idx}
+              href={item.hrf}
+              className="text-md font-medium hover:text-primary transition-colors"
+            >
+              {item.title}
+            </Link>
+          ))}
         </nav>
         <div className="hidden md:flex gap-4">
           <Button variant="ghost" asChild>
@@ -92,4 +84,4 @@ export default function Header() {
       )}
     </header>
   );
-}
+};

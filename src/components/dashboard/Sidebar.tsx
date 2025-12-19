@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
-import { useCreditsStore, useNavbarStore } from "../core/storeProvider";
+import { useCreditsStore, useNavbarStore } from "@/stores/hooks";
 
 const sidebarItems = [
   { href: "/home", icon: LayoutDashboardIcon, label: "Home Page" },
@@ -20,9 +20,10 @@ const sidebarItems = [
   { href: "/bg-remover", icon: ImageIcon, label: "Background Remover" },
 ];
 
-export const Sidebar = () => {
+export const Sidebar: React.FC = () => {
   const { setIsOpen } = useNavbarStore((state) => state);
   const { credits } = useCreditsStore((state) => state);
+
   const router = useRouter();
   const pathname = usePathname();
 

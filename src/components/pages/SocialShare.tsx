@@ -17,19 +17,12 @@ import { CldImage } from "next-cloudinary";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { useCreditsStore } from "../core/storeProvider";
-
-const socialFormats = {
-  "instagram Square (1:1)": { width: 1080, height: 1080, aspectRatio: "1:1" },
-  "instagram Portrait (4:5)": { width: 1080, height: 1350, aspectRatio: "4:5" },
-  "twitter Post (16:9)": { width: 1200, height: 675, aspectRatio: "16:9" },
-  "twitter Header (3:1)": { width: 1500, height: 500, aspectRatio: "3:1" },
-  "facebook Cover (205:78)": { width: 820, height: 312, aspectRatio: "205:78" },
-};
+import { useCreditsStore } from "@/stores/hooks";
+import { socialFormats } from "@/constants";
 
 type SocialFormat = keyof typeof socialFormats;
 
-export default function SocialShare() {
+export const SocialShare: React.FC = () => {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [selectedFormat, setSelectedFormat] = useState<SocialFormat>(
     "instagram Square (1:1)",
@@ -69,6 +62,23 @@ export default function SocialShare() {
     }
   };
 
+  const handleDownload = useCallback(async () => {
+    if (!imageRef.current) return;
+
+    try {
+      await downloadImage(imageRef.current.src);
+
+      const data = await updateCredits();
+      if ("credits" in data) {
+        setCredits(data.credits);
+        router.push("/social-share");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to download image.");
+    }
+  }, [setCredits, router]);
+
   const downloadImage = async (imageSrc: string) => {
     try {
       const response = await fetch(imageSrc);
@@ -87,23 +97,6 @@ export default function SocialShare() {
       toast.error("Failed to download image.");
     }
   };
-
-  const handleDownload = useCallback(async () => {
-    if (!imageRef.current) return;
-
-    try {
-      await downloadImage(imageRef.current.src);
-
-      const data = await updateCredits();
-      if ("credits" in data) {
-        setCredits(data.credits);
-        router.push("/social-share");
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to download image.");
-    }
-  }, [setCredits, router]);
 
   useEffect(() => {
     if (uploadedImage) setIsTransforming(true);
@@ -190,4 +183,4 @@ export default function SocialShare() {
       </Card>
     </div>
   );
-}
+};

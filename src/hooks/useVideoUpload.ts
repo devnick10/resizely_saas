@@ -4,16 +4,17 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { videoUpload } from "@/actions/videoUpload";
-import { useCreditsStore } from "@/components/core/storeProvider";
+import { useCreditsStore } from "@/stores/hooks";
 
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 
 export function useVideoUpload() {
+  const { credits } = useCreditsStore((state) => state);
+
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<unknown>(null);
 
   const router = useRouter();
-  const { credits } = useCreditsStore((state) => state);
 
   const uploadVideo = async ({
     file,

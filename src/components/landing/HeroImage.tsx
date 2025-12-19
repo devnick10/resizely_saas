@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-export default function HeroImage() {
+export const HeroImage: React.FC = () => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -201,4 +201,4 @@ export default function HeroImage() {
       </div>
     </div>
   );
-}
+};

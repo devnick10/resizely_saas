@@ -1,8 +1,10 @@
-import Videos from "@/components/dashboard/home";
+import { Videos } from "@/components/dashboard/Videos";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { VIdeoUploadForm } from "../dashboard/videoUploadForm";
+import { Suspense } from "react";
+import { Loader } from "../core/Loader";
 
-function VideoUpload() {
+export const VideoUpload: React.FC = () => {
   return (
     <div className="overflow-hidden w-full mx-auto p-4 max-w-4xl">
       <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-center">
@@ -21,10 +23,10 @@ function VideoUpload() {
         </CardContent>
       </Card>
       <div className="mt-8">
-        <Videos />
+        <Suspense fallback={<Loader />}>
+          <Videos />
+        </Suspense>
       </div>
     </div>
   );
-}
-
-export default VideoUpload;
+};

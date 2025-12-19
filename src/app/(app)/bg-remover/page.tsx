@@ -1,8 +1,6 @@
-import BgRemover from "@/components/pages/BgRemover";
+import { BgRemover } from "@/components/pages/BgRemover";
 import React from "react";
 
-function page() {
+export default function Page() {
   return <BgRemover />;
 }
-
-export default page;

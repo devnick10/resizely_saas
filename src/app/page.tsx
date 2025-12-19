@@ -1,8 +1,6 @@
-import Landing from "@/components/pages/Landing";
 import React from "react";
+import { Landing } from "@/components/pages/Landing";
 
-function page() {
+export default function Page() {
   return <Landing />;
 }
-
-export default page;
