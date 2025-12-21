@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "format": "prettier . --write",
     "prepare": "husky"
   },
@@ -43,13 +44,15 @@
     "zustand": "^5.0.9"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
+    "@eslint/eslintrc": "^2.1.4",
+    "@eslint/js": "^8.57.1",
+    "@next/eslint-plugin-next": "^15.1.6",
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^20.17.16",
     "@types/nodemailer": "^6.4.17",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^9",
+    "eslint": "^8.57.1",
     "eslint-config-next": "15.1.6",
     "eslint-config-prettier": "^10.1.8",
     "husky": "^9.1.7",
