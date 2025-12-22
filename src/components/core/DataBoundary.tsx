@@ -17,5 +17,5 @@ export const DataBoundary: React.FC<DataBoundaryProps> = (props) => {
     setCredits(props.credits);
   }, [props, setUser, setCredits]);
 
-  return <>{props.children}</>;
+  return props.children;
 };
