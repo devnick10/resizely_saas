@@ -15,16 +15,12 @@ export async function middleware(request: NextRequest) {
     "/verify",
     "/payment",
   ];
-  
+
   // Routes that should NOT be accessible when logged in
-  const publicAuthRoutes = [
-    "/",
-    "/sign-in",
-    "/sign-up",
-  ];
+  const publicAuthRoutes = ["/", "/sign-in", "/sign-up"];
 
   const isProtectedRoute = privateRoutes.some((route) =>
-    pathname.startsWith(route)
+    pathname.startsWith(route),
   );
 
   const isAuthPage = publicAuthRoutes.includes(pathname);
@@ -46,7 +42,7 @@ export const config = {
     "/",
     "/sign-in",
     "/sign-up",
-    
+
     "/home/:path*",
     "/social-share/:path*",
     "/video-upload/:path*",

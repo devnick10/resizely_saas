@@ -1,11 +1,10 @@
-import bcrypt from "bcrypt";
-import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/db";
-import { Account, AuthOptions, Session } from "next-auth";
 import { CredentialsType, credentialsSchema } from "@/schema";
-import GoogleProvider from "next-auth/providers/google";
+import bcrypt from "bcrypt";
 import type { DefaultSession } from "next-auth";
-import { User } from "next-auth";
+import { Account, AuthOptions, User } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 
 declare module "next-auth" {
   interface Session {
