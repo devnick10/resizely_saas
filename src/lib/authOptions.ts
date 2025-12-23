@@ -1,23 +1,27 @@
 import bcrypt from "bcrypt";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/db";
-import { JWT } from "next-auth/jwt";
-import { Account, Session } from "next-auth";
+import { Account, AuthOptions, Session } from "next-auth";
 import { CredentialsType, credentialsSchema } from "@/schema";
 import GoogleProvider from "next-auth/providers/google";
+import type { DefaultSession } from "next-auth";
 import { User } from "next-auth";
+
 declare module "next-auth" {
   interface Session {
     user: {
       id: string;
-      name?: string;
-      email?: string;
-      image?: string;
-    };
+    } & DefaultSession["user"];
   }
 }
 
-export const authOptions = {
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: string;
+  }
+}
+
+export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -75,7 +79,22 @@ export const authOptions = {
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: "jwt",
+  },
   callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+    async session({ token, session }) {
+      if (session.user) {
+        session.user.id = token.sub || token.id;
+      }
+      return session;
+    },
     async signIn({
       user,
       account,
@@ -116,15 +135,9 @@ export const authOptions = {
 
       return true;
     },
-    async session({ token, session }: { token: JWT; session: Session }) {
-      if (session.user) {
-        session.user.id = token.sub || "";
-      }
-      return session;
-    },
   },
   pages: {
     signIn: "/sign-in",
-    signUp: "/sign-up",
+    newUser: "/sign-up",
   },
 };
