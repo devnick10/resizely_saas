@@ -124,6 +124,7 @@ export const authOptions: AuthOptions = {
                   userId: dbUser.id,
                 },
               });
+              user.id = dbUser.id;
             });
           }
         } catch (error) {
@@ -131,7 +132,6 @@ export const authOptions: AuthOptions = {
           return false;
         }
       }
-
       return true;
     },
   },
