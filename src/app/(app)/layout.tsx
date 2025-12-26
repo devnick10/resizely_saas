@@ -2,17 +2,18 @@ import React from "react";
 import { Navbar } from "@/components/dashboard/Navbar";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { getUser } from "../../lib/data/user/getUser";
-import { DataBoundary } from "@/components/core/DataBoundary";
+import { StoreInitializer } from "@/components/core/StoreInitializer";
 import { getCredits } from "@/lib/data/user/getCredits";
 
 export default async function AppLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const user = await getUser();
-  const { credits } = await getCredits();
+  const credits = await getCredits();
 
   return (
-    <DataBoundary user={user} credits={credits!}>
+    <>
+      <StoreInitializer user={user} credits={credits} />
       <div className="flex h-screen flex-col bg-white text-black transition-colors dark:bg-background dark:text-white">
         <Navbar />
         <div className="flex flex-1 overflow-hidden">
@@ -28,6 +29,6 @@ export default async function AppLayout({
           </main>
         </div>
       </div>
-    </DataBoundary>
+    </>
   );
 }
