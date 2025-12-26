@@ -90,7 +90,7 @@ export const authOptions: AuthOptions = {
     },
     async session({ token, session }) {
       if (session.user) {
-        session.user.id = token.sub || token.id;
+        session.user.id = token.id;
       }
       return session;
     },
@@ -108,7 +108,7 @@ export const authOptions: AuthOptions = {
           });
 
           if (!existingUser) {
-            await prisma.$transaction(async (tx) => {
+            const createdUser = await prisma.$transaction(async (tx) => {
               const dbUser = await tx.user.create({
                 data: {
                   email: user.email!,
@@ -124,8 +124,11 @@ export const authOptions: AuthOptions = {
                   userId: dbUser.id,
                 },
               });
-              user.id = dbUser.id;
+              return dbUser;
             });
+            user.id = createdUser.id;
+          } else {
+            user.id = existingUser.id;
           }
         } catch (error) {
           console.error("Error during Google sign-in:", error);
