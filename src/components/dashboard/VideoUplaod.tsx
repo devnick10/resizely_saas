@@ -1,6 +1,6 @@
 import { Videos } from "@/components/dashboard/Videos";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { VIdeoUploadForm } from "../dashboard/videoUploadForm";
+import { VIdeoUploadForm } from "./videoUploadForm";
 import { Suspense } from "react";
 import { Loader } from "../core/Loader";
 

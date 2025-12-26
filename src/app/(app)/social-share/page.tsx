@@ -1,4 +1,4 @@
-import { SocialShare } from "@/components/pages/SocialShare";
+import { SocialShare } from "@/components/dashboard/pages/SocialShare";
 import React from "react";
 
 export default function Page() {

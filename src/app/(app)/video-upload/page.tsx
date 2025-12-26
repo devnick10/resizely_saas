@@ -1,4 +1,4 @@
-import { VideoUpload } from "@/components/pages/VideoUplaod";
+import { VideoUpload } from "@/components/dashboard/VideoUplaod";
 import React from "react";
 
 export default function Page() {
