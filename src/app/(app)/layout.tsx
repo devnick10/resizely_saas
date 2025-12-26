@@ -8,9 +8,7 @@ import { getCredits } from "@/lib/data/user/getCredits";
 export default async function AppLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const user = await getUser();
-  const credits = await getCredits();
-
+  const [user, credits] = await Promise.all([getUser(), getCredits()]);
   return (
     <>
       <StoreInitializer user={user} credits={credits} />
