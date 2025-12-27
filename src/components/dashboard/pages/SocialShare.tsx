@@ -102,7 +102,11 @@ export const SocialShare: React.FC = () => {
             <Input type="file" id="file" onChange={handleSubmit} />
           </div>
 
-          {isUploading && <Loader label="Uploading" />}
+          {isUploading && (
+            <div className="flex w-full justify-center">
+              <Loader label="Uploading" />
+            </div>
+          )}
 
           {uploadedImage && (
             <div className="space-y-6">
