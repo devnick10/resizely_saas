@@ -4,6 +4,7 @@ import { Loader } from "lucide-react";
 import { getUser } from "@/lib/data/user/getUser";
 import { getCredits } from "@/lib/data/user/getCredits";
 import { StoreInitializer } from "@/components/core/StoreInitializer";
+import { throwClientError } from "@/helper/clientError";
 
 export const Home: React.FC = async () => {
   return (
@@ -17,10 +18,17 @@ export const Home: React.FC = async () => {
 };
 
 const HomeData: React.FC = async () => {
-  const [user, credits] = await Promise.all([getUser(), getCredits()]);
+  const [user, credits] = await Promise.allSettled([getUser(), getCredits()]);
+  if (user.status === "rejected")
+    throwClientError(null, "Failed to fetch user data");
+  if (credits.status === "rejected")
+    throwClientError(null, "Failed to fetch user credits");
   return (
     <>
-      <StoreInitializer user={user} credits={credits} />
+      <StoreInitializer
+        user={user.status === "fulfilled" ? user.value : null}
+        credits={credits.status === "fulfilled" ? credits.value : 0}
+      />
       <Videos />
     </>
   );
