@@ -1,29 +1,55 @@
 "use client";
-import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { throwClientError } from "@/helper/clientError";
 import { useVideoUpload } from "@/hooks/useVideoUpload";
-import { useState } from "react";
+import { useCreditsStore } from "@/stores/hooks";
+import { VideoUploadPayload } from "@/types";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { Loader } from "../core/Loader";
 
 export const VIdeoUploadForm: React.FC = () => {
   const { isUploading, uploadVideo, error } = useVideoUpload();
+  const { credits } = useCreditsStore((state) => state);
 
-  const [file, setFile] = useState<File | null>(null);
-  const [title, setTitle] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
+  const [payload, setPayload] = useState<VideoUploadPayload>({
+    title: "",
+    description: "",
+    file: null,
+  });
+
+  useEffect(() => {
+    if (error) {
+      throwClientError(error);
+    }
+  }, [error]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!file) return;
-    await uploadVideo({ file, title, description });
-  };
+    if (!payload.file) {
+      toast.error("Please select the file.");
+      return;
+    }
+    if (!credits || credits <= 0) {
+      toast.error("Insufficient credits, please buy more.");
+      return;
+    }
 
-  if (error) {
-    toast.error("Sorry for the inconvenience");
-  }
+    try {
+      await uploadVideo(payload);
+      setPayload({
+        title: "",
+        description: "",
+        file: null,
+      });
+      toast.success("Video uploaded successfully");
+    } catch (error: unknown) {
+      throwClientError(error);
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit}>
@@ -32,8 +58,11 @@ export const VIdeoUploadForm: React.FC = () => {
         <Input
           id="title"
           type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          value={payload.title}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => ({
+            ...payload,
+            titile: e.target.value,
+          })}
           required
         />
       </div>
@@ -42,8 +71,11 @@ export const VIdeoUploadForm: React.FC = () => {
         <Label htmlFor="description">Description</Label>
         <Textarea
           id="description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          value={payload.description}
+          onChange={(e: ChangeEvent<HTMLTextAreaElement>) => ({
+            ...payload,
+            description: e.target.value,
+          })}
         />
       </div>
 
@@ -53,12 +85,15 @@ export const VIdeoUploadForm: React.FC = () => {
           id="video"
           type="file"
           accept="video/*"
-          onChange={(e) => setFile(e.target.files?.[0] || null)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => ({
+            ...payload,
+            file: e.target.value,
+          })}
           required
         />
       </div>
       <Button type="submit" disabled={isUploading} className="w-full">
-        {isUploading ? "Uploading..." : "Upload Video"}
+        {isUploading ? <Loader label="Uploading" /> : "Upload Video"}
       </Button>
     </form>
   );

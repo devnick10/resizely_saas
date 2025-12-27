@@ -2,11 +2,9 @@ import { getVideos } from "@/lib/data/user/getVideos";
 import { VideoCard } from "@/components/core/VideoCard";
 
 export const Videos: React.FC = async () => {
-  const { data: videos } = await getVideos();
-
+  const videos = await getVideos();
   return (
-    <div className="container mx-auto mt-5 p-4">
-      <h1 className="mb-4 text-2xl font-bold">All Videos</h1>
+    <div>
       {!videos ||
         (videos.length == 0 && (
           <div className="text-center text-lg text-gray-500">
