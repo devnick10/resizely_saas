@@ -28,3 +28,9 @@ export interface RegisterUserInput {
   password: string;
   username: string;
 }
+
+export interface VideoUploadPayload {
+  title: string;
+  description: string;
+  file: File | null;
+}
