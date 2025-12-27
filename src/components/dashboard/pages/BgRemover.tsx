@@ -121,8 +121,8 @@ export const BgRemover: React.FC = () => {
                 </div>
                 <div className="relative rounded-lg border bg-muted p-2">
                   {isTransforming && (
-                    <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-white/60">
-                      <span className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></span>
+                    <div className="flex h-1/2 w-full items-center justify-center">
+                      <Loader label="Processing" />
                     </div>
                   )}
                   <CldImage

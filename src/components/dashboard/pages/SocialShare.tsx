@@ -27,11 +27,11 @@ export const SocialShare: React.FC = () => {
   const { error, isUploading, uploadImage } = useImageUpload();
   const { credits } = useCreditsStore((state) => state);
 
-  const [originalImage, setOriginalImage] = useState<string>("");
   const [uploadedImage, setUploadedImage] = useState<string>("");
   const [selectedFormat, setSelectedFormat] = useState<SocialFormat>(
     "instagram Square (1:1)",
   );
+  const [fileName, setFileName] = useState<string>("");
   const [isTransforming, setIsTransforming] = useState<boolean>(false);
   const imageRef = useRef<HTMLImageElement>(null);
 
@@ -57,8 +57,8 @@ export const SocialShare: React.FC = () => {
 
     try {
       const response = await uploadImage(file);
-      setOriginalImage(URL.createObjectURL(file));
       setUploadedImage(response.publicId!);
+      setFileName(file.name);
       toast.success("Image uploaded successfully!");
     } catch (error: unknown) {
       throwClientError(error, "Failed to upload image.");
@@ -74,13 +74,13 @@ export const SocialShare: React.FC = () => {
     try {
       await downloadFile({
         url: imageRef.current.src,
-        filename: originalImage,
+        filename: `resizely_${fileName}`,
       });
       imageRef.current = null;
     } catch (error) {
       throwClientError(error, "Failed to download image.");
     }
-  }, [originalImage]);
+  }, [fileName]);
 
   return (
     <div className="mx-auto max-w-4xl p-4">
