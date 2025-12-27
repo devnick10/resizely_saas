@@ -1,5 +1,5 @@
 "use client";
-
+import { deleteVideo } from "@/actions/deleteVideoAssets";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,13 +8,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import useVideoCard from "@/hooks/useVideoCard";
+import { throwClientError } from "@/helper/clientError";
+import { downloadFile } from "@/helper/downloadFile";
 import { Video } from "@/types";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { Clock, Download, FileDown, FileUp } from "lucide-react";
+import { filesize } from "filesize";
+import { Clock, Download, FileDown, FileUp, TrashIcon } from "lucide-react";
+import { getCldImageUrl, getCldVideoUrl } from "next-cloudinary";
 import Image from "next/image";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 dayjs.extend(relativeTime);
 
@@ -23,14 +26,6 @@ interface VideoCardProps {
 }
 
 export const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
-  const {
-    handleDownload,
-    formatDuration,
-    formatSize,
-    getFullVideoUrl,
-    getPreviewVideoUrl,
-    getThumbnailUrl,
-  } = useVideoCard();
   const [isHovered, setIsHovered] = useState(false);
   const [previewError, setPreviewError] = useState(false);
 
@@ -38,15 +33,57 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
     setPreviewError(false);
   }, [isHovered]);
 
+  const getThumbnailUrl = (publicId: string) =>
+    getCldImageUrl({
+      src: publicId,
+      width: 400,
+      height: 225,
+      crop: "fill",
+      gravity: "auto",
+      format: "jpg",
+      quality: "auto",
+      assetType: "video",
+    });
+
+  const getFullVideoUrl = (publicId: string) =>
+    getCldVideoUrl({
+      src: publicId,
+      width: 1920,
+      height: 1080,
+    });
+
+  const getPreviewVideoUrl = (publicId: string) =>
+    getCldVideoUrl({
+      src: publicId,
+      width: 400,
+      height: 225,
+      rawTransformations: ["e_preview:duration_10:max_seg_9:min_seg_dur_1"],
+    });
+
+  const formatSize = (size: number) => filesize(size);
+  const formatDuration = useCallback((seconds: number) => {
+    const min = Math.floor(seconds / 60);
+    const sec = Math.round(seconds % 60);
+    return `${min}:${sec.toString().padStart(2, "0")}`;
+  }, []);
+
   const compressionPercentage = useMemo(() => {
     return Math.round(
       (1 - Number(video.compressSize) / Number(video.originalSize)) * 100,
     );
   }, [video]);
 
+  const handleDownload = async (url: string, title: string) => {
+    try {
+      await downloadFile({ url, filename: `${title}.mp4` });
+    } catch (error) {
+      throwClientError(error, "Failed to download image.");
+    }
+  };
+
   return (
     <Card
-      className="shadow transition-shadow duration-300 hover:shadow-lg"
+      className="w-full max-w-xs font-inter shadow transition-shadow duration-300 hover:shadow-lg"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -80,8 +117,12 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
       </CardHeader>
 
       <CardContent className="space-y-2 p-4">
-        <CardTitle className="text-base font-semibold">{video.title}</CardTitle>
-        <p className="text-sm text-muted-foreground">{video.description}</p>
+        <CardTitle className="font-poppins text-base font-semibold">
+          {video.title}
+        </CardTitle>
+        <p className="font-poppins text-sm text-muted-foreground">
+          {video.description}
+        </p>
         <p className="text-xs text-muted-foreground">
           Uploaded {dayjs(video.createdAt).fromNow()}
         </p>
@@ -111,15 +152,24 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
             {compressionPercentage}%
           </span>
         </span>
-        <Button
-          size="sm"
-          variant="default"
-          onClick={() =>
-            handleDownload(getFullVideoUrl(video.publicId), video.title)
-          }
-        >
-          <Download className="mr-1 h-4 w-4" /> Download
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            size="sm"
+            variant="default"
+            onClick={() =>
+              handleDownload(getFullVideoUrl(video.publicId), video.title)
+            }
+          >
+            <Download className="h-4 w-4" />
+          </Button>
+          <Button
+            size="sm"
+            variant="destructive"
+            onClick={() => deleteVideo(video.publicId)}
+          >
+            <TrashIcon className="h-4 w-4" />
+          </Button>
+        </div>
       </CardFooter>
     </Card>
   );

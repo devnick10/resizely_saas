@@ -9,7 +9,7 @@ import { throwClientError } from "@/helper/clientError";
 export const Home: React.FC = async () => {
   return (
     <div className="container mx-auto mt-5 p-4">
-      <h1 className="mb-4 text-2xl font-bold">All Videos</h1>
+      <h1 className="mb-4 font-inter text-2xl font-bold">All Videos</h1>
       <Suspense fallback={<Loader />}>
         <HomeData />
       </Suspense>

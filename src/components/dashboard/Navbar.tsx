@@ -25,7 +25,7 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="flex w-full shrink-0 items-center justify-between overflow-hidden border-b border-gray-200 bg-white px-2 py-2 dark:border-gray-500 dark:bg-muted sm:px-6 md:flex-nowrap">
+    <nav className="flex w-full shrink-0 items-center justify-between overflow-hidden border-b border-neutral-700 bg-white px-2 py-2 dark:bg-muted sm:px-6 md:flex-nowrap">
       {/* Navbar left section */}
       <div className="m-0 flex items-center justify-center">
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -49,7 +49,7 @@ export const Navbar: React.FC = () => {
           </SheetContent>
         </Sheet>
         <div>
-          <Link href="/" className="text-xl font-bold text-primary">
+          <Link href="/" className="font-inter text-xl font-bold text-blue-400">
             Resizely
           </Link>
         </div>

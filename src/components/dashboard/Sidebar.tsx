@@ -28,7 +28,7 @@ export const Sidebar: React.FC = () => {
   const pathname = usePathname();
 
   return (
-    <div className="flex h-full flex-col justify-between overflow-hidden pt-8 sm:pt-2">
+    <div className="flex h-full flex-col justify-between overflow-hidden pt-8 font-poppins sm:pt-2">
       <nav className="flex flex-col gap-2 p-4">
         {sidebarItems.map((item) => (
           <Button
