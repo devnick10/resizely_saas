@@ -4,25 +4,74 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useImageUpload } from "@/hooks/useImageUploader";
+import { throwClientError } from "@/helper/clientError";
+import { downloadFile } from "@/helper/downloadFile";
+import { useImageUpload } from "@/hooks/useImageUpload";
+import { useCreditsStore } from "@/stores/hooks";
 import { CldImage } from "next-cloudinary";
-import Image from "next/image";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
+import Image from "next/image";
+import { Loader } from "@/components/core/Loader";
 
 export const BgRemover: React.FC = () => {
-  const {
-    uploadedImage,
-    originalImage,
-    isUploading,
-    isTransforming,
-    imageRef,
-    handleFileUpload,
-    handleDownload,
-    error,
-    setIsTransforming,
-  } = useImageUpload();
+  const { error, uploadImage, isUploading } = useImageUpload();
+  const { credits } = useCreditsStore((state) => state);
 
-  if (error) toast.error("Something went wrong");
+  const [originalImage, setOriginalImage] = useState<string>("");
+  const [uploadedImage, setUploadedImage] = useState<string>("");
+  const [fileName, setFileName] = useState<string>("");
+
+  const [isTransforming, setIsTransforming] = useState<boolean>(false);
+  const imageRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    if (uploadedImage) setIsTransforming(true);
+    if (error) {
+      throwClientError(error);
+    }
+  }, [error, uploadedImage]);
+
+  const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const file = e.target.files?.[0];
+    if (!file) {
+      toast.error("Please select the file.");
+      return;
+    }
+
+    if (!credits || credits <= 0) {
+      toast.error("Insufficient credits, please buy more.");
+      return;
+    }
+
+    try {
+      const response = await uploadImage(file);
+      setOriginalImage(URL.createObjectURL(file));
+      setFileName(file.name);
+      setUploadedImage(response.publicId!);
+      toast.success("Image uploaded successfully!");
+    } catch (error: unknown) {
+      throwClientError(error, "Failed to upload image.");
+    }
+  };
+
+  const handleDownload = useCallback(async () => {
+    if (!imageRef.current) {
+      toast.error("Something went wrong.");
+      return;
+    }
+
+    try {
+      await downloadFile({
+        url: imageRef.current.src,
+        filename: `resizely_${fileName}`,
+      });
+      imageRef.current = null;
+    } catch (error) {
+      throwClientError(error, "Failed to download image.");
+    }
+  }, [fileName]);
 
   return (
     <div className="container mx-auto max-w-4xl p-4">
@@ -45,13 +94,15 @@ export const BgRemover: React.FC = () => {
               id="file"
               type="file"
               accept="image/*"
-              onChange={handleFileUpload}
+              onChange={handleSubmit}
               disabled={isUploading}
             />
           </div>
 
           {isUploading && (
-            <div className="text-sm text-muted-foreground">Uploading...</div>
+            <div className="flex w-full justify-center">
+              <Loader label="Uploading" />
+            </div>
           )}
 
           {uploadedImage && originalImage && (
