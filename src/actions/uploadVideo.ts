@@ -18,7 +18,7 @@ interface CloudinaryUploadResult {
   [key: string]: unknown;
 }
 
-export async function videoUpload(data: FormData) {
+export async function videoUploader(data: FormData) {
   const user = await getUser();
   // Validate Cloudinary credentials
   if (
