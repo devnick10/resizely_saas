@@ -1,32 +1,27 @@
 import "server-only";
 import prisma from "@/db";
+import { unstable_cache } from "next/cache";
 import { getUser } from "./getUser";
 
 export async function getVideos() {
-  const { id } = await getUser();
-  try {
-    const videos = await prisma.video.findMany({
-      where: {
-        userId: id,
-      },
-    });
+  const user = await getUser();
 
-    if (!videos || videos.length === 0) {
-      return {
-        success: false,
-        data: [],
-      };
-    }
+  const cachedGetVideos = unstable_cache(
+    async () => {
+      return prisma.video.findMany({
+        where: {
+          userId: user.id,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+    },
+    [`videos_${user.id}`], // cache key
+    {
+      tags: [`videos_${user.id}`], // revalidation tag
+    },
+  );
 
-    return {
-      success: true,
-      data: videos,
-    };
-  } catch (error) {
-    return {
-      error,
-      success: false,
-      message: "Failed to fetch user videos",
-    };
-  }
+  return cachedGetVideos();
 }
