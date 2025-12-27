@@ -1,43 +1,37 @@
 "use server";
 import prisma from "@/db";
-import { emailValidation } from "@/schema";
+import { throwServerError } from "@/helper/serverError";
+import { getUser } from "@/lib/data/user/getUser";
 
 export async function verifyOtp(
-  email: string,
   inputOtp: string,
 ): Promise<{ success: boolean }> {
-  emailValidation(email);
-  const user = await prisma.user.findUnique({
-    where: { email },
-  });
+  const user = await getUser();
 
-  if (!user?.otpExpiresAt) {
-    return {
-      success: false,
-    };
+  try {
+    await prisma.$transaction(async (txn) => {
+      const dbUser = await txn.user.findUnique({
+        where: { id: user?.id },
+      });
+
+      if (dbUser?.otp !== inputOtp) {
+        throwServerError(null, "Invalid OTP");
+      }
+
+      if (dbUser.otpExpiresAt && new Date() > dbUser.otpExpiresAt) {
+        throwServerError(null, "OTP expired");
+      }
+
+      await txn.user.update({
+        where: { id: user.id },
+        data: {
+          otp: null,
+          otpExpiresAt: null,
+        },
+      });
+    });
+    return { success: true };
+  } catch (error) {
+    throwServerError(error, "Faild to validate OTP!");
   }
-
-  if (user.otp !== inputOtp) {
-    return {
-      success: false,
-    };
-  }
-
-  if (new Date() > user.otpExpiresAt) {
-    return {
-      success: false,
-    };
-  }
-
-  await prisma.user.update({
-    where: { email },
-    data: {
-      otp: null,
-      otpExpiresAt: null,
-    },
-  });
-
-  return {
-    success: true,
-  };
 }
