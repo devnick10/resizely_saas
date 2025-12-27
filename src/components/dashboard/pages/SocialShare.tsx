@@ -1,7 +1,6 @@
 "use client";
 
-import { imageUpload } from "@/actions/imageUpload";
-import { updateCredits } from "@/actions/updateCredits";
+import { Loader } from "@/components/core/Loader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -13,94 +12,75 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { socialFormats } from "@/constants";
+import { throwClientError } from "@/helper/clientError";
+import { downloadFile } from "@/helper/downloadFile";
+import { useImageUpload } from "@/hooks/useImageUpload";
+import { useCreditsStore } from "@/stores/hooks";
 import { CldImage } from "next-cloudinary";
-import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { useCreditsStore } from "@/stores/hooks";
-import { socialFormats } from "@/constants";
 
 type SocialFormat = keyof typeof socialFormats;
 
 export const SocialShare: React.FC = () => {
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const { error, isUploading, uploadImage } = useImageUpload();
+  const { credits } = useCreditsStore((state) => state);
+
+  const [originalImage, setOriginalImage] = useState<string>("");
+  const [uploadedImage, setUploadedImage] = useState<string>("");
   const [selectedFormat, setSelectedFormat] = useState<SocialFormat>(
     "instagram Square (1:1)",
   );
-  const [isUploading, setIsUploading] = useState<boolean>(false);
   const [isTransforming, setIsTransforming] = useState<boolean>(false);
   const imageRef = useRef<HTMLImageElement>(null);
-  const { credits, setCredits } = useCreditsStore((state) => state);
-  const router = useRouter();
 
-  const handleFileUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  useEffect(() => {
+    if (uploadedImage) setIsTransforming(true);
+    if (error) {
+      throwClientError(error);
+    }
+  }, [selectedFormat, uploadedImage, error]);
 
-    setIsUploading(true);
-    const formData = new FormData();
-    formData.append("file", file);
+  const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const file = e.target.files?.[0];
+    if (!file) {
+      toast.error("Please select the file.");
+      return;
+    }
+
+    if (!credits || credits <= 0) {
+      toast.error("Insufficient credits, please buy more.");
+      return;
+    }
+
     try {
-      if (!credits) {
-        toast.error("Insufficient credits, please buy more.");
-        return;
-      }
-
-      const response = await imageUpload(formData);
-      if (!response.success) throw new Error("Failed to upload image");
-      if (response.publicId) {
-        setUploadedImage(response.publicId);
-      }
+      const response = await uploadImage(file);
+      setOriginalImage(URL.createObjectURL(file));
+      setUploadedImage(response.publicId!);
       toast.success("Image uploaded successfully!");
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to upload image.");
-    } finally {
-      setIsUploading(false);
+    } catch (error: unknown) {
+      throwClientError(error, "Failed to upload image.");
     }
   };
 
   const handleDownload = useCallback(async () => {
-    if (!imageRef.current) return;
+    if (!imageRef.current) {
+      toast.error("Something went wrong.");
+      return;
+    }
 
     try {
-      await downloadImage(imageRef.current.src);
-
-      const data = await updateCredits();
-      if ("credits" in data) {
-        setCredits(data.credits);
-        router.push("/social-share");
-      }
+      await downloadFile({
+        url: imageRef.current.src,
+        filename: originalImage,
+      });
+      imageRef.current = null;
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to download image.");
+      throwClientError(error, "Failed to download image.");
     }
-  }, [setCredits, router]);
-
-  const downloadImage = async (imageSrc: string) => {
-    try {
-      const response = await fetch(imageSrc);
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "image.png";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to download image.");
-    }
-  };
-
-  useEffect(() => {
-    if (uploadedImage) setIsTransforming(true);
-  }, [selectedFormat, uploadedImage]);
+  }, [originalImage]);
 
   return (
     <div className="mx-auto max-w-4xl p-4">
@@ -119,12 +99,10 @@ export const SocialShare: React.FC = () => {
         <CardContent className="space-y-4">
           <div>
             <Label htmlFor="file">Choose an image file</Label>
-            <Input type="file" id="file" onChange={handleFileUpload} />
+            <Input type="file" id="file" onChange={handleSubmit} />
           </div>
 
-          {isUploading && (
-            <div className="animate-pulse text-sm">Uploading...</div>
-          )}
+          {isUploading && <Loader label="Uploading" />}
 
           {uploadedImage && (
             <div className="space-y-6">
