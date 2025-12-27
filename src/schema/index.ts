@@ -18,6 +18,10 @@ const sendOtpSchema = z.object({
   email: z.string().email({ message: "Please provide right email address" }),
 });
 
+const deleteVideoSchema = z.object({
+  public_id: z.string(),
+});
+
 function emailValidation(email: string) {
   const { success, data, error } = sendOtpSchema.safeParse(email);
   if (!success) {
@@ -34,10 +38,19 @@ function registerUserValidation(user: RegisterUserInput) {
   return data;
 }
 
+function deleteVideoValidatation(public_id: string) {
+  const { success, data, error } = deleteVideoSchema.safeParse({ public_id });
+  if (!success) {
+    throw Error(error.issues[0].message);
+  }
+  return data;
+}
+
 export {
   sendOtpSchema,
   credentialsSchema,
   emailValidation,
   registerUserValidation,
+  deleteVideoValidatation,
 };
 export type CredentialsType = z.infer<typeof credentialsSchema>;
