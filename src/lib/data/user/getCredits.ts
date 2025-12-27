@@ -1,25 +1,32 @@
 import "server-only";
 import prisma from "@/db";
+import { throwServerError } from "@/helper/serverError";
+import { unstable_cache } from "next/cache";
 import { getUser } from "./getUser";
 
-export async function getCredits() {
-  const { email } = await getUser();
-  if (!email) {
-    throw Error("Faild to fetch user credits");
-  }
+export const getCredits = async () => {
+  const user = await getUser();
 
-  try {
-    const user = await prisma.user.findUnique({
-      where: { email },
-      include: { Credit: true },
-    });
+  const cachedCredits = unstable_cache(
+    async () => {
+      try {
+        const userCredits = await prisma.credit.findFirst({
+          where: { userId: user.id },
+        });
 
-    const userCredits = user?.Credit[0];
+        if (!userCredits) {
+          throwServerError(null, "User credits not found!");
+        }
 
-    return {
-      credits: userCredits?.credits,
-    };
-  } catch (error) {
-    throw Error(error as string);
-  }
-}
+        return userCredits.credits;
+      } catch (error) {
+        throwServerError(error, "Failed to fetch user credits");
+      }
+    },
+    [`credits_${user.id}`],
+    {
+      tags: [`credits_${user.id}`],
+    },
+  );
+  return cachedCredits();
+};
