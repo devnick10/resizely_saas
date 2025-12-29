@@ -22,6 +22,7 @@ export const BgRemover: React.FC = () => {
   const [uploadedImage, setUploadedImage] = useState<string>("");
   const [fileName, setFileName] = useState<string>("");
 
+  const [imageTransformingError, setImageTransformingError] = useState(false);
   const [isTransforming, setIsTransforming] = useState<boolean>(false);
   const imageRef = useRef<HTMLImageElement>(null);
 
@@ -52,6 +53,7 @@ export const BgRemover: React.FC = () => {
       setUploadedImage(response.publicId!);
       toast.success("Image uploaded successfully!");
     } catch (error: unknown) {
+      setIsTransforming(false);
       throwClientError(error, "Failed to upload image.");
     }
   };
@@ -125,17 +127,31 @@ export const BgRemover: React.FC = () => {
                       <Loader label="Processing" />
                     </div>
                   )}
-                  <CldImage
-                    width={400}
-                    height={400}
-                    src={uploadedImage}
-                    sizes="100vw"
-                    alt="Transformed Image"
-                    removeBackground
-                    ref={imageRef}
-                    onLoad={() => setIsTransforming(false)}
-                    className="mx-auto rounded-lg"
-                  />
+                  {!imageTransformingError && (
+                    <CldImage
+                      width={400}
+                      height={400}
+                      src={uploadedImage}
+                      sizes="100vw"
+                      alt="Transformed Image"
+                      removeBackground
+                      ref={imageRef}
+                      onLoad={() => setIsTransforming(false)}
+                      onError={() => {
+                        setIsTransforming(false);
+                        setImageTransformingError(true);
+                        toast.error(
+                          "Background removal failed. Internal server error!.",
+                        );
+                      }}
+                      className="mx-auto rounded-lg"
+                    />
+                  )}
+                  {imageTransformingError && (
+                    <h4 className="w-full text-center text-red-500">
+                      Internal Server Error! <br /> Try again after few minutes
+                    </h4>
+                  )}
                 </div>
               </div>
 
