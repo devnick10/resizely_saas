@@ -14,7 +14,6 @@ v2.config({
 });
 
 export async function deleteVideo(payload: string) {
-  console.log(payload);
   const user = await getUser();
   const { public_id } = deleteVideoValidatation(payload);
   // Validate Cloudinary credentials

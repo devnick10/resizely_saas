@@ -1,4 +1,6 @@
-export async function createOrderId(plan: number): Promise<{
+import { throwServerError } from "./serverError";
+
+export async function createOrderId(amount: number): Promise<{
   orderId: string | null;
   error: boolean;
 }> {
@@ -8,7 +10,7 @@ export async function createOrderId(plan: number): Promise<{
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ amount: plan }),
+      body: JSON.stringify({ amount: String(amount) }),
     });
 
     if (!response.ok) {
@@ -18,7 +20,6 @@ export async function createOrderId(plan: number): Promise<{
     const data = await response.json();
     return { orderId: data.orderId, error: false };
   } catch (err) {
-    console.error("Order fetch failed:", err);
-    return { orderId: null, error: true };
+    throwServerError(err, "Order fetch failed:");
   }
 }
