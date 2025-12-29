@@ -22,15 +22,22 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 type SocialFormat = keyof typeof socialFormats;
+const MAX_DIMENSION = 65500;
+const MIN_DIMENSION = 1;
 
 export const SocialShare: React.FC = () => {
   const { error, isUploading, uploadImage } = useImageUpload();
   const { credits } = useCreditsStore((state) => state);
 
+  const [mode, setMode] = useState<"social" | "custom">("social");
+  const [customWidth, setCustomWidth] = useState<number>(1080);
+  const [customHeight, setCustomHeight] = useState<number>(1080);
+
+  const defaultFormat = Object.keys(socialFormats)[0] as SocialFormat;
+
   const [uploadedImage, setUploadedImage] = useState<string>("");
-  const [selectedFormat, setSelectedFormat] = useState<SocialFormat>(
-    "instagram Square (1:1)",
-  );
+  const [selectedFormat, setSelectedFormat] =
+    useState<SocialFormat>(defaultFormat);
   const [fileName, setFileName] = useState<string>("");
   const [isTransforming, setIsTransforming] = useState<boolean>(false);
   const imageRef = useRef<HTMLImageElement>(null);
@@ -41,6 +48,23 @@ export const SocialShare: React.FC = () => {
       throwClientError(error);
     }
   }, [selectedFormat, uploadedImage, error]);
+
+  const transformConfig =
+    mode === "social"
+      ? {
+          width: socialFormats[selectedFormat].width,
+          height: socialFormats[selectedFormat].height,
+          aspectRatio: socialFormats[selectedFormat].aspectRatio,
+        }
+      : {
+          width: customWidth,
+          height: customHeight,
+          aspectRatio: undefined,
+        };
+
+  const isValidSize =
+    transformConfig.width <= MAX_DIMENSION &&
+    transformConfig.height <= MAX_DIMENSION;
 
   const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -82,6 +106,11 @@ export const SocialShare: React.FC = () => {
     }
   }, [fileName]);
 
+  if (!isValidSize) {
+    toast.error("Max allowed image size is 65,500px.");
+    return null;
+  }
+
   return (
     <div className="mx-auto max-w-4xl p-4">
       <h1 className="mb-2 text-center text-2xl font-bold sm:text-3xl">
@@ -109,55 +138,110 @@ export const SocialShare: React.FC = () => {
           )}
 
           {uploadedImage && (
-            <div className="space-y-6">
-              <div>
-                <Label htmlFor="format">Select Social Media Format</Label>
-                <Select
-                  value={selectedFormat}
-                  onValueChange={(val) =>
-                    setSelectedFormat(val as SocialFormat)
-                  }
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select a format" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.keys(socialFormats).map((format) => (
-                      <SelectItem key={format} value={format}>
-                        {format}
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+              {/* LEFT SIDE – CONTROLS */}
+              <div className="space-y-6">
+                {/* FORMAT */}
+                <div>
+                  <Label htmlFor="format">Select Social Media Format</Label>
+                  <Select
+                    value={selectedFormat}
+                    onValueChange={(val) =>
+                      setSelectedFormat(val as SocialFormat)
+                    }
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select a format" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.keys(socialFormats).map((format) => (
+                        <SelectItem key={format} value={format}>
+                          {format}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* MODE */}
+                <div>
+                  <Label>Resize Mode</Label>
+                  <Select
+                    value={mode}
+                    onValueChange={(val) => setMode(val as "social" | "custom")}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="social">
+                        Social Media Format
                       </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                      <SelectItem value="custom">Custom Size</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* CUSTOM SIZE */}
+                {mode === "custom" && (
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label>Width (px)</Label>
+                      <Input
+                        type="number"
+                        min={MIN_DIMENSION}
+                        max={MAX_DIMENSION}
+                        value={customWidth}
+                        onChange={(e) => setCustomWidth(Number(e.target.value))}
+                      />
+                    </div>
+                    <div>
+                      <Label>Height (px)</Label>
+                      <Input
+                        type="number"
+                        min={MIN_DIMENSION}
+                        max={MAX_DIMENSION}
+                        value={customHeight}
+                        onChange={(e) =>
+                          setCustomHeight(Number(e.target.value))
+                        }
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* DOWNLOAD */}
+                <Button onClick={handleDownload} className="w-full">
+                  Download{" "}
+                  {mode === "custom"
+                    ? `${customWidth}×${customHeight}`
+                    : selectedFormat}
+                </Button>
               </div>
 
-              <div className="relative">
-                <h3 className="mb-2 text-lg font-semibold">Preview:</h3>
-                <div className="flex justify-center">
+              {/* RIGHT SIDE – PREVIEW */}
+              <div className="relative flex justify-center lg:sticky lg:top-24">
+                <div className="relative">
                   {isTransforming && (
                     <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/70">
-                      <span className="h-6 w-6 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></span>
+                      <span className="h-6 w-6 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
                     </div>
                   )}
+
                   <CldImage
-                    width={socialFormats[selectedFormat].width}
-                    height={socialFormats[selectedFormat].height}
+                    width={transformConfig.width}
+                    height={transformConfig.height}
+                    aspectRatio={transformConfig.aspectRatio}
                     src={uploadedImage}
+                    crop="fill"
+                    gravity="auto"
                     sizes="100vw"
                     alt="transformed image"
-                    crop="fill"
-                    aspectRatio={socialFormats[selectedFormat].aspectRatio}
-                    gravity="auto"
                     ref={imageRef}
                     onLoad={() => setIsTransforming(false)}
+                    className="max-h-[70vh] w-auto rounded-lg shadow-md"
                   />
                 </div>
-              </div>
-
-              <div className="flex justify-end">
-                <Button onClick={handleDownload}>
-                  Download for {selectedFormat}
-                </Button>
               </div>
             </div>
           )}
