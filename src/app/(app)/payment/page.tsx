@@ -1,6 +1,5 @@
-import { Payment } from "@/components/landing/Payment";
-import React from "react";
+import { PricingSection } from "@/components/landing/PaymentSection";
 
 export default function Page() {
-  return <Payment />;
+  return <PricingSection />;
 }

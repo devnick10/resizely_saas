@@ -76,7 +76,7 @@ export const Signup: React.FC = () => {
 
     setLoading(true);
     try {
-      const { success } = await verifyOtp(emailAddress, code);
+      const { success } = await verifyOtp(code);
       if (!success) return toast.error("Invalid verification code.");
 
       toast.success("Email verified successfully.");

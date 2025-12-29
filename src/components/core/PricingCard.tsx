@@ -1,12 +1,6 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
-import { usePayment } from "@/hooks/usePayment";
 import { Plan } from "@/types";
 import { CheckCircle } from "lucide-react";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { PricingCardButton } from "../landing/PricingCardButton";
 
 interface PricingCardProps {
   title: string;
@@ -16,57 +10,12 @@ interface PricingCardProps {
   buttonText: string;
   buttonVariant: "default" | "outline" | "secondary";
   popular?: boolean;
-  pro?: boolean;
+  plan?: Plan;
   free?: boolean;
+  standerd?: boolean;
 }
 
 export const PricingCard: React.FC<PricingCardProps> = (props) => {
-  const { data } = useSession();
-  const selectedPlan = props.pro ? Plan.Pro : Plan.Standard;
-  const { options, paymentError, message } = usePayment({
-    plan: selectedPlan,
-  });
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<unknown>();
-
-  useEffect(() => {
-    if (error) {
-      toast.error("Sorry for the inconvenience");
-    }
-  }, [error]);
-
-  const processPayment = async () => {
-    setLoading(true);
-
-    try {
-      if (!data?.user) return;
-
-      if (!window.Razorpay) {
-        toast.error(
-          "Razorpay SDK failed to load. Please refresh and try again.",
-        );
-        return;
-      }
-
-      if (paymentError) {
-        toast.error(message || "Internal server error.");
-        setError(message);
-        return;
-      }
-
-      const paymentObject = new window.Razorpay(options);
-      paymentObject.open();
-    } catch (error) {
-      setError(error);
-      toast.error("Error processing payment. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (!data?.user) return null;
-
   return (
     <div
       className={`rounded-lg border bg-white p-8 dark:bg-muted ${
@@ -102,20 +51,12 @@ export const PricingCard: React.FC<PricingCardProps> = (props) => {
           </li>
         ))}
       </ul>
-
-      <Button
-        variant={props.buttonVariant}
-        className="w-full"
-        onClick={() => {
-          if (props.free) {
-            return toast.success("You already have free plan.");
-          }
-          processPayment();
-        }}
-        disabled={loading}
-      >
-        {loading ? "Processing..." : props.buttonText}
-      </Button>
+      <PricingCardButton
+        buttonText={props.buttonText}
+        buttonVariant={props.buttonVariant}
+        free={props.free}
+        plan={props.plan}
+      />
     </div>
   );
 };

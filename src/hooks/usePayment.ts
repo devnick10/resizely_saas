@@ -1,14 +1,8 @@
 "use client";
-import { useCreditsStore, useUserStore } from "@/stores/hooks";
-import { Plan } from "@/types";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import { createOrderId } from "../helper/createOrderId";
 
-interface UserPayment {
-  plan: Plan;
-}
+import { useUserStore } from "@/stores/hooks";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { createOrderId } from "../helper/createOrderId";
 
 interface VerifyPaymentHandler {
   razorpay_payment_id: string;
@@ -33,88 +27,117 @@ interface PaymentOptions {
   };
 }
 
-interface UsePaymentResult {
-  loading: boolean;
-  paymentError: boolean;
-  options: PaymentOptions | null;
-  message: string | undefined;
+interface UsePaymentCallbacks {
+  onSuccess?: () => void;
+  onError?: (error: unknown) => void;
 }
 
-export function usePayment({ plan }: UserPayment): UsePaymentResult {
-  const { setCredits } = useCreditsStore((state) => state);
+interface UsePaymentResult {
+  isLoading: boolean;
+  error: unknown | null;
+  options: PaymentOptions | null;
+  startPayment: () => void;
+}
+
+export function usePayment(
+  plan: number | null,
+  callbacks: UsePaymentCallbacks = {},
+): UsePaymentResult {
   const { user } = useUserStore((state) => state);
 
   const [options, setOptions] = useState<PaymentOptions | null>(null);
-  const [paymentError, setPaymentError] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState<string>();
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<unknown | null>(null);
 
-  const router = useRouter();
+  // use ref to store callbacks to avoid effect dependency
+  const callbacksRef = useRef(callbacks);
+  callbacksRef.current = callbacks;
 
   useEffect(() => {
-    const fetchOrder = async () => {
-      const { orderId, error: orderError } = await createOrderId(plan);
+    if (!plan) return;
 
-      if (!orderId || orderError) {
-        setPaymentError(true);
-        setMessage("Failed to create Razorpay order");
-        setLoading(false);
-        return;
-      }
+    let isMounted = true;
 
-      const verifyPaymentHandler = async (response: VerifyPaymentHandler) => {
-        try {
-          const result = await fetch("/api/verify", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              orderCreationId: orderId,
-              razorpayPaymentId: response.razorpay_payment_id,
-              razorpayOrderId: response.razorpay_order_id,
-              razorpaySignature: response.razorpay_signature,
-              plan: plan,
-            }),
-          });
+    async function initPayment() {
+      try {
+        setIsLoading(true);
 
-          const res = await result.json();
+        const { orderId, error: orderError } = await createOrderId(
+          Number(plan),
+        );
 
-          if (!res.isOk) {
-            setMessage(res.message || "Payment verification failed");
-            setPaymentError(true);
-            return;
-          }
-
-          router.push("/home");
-          setCredits(res.updatedCredits);
-          toast.success("Payment succeeded!");
-        } catch (err) {
-          console.error(err);
-          setMessage("An error occurred during verification");
-          setPaymentError(true);
+        if (!orderId || orderError) {
+          throw new Error("Order creation failed");
         }
-      };
 
-      const paymentOptions = {
-        key: process.env.NEXT_PUBLIC_RAZOR_PAY_KEY_ID!,
-        amount: String(plan),
-        currency: "INR",
-        name: "Resizly",
-        description: "Buy credits",
-        order_id: orderId,
-        handler: verifyPaymentHandler,
-        prefill: {
-          name: user?.name || "Guest",
-          email: user?.email || "guest@example.com",
-        },
-        theme: { color: "#3399cc" },
-      };
+        const verifyPaymentHandler = async (response: VerifyPaymentHandler) => {
+          try {
+            const res = await fetch("/api/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                razorpayPaymentId: response.razorpay_payment_id,
+                razorpayOrderId: response.razorpay_order_id,
+                razorpaySignature: response.razorpay_signature,
+                plan,
+              }),
+            });
 
-      setOptions(paymentOptions);
-      setLoading(false);
+            const result = await res.json();
+
+            if (!result.isOk) {
+              throw new Error("Payment verification failed");
+            }
+
+            callbacksRef.current.onSuccess?.();
+          } catch (err) {
+            setError(err);
+            callbacksRef.current.onError?.(err);
+          }
+        };
+
+        if (isMounted) {
+          setOptions({
+            key: process.env.NEXT_PUBLIC_RAZOR_PAY_KEY_ID!,
+            amount: String(plan),
+            currency: "INR",
+            name: "Resizely",
+            description: "Buy credits",
+            order_id: orderId,
+            handler: verifyPaymentHandler,
+            prefill: {
+              name: user?.name ?? "Guest",
+              email: user?.email ?? "guest@example.com",
+            },
+            theme: { color: "#3399cc" },
+          });
+        }
+      } catch (err) {
+        if (isMounted) setError(err);
+      } finally {
+        if (isMounted) setIsLoading(false);
+      }
+    }
+
+    initPayment();
+
+    return () => {
+      isMounted = false;
     };
+  }, [plan, user]);
 
-    fetchOrder();
-  }, [user, plan, router, setCredits]);
+  const startPayment = useCallback(() => {
+    // @ts-ignore Razorpay injected globally
+    if (!options || !window.Razorpay) return;
+    // @ts-ignore Razorpay injected globally
+    const razorpay = new window.Razorpay(options);
+    razorpay.open();
+  }, [options]);
 
-  return { message, loading, paymentError, options };
+  return {
+    isLoading,
+    error,
+    options,
+    startPayment,
+  };
 }

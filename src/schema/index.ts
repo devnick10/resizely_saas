@@ -1,4 +1,4 @@
-import { RegisterUserInput } from "@/types";
+import { Plan, RegisterUserInput } from "@/types";
 import { z } from "zod";
 
 const credentialsSchema = z.object({
@@ -22,12 +22,40 @@ const deleteVideoSchema = z.object({
   public_id: z.string(),
 });
 
+const orderSchema = z.object({
+  amount: z.string(),
+});
+
+const VerifySchema = z.object({
+  razorpayOrderId: z.string(),
+  razorpayPaymentId: z.string(),
+  razorpaySignature: z.string(),
+  plan: z.nativeEnum(Plan),
+});
+type VerifySchemaRequest = z.infer<typeof VerifySchema>;
+
 function emailValidation(email: string) {
   const { success, data, error } = sendOtpSchema.safeParse(email);
   if (!success) {
     throw Error(error.issues[0].message);
   }
   return data.email;
+}
+
+function verifyRequestValidation(requestData: VerifySchemaRequest) {
+  const { success, data, error } = VerifySchema.safeParse(requestData);
+  if (!success) {
+    throw Error(error.issues[0].message);
+  }
+  return data;
+}
+
+function validateOrder(amount: string) {
+  const { success, data, error } = orderSchema.safeParse(amount);
+  if (!success) {
+    throw Error(error.issues[0].message);
+  }
+  return data.amount;
 }
 
 function registerUserValidation(user: RegisterUserInput) {
@@ -47,10 +75,12 @@ function deleteVideoValidatation(public_id: string) {
 }
 
 export {
-  sendOtpSchema,
   credentialsSchema,
+  deleteVideoValidatation,
   emailValidation,
   registerUserValidation,
-  deleteVideoValidatation,
+  sendOtpSchema,
+  validateOrder,
+  verifyRequestValidation,
 };
 export type CredentialsType = z.infer<typeof credentialsSchema>;

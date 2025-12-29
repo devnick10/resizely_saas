@@ -1,6 +1,6 @@
 export enum Plan {
-  Pro = 342700,
-  Standard = 171300,
+  Pro = 49900, //INR 499RS
+  Standard = 19900, //INR 199RS
 }
 
 export interface User {
@@ -33,4 +33,10 @@ export interface VideoUploadPayload {
   title: string;
   description: string;
   file: File | null;
+}
+
+export interface VerifyPaymentHandler {
+  razorpay_payment_id: string;
+  razorpay_order_id: string;
+  razorpay_signature: string;
 }

@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import prisma from "@/db";
 import { getUser } from "@/lib/data/user/getUser";
+import { Plan } from "@/types";
+import { throwServerError } from "@/helper/serverError";
+import { revalidateTag } from "next/cache";
+import { verifyRequestValidation } from "@/schema";
 
 const generatedSignature = (
   razorpayOrderId: string,
@@ -16,11 +20,12 @@ const generatedSignature = (
 };
 
 export async function POST(request: NextRequest) {
-  const { orderCreationId, razorpayPaymentId, razorpaySignature, plan } =
-    await request.json();
+  const user = await getUser();
+  const requestBody = await request.json();
+  const { razorpayOrderId, razorpayPaymentId, razorpaySignature, plan } =
+    verifyRequestValidation(requestBody);
 
-  const signature = generatedSignature(orderCreationId, razorpayPaymentId);
-
+  const signature = generatedSignature(razorpayOrderId, razorpayPaymentId);
   if (signature !== razorpaySignature) {
     return NextResponse.json(
       { message: "Payment verification failed", isOk: false },
@@ -28,53 +33,43 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { email } = await getUser();
-  if (!email)
-    return NextResponse.json(
-      { message: "Unauthorized", isOk: false },
-      { status: 401 },
-    );
-
   try {
-    const dbUser = await prisma.user.findUnique({
-      where: { email },
-      include: { Credit: true },
+    await prisma.$transaction(async (txn) => {
+      const dbUser = await txn.user.findUnique({
+        where: { id: user.id },
+        include: { Credit: true },
+      });
+
+      if (!dbUser || !dbUser.Credit || !plan) {
+        throwServerError(null, "User not found!");
+      }
+
+      if (!plan) {
+        throwServerError(null, "Plan not provided!");
+      }
+
+      const creditId = dbUser.Credit.id;
+      const PLAN_CREDITS: Record<Plan, number> = {
+        [Plan.Standard]: 20,
+        [Plan.Pro]: 60,
+      };
+      const creditsIncrementBy = PLAN_CREDITS[plan];
+
+      await txn.credit.update({
+        where: { id: creditId },
+        data: { credits: { increment: creditsIncrementBy } },
+      });
     });
 
-    if (!dbUser || !dbUser.Credit || !plan) {
-      return NextResponse.json(
-        { error: "User or credits not found" },
-        { status: 404 },
-      );
-    }
-
-    const userCredits = dbUser.Credit[0];
-    const incrementValue: number = plan === 171300 ? 20 : 60;
-
-    const updatedCredits = await prisma.credit.update({
-      where: { id: userCredits.id },
-      data: { credits: { increment: incrementValue } },
-    });
-
-    if (!updatedCredits) {
-      return NextResponse.json(
-        { message: "credit's update failed" },
-        { status: 500 },
-      );
-    }
-
+    revalidateTag(`credits_${user.id}`);
     return NextResponse.json(
       {
         message: "Payment verified successfully",
         isOk: true,
-        updatedCredits: updatedCredits.credits,
       },
       { status: 200 },
     );
   } catch (error) {
-    return NextResponse.json(
-      { message: "Failed to update credits", isOk: false, error },
-      { status: 500 },
-    );
+    throwServerError(error, "Payment verification failed!");
   }
 }
