@@ -1,4 +1,4 @@
-import { throwClientError } from "@/helper/clientError";
+"use client";
 
 type DownloadFileOptions = {
   url: string;
@@ -28,6 +28,6 @@ export async function downloadFile({
     document.body.removeChild(link);
     URL.revokeObjectURL(objectUrl);
   } catch (error) {
-    throwClientError(error, "Download failed");
+    throw error;
   }
 }
