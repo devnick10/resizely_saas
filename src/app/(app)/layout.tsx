@@ -1,19 +1,19 @@
-import { getUser } from "@/lib/data/user/getUser";
-import { getCredits } from "@/lib/data/user/getCredits";
 import { StoreInitializer } from "@/components/core/StoreInitializer";
-import { throwClientError } from "@/helper/clientError";
 import { Navbar } from "@/components/dashboard/Navbar";
 import { Sidebar } from "@/components/dashboard/Sidebar";
+import { getCredits } from "@/lib/data/user/getCredits";
+import { getUser } from "@/lib/data/user/getUser";
+import { redirect } from "next/navigation";
 import React from "react";
 
 export default async function AppLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const [user, credits] = await Promise.allSettled([getUser(), getCredits()]);
-  if (user.status === "rejected")
-    throwClientError(null, "Failed to fetch user data");
-  if (credits.status === "rejected")
-    throwClientError(null, "Failed to fetch user credits");
+
+  if (user.status === "rejected") {
+    redirect("/sign-in");
+  }
 
   return (
     <>
