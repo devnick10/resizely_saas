@@ -1,5 +1,3 @@
-"use client";
-
 import { Image as ImageType } from "@/types";
 import { TransformationCard } from "./TransformationCard";
 
