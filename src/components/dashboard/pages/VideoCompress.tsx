@@ -1,10 +1,7 @@
-import { Videos } from "@/components/dashboard/Videos";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { VIdeoUploadForm } from "./videoUploadForm";
-import { Suspense } from "react";
-import { Loader } from "../core/Loader";
+import { VIdeoUploadForm } from "../VideoUploadForm";
 
-export const VideoUpload: React.FC = () => {
+export const VideoCompress: React.FC = () => {
   return (
     <div className="mx-auto w-full max-w-4xl overflow-hidden p-4">
       <h1 className="mb-4 text-center text-2xl font-bold sm:text-3xl">
@@ -22,11 +19,6 @@ export const VideoUpload: React.FC = () => {
           <VIdeoUploadForm />
         </CardContent>
       </Card>
-      <div className="mt-8">
-        <Suspense fallback={<Loader />}>
-          <Videos />
-        </Suspense>
-      </div>
     </div>
   );
 };

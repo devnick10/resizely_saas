@@ -1,11 +1,11 @@
 import Razorpay from "razorpay";
 import { NextResponse, NextRequest } from "next/server";
-import { validateOrder } from "@/schema";
+import { orderValidation } from "@/schema";
 
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
-    const amount = validateOrder(data);
+    const amount = orderValidation(data);
     const keyId = process.env.RAZOR_PAY_KEY_ID;
     const keySecret = process.env.RAZOR_KEY_SECRET;
 

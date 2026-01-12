@@ -1,6 +1,5 @@
-import { cn } from "@/lib/cn";
-import { LoaderIcon } from "lucide-react";
 import React from "react";
+import { Spinner } from "./Spinner";
 
 interface LoaderProps {
   label?: string;
@@ -14,14 +13,3 @@ export const Loader: React.FC<LoaderProps> = ({ label }) => {
     </div>
   );
 };
-
-function Spinner({ className, ...props }: React.ComponentProps<"svg">) {
-  return (
-    <LoaderIcon
-      role="status"
-      aria-label="Loading"
-      className={cn("size-4 animate-spin", className)}
-      {...props}
-    />
-  );
-}

@@ -1,6 +1,8 @@
 "use client";
 
+import { saveTransformation } from "@/actions/saveTransformations";
 import { Loader } from "@/components/core/Loader";
+import { Spinner } from "@/components/core/Spinner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -16,6 +18,7 @@ import { socialFormats } from "@/constants";
 import { throwClientError } from "@/helper/clientError";
 import { downloadFile } from "@/helper/downloadFile";
 import { useImageUpload } from "@/hooks/useImageUpload";
+import { useLoading } from "@/hooks/useLoading";
 import { useCreditsStore } from "@/stores/hooks";
 import { CldImage } from "next-cloudinary";
 import React, { useCallback, useEffect, useRef, useState } from "react";
@@ -25,9 +28,10 @@ type SocialFormat = keyof typeof socialFormats;
 const MAX_DIMENSION = 65500;
 const MIN_DIMENSION = 1;
 
-export const SocialShare: React.FC = () => {
+export const Resize: React.FC = () => {
   const { error, isUploading, uploadImage } = useImageUpload();
   const { credits } = useCreditsStore((state) => state);
+  const { loading, setLoading } = useLoading();
 
   const [mode, setMode] = useState<"social" | "custom">("social");
   const [customWidth, setCustomWidth] = useState<number>(1080);
@@ -86,6 +90,22 @@ export const SocialShare: React.FC = () => {
       toast.success("Image uploaded successfully!");
     } catch (error: unknown) {
       throwClientError(error, "Failed to upload image.");
+    }
+  };
+
+  const saveImage = async () => {
+    setLoading(true);
+    try {
+      await saveTransformation({
+        imagePublicId: uploadedImage,
+        type: "DERIVED",
+        transformation: { resize: { ...transformConfig } },
+      });
+      toast.success("Image saved successfully!");
+    } catch (error) {
+      throwClientError(error, "Failed to save image.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -209,7 +229,18 @@ export const SocialShare: React.FC = () => {
                     </div>
                   </div>
                 )}
-
+                <Button onClick={saveImage} className="w-full">
+                  Save{" "}
+                  {!loading ? (
+                    mode === "custom" ? (
+                      `${customWidth}×${customHeight}`
+                    ) : (
+                      selectedFormat
+                    )
+                  ) : (
+                    <Spinner />
+                  )}
+                </Button>
                 {/* DOWNLOAD */}
                 <Button onClick={handleDownload} className="w-full">
                   Download{" "}
@@ -227,20 +258,21 @@ export const SocialShare: React.FC = () => {
                       <span className="h-6 w-6 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
                     </div>
                   )}
-
-                  <CldImage
-                    width={transformConfig.width}
-                    height={transformConfig.height}
-                    aspectRatio={transformConfig.aspectRatio}
-                    src={uploadedImage}
-                    crop="fill"
-                    gravity="auto"
-                    sizes="100vw"
-                    alt="transformed image"
-                    ref={imageRef}
-                    onLoad={() => setIsTransforming(false)}
-                    className="max-h-[70vh] w-auto rounded-lg shadow-md"
-                  />
+                  {uploadedImage && (
+                    <CldImage
+                      width={transformConfig.width}
+                      height={transformConfig.height}
+                      aspectRatio={transformConfig.aspectRatio}
+                      src={uploadedImage}
+                      crop="fill"
+                      gravity="auto"
+                      sizes="100vw"
+                      alt="transformed image"
+                      ref={imageRef}
+                      onLoad={() => setIsTransforming(false)}
+                      className="max-h-[70vh] w-auto rounded-lg shadow-md"
+                    />
+                  )}
                 </div>
               </div>
             </div>

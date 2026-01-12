@@ -3,6 +3,7 @@
 import { useUserStore } from "@/stores/hooks";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createOrderId } from "../helper/createOrderId";
+import { useLoading } from "./useLoading";
 
 interface VerifyPaymentHandler {
   razorpay_payment_id: string;
@@ -46,7 +47,7 @@ export function usePayment(
   const { user } = useUserStore((state) => state);
 
   const [options, setOptions] = useState<PaymentOptions | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { loading, setLoading } = useLoading();
   const [error, setError] = useState<unknown | null>(null);
 
   // use ref to store callbacks to avoid effect dependency
@@ -60,7 +61,7 @@ export function usePayment(
 
     async function initPayment() {
       try {
-        setIsLoading(true);
+        setLoading(true);
 
         const { orderId, error: orderError } = await createOrderId(
           Number(plan),
@@ -115,7 +116,7 @@ export function usePayment(
       } catch (err) {
         if (isMounted) setError(err);
       } finally {
-        if (isMounted) setIsLoading(false);
+        if (isMounted) setLoading(false);
       }
     }
 
@@ -124,7 +125,7 @@ export function usePayment(
     return () => {
       isMounted = false;
     };
-  }, [plan, user]);
+  }, [plan, user, setLoading]);
 
   const startPayment = useCallback(() => {
     // @ts-ignore Razorpay injected globally
@@ -135,7 +136,7 @@ export function usePayment(
   }, [options]);
 
   return {
-    isLoading,
+    isLoading: loading,
     error,
     options,
     startPayment,

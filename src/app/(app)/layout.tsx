@@ -1,7 +1,7 @@
 import { StoreInitializer } from "@/components/core/StoreInitializer";
 import { Navbar } from "@/components/dashboard/Navbar";
 import { Sidebar } from "@/components/dashboard/Sidebar";
-import { getCredits } from "@/lib/data/user/getCredits";
+import { getCredits } from "@/lib/data/getCredits";
 import { getUser } from "@/lib/data/user/getUser";
 import { redirect } from "next/navigation";
 import React from "react";

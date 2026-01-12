@@ -18,7 +18,6 @@ interface CloudinaryUploadResult {
 
 export async function imageUploader(request: FormData) {
   const user = await getUser();
-
   const formData = request;
   const file = formData.get("file") as File | null;
 
@@ -33,7 +32,7 @@ export async function imageUploader(request: FormData) {
     const uploadResult = await new Promise<CloudinaryUploadResult>(
       (resolve, reject) => {
         const uploadStream = v2.uploader.upload_stream(
-          { folder: "cloudinary_saas" },
+          { folder: "cloudinary_saas/resize" },
           (error, result) => {
             if (error || !result) {
               reject(error || new Error("Upload failed"));
@@ -48,15 +47,25 @@ export async function imageUploader(request: FormData) {
     );
 
     try {
-      await prisma.credit.update({
-        where: {
-          userId: user.id,
-        },
-        data: {
-          credits: {
-            decrement: 1,
+      await prisma.$transaction(async (txn) => {
+        const credit = await txn.credit.findUnique({
+          where: { userId: user.id },
+        });
+
+        if (!credit || credit.credits <= 0) {
+          throw new Error("Insufficient credits");
+        }
+
+        await txn.credit.update({
+          where: {
+            userId: user.id,
           },
-        },
+          data: {
+            credits: {
+              decrement: 1,
+            },
+          },
+        });
       });
     } catch (error) {
       if (uploadResult?.public_id) {
@@ -70,7 +79,7 @@ export async function imageUploader(request: FormData) {
     }
 
     revalidateTag(`credits_${user.id}`);
-    return { success: true, publicId: uploadResult.public_id };
+    return { publicId: uploadResult.public_id };
   } catch (error) {
     throwServerError(error, "Error while uploading image try again later.");
   }

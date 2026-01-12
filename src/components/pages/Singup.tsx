@@ -11,9 +11,9 @@ import { Eye, EyeOff } from "lucide-react";
 import { sendOTP } from "@/actions/sendOtp";
 import { verifyOtp } from "@/actions/verifyOtp";
 
-import { Header } from "@/components/core/header";
+import { Header } from "@/components/core/Header";
 import { Loader } from "@/components/core/Loader";
-import { useLoader } from "@/hooks/useLoader";
+import { useLoading } from "@/hooks/useLoading";
 
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Input } from "../ui/input";
@@ -28,7 +28,7 @@ export const Signup: React.FC = () => {
   const [verification, setVerification] = useState(false);
   const [code, setCode] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const { loading, setLoading } = useLoader();
+  const { loading, setLoading } = useLoading();
   const router = useRouter();
 
   if (loading) return <Loader />;
@@ -191,7 +191,7 @@ export const Signup: React.FC = () => {
               <Button
                 variant="outline"
                 className="text-md flex w-full gap-2"
-                onClick={() => signIn("google", { callbackUrl: "/home" })}
+                onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
               >
                 <Image
                   src="https://res.cloudinary.com/dnr1sgjrx/image/upload/v1744802382/google_ysyp3i.png"

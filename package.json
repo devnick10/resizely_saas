@@ -53,6 +53,7 @@
     "@eslint/eslintrc": "^2.1.4",
     "@eslint/js": "^8.57.1",
     "@next/eslint-plugin-next": "^15.1.6",
+    "@radix-ui/react-tabs": "^1.1.13",
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^20.17.16",
     "@types/nodemailer": "^6.4.17",

@@ -16,6 +16,7 @@ v2.config({
 export async function deleteVideo(payload: string) {
   const user = await getUser();
   const { public_id } = deleteVideoValidatation(payload);
+
   // Validate Cloudinary credentials
   if (
     !process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ||
@@ -26,21 +27,22 @@ export async function deleteVideo(payload: string) {
   }
 
   try {
-    // TODO: delete form could
-    await v2.uploader.destroy(public_id);
+    const response = await v2.uploader.destroy(public_id, {
+      resource_type: "video",
+    });
 
-    try {
-      await prisma.video.deleteMany({
-        where: {
-          userId: user.id,
-          publicId: public_id,
-        },
-      });
-      revalidateTag(`videos_${user.id}`);
-    } catch (error) {
-      throwServerError(error, "Video deletion failed from db.");
+    if (response.result !== "ok" && response.result !== "not found") {
+      throw new Error(`Cloudinary delete failed: ${response.result}`);
     }
+
+    await prisma.video.deleteMany({
+      where: {
+        userId: user.id,
+        publicId: public_id,
+      },
+    });
+    revalidateTag(`videos_${user.id}`);
   } catch (error) {
-    throwServerError(error, "Video deletion failed from cloud.");
+    throwServerError(error, "Video deletion failed.");
   }
 }

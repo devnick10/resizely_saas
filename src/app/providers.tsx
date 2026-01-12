@@ -1,6 +1,6 @@
 "use client";
 import { ThemeProvider } from "@/components/core/ThemeProvider";
-import { RootStoreProvider } from "@/components/core/storeProvider";
+import { RootStoreProvider } from "@/components/core/StoreProvider";
 import { SessionProvider } from "next-auth/react";
 import Script from "next/script";
 import React from "react";

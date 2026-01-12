@@ -18,7 +18,45 @@ model User {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   Credit       Credit?
+  images       Image[]
   videos       Video[]
+}
+
+model Credit {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  credits   Int      @default(2)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Image {
+  id              String             @id @default(uuid())
+  publicId        String
+  userId          String
+  user            User               @relation(fields: [userId], references: [id],onDelete: Cascade)
+  createdAt       DateTime           @default(now())
+  transformations TransformedImage[]
+}
+
+enum TransformationType {
+  DERIVED // resize, crop, format, quality
+  IRREVERSIBLE // bg remove, AI edits
+}
+
+model TransformedImage {
+  id                 String             @id @default(uuid())
+  imageId            String
+  image              Image              @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  publicId           String // original or transformed
+  transformation     Json? // NULL for irreversible ops
+  transformationHash String
+  type               TransformationType @default(DERIVED)
+  createdAt          DateTime           @default(now())
+
+  @@unique([imageId, transformationHash])
+  @@index([imageId])
 }
 
 model Video {
@@ -32,14 +70,5 @@ model Video {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   userId       String
-  user         User     @relation(fields: [userId], references: [id])
-}
-
-model Credit {
-  id        String   @id @default(uuid())
-  userId    String   @unique
-  credits   Int      @default(2)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [userId], references: [id],onDelete: Cascade)
 }

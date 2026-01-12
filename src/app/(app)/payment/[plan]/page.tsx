@@ -30,7 +30,7 @@ export default function Page() {
     onSuccess: () => {
       toast.success("Payment successful 🎉");
       setCredits(credits + creditsIncrementBy);
-      router.replace("/home");
+      router.replace("/dashboard");
     },
     onError: () => {
       toast.error("Payment failed!");

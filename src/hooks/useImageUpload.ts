@@ -3,15 +3,16 @@
 import { imageUploader } from "@/actions/uploadImage";
 import { throwClientError } from "@/helper/clientError";
 import { useState } from "react";
+import { useLoading } from "./useLoading";
 
 export function useImageUpload() {
-  const [isUploading, setIsUploading] = useState(false);
+  const { loading, setLoading } = useLoading();
   const [error, setError] = useState<unknown>(null);
 
   const uploadImage = async (file: File) => {
     if (!file) throwClientError("File is required.");
 
-    setIsUploading(true);
+    setLoading(true);
 
     try {
       const formData = new FormData();
@@ -22,13 +23,13 @@ export function useImageUpload() {
       setError(err);
       throw err;
     } finally {
-      setIsUploading(false);
+      setLoading(false);
     }
   };
 
   return {
     uploadImage,
-    isUploading,
+    isUploading: loading,
     error,
   };
 }

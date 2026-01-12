@@ -10,6 +10,7 @@ import { VideoUploadPayload } from "@/types";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Loader } from "../core/Loader";
+const ERROR = null;
 
 export const VIdeoUploadForm: React.FC = () => {
   const { isUploading, uploadVideo, error } = useVideoUpload();
@@ -59,10 +60,12 @@ export const VIdeoUploadForm: React.FC = () => {
           id="title"
           type="text"
           value={payload.title}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => ({
-            ...payload,
-            titile: e.target.value,
-          })}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setPayload((prev) => ({
+              ...prev,
+              title: e.target.value,
+            }))
+          }
           required
         />
       </div>
@@ -72,10 +75,9 @@ export const VIdeoUploadForm: React.FC = () => {
         <Textarea
           id="description"
           value={payload.description}
-          onChange={(e: ChangeEvent<HTMLTextAreaElement>) => ({
-            ...payload,
-            description: e.target.value,
-          })}
+          onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+            setPayload((prev) => ({ ...prev, description: e.target.value }))
+          }
         />
       </div>
 
@@ -85,10 +87,17 @@ export const VIdeoUploadForm: React.FC = () => {
           id="video"
           type="file"
           accept="video/*"
-          onChange={(e: ChangeEvent<HTMLInputElement>) => ({
-            ...payload,
-            file: e.target.value,
-          })}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            const file = e.target.files?.[0];
+            if (!file) {
+              throwClientError(ERROR, "File is required");
+              return;
+            }
+            setPayload((prev) => ({
+              ...prev,
+              file,
+            }));
+          }}
           required
         />
       </div>

@@ -1,7 +1,7 @@
 import "server-only";
 import prisma from "@/db";
 import { unstable_cache } from "next/cache";
-import { getUser } from "./getUser";
+import { getUser } from "./user/getUser";
 
 export async function getVideos() {
   const user = await getUser();

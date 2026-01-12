@@ -51,7 +51,7 @@ export async function videoUploader(data: FormData) {
         const uploadStream = v2.uploader.upload_stream(
           {
             resource_type: "video",
-            folder: "cloudinary_saas_videos",
+            folder: "cloudinary_saas/compress_videos",
             transformation: [{ quality: "auto", fetch_format: "mp4" }],
           },
           (error, result) => {

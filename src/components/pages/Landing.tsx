@@ -1,5 +1,5 @@
 import { Footer } from "@/components/core/Footer";
-import { Header } from "@/components/core/header";
+import { Header } from "@/components/core/Header";
 import React from "react";
 import { CtaSection } from "../landing/CtaSection";
 import { FeaturesSection } from "../landing/FeaturesSection";

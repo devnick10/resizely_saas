@@ -3,10 +3,11 @@
 import { videoUploader } from "@/actions/uploadVideo";
 import { VideoUploadPayload } from "@/types";
 import { useState } from "react";
+import { useLoading } from "./useLoading";
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 
 export function useVideoUpload() {
-  const [isUploading, setIsUploading] = useState(false);
+  const { loading, setLoading } = useLoading();
   const [error, setError] = useState<Error | null>(null);
 
   const uploadVideo = async ({
@@ -22,7 +23,7 @@ export function useVideoUpload() {
       throw new Error("File size too large, we support only 100mb now");
     }
 
-    setIsUploading(true);
+    setLoading(true);
 
     try {
       const formData = new FormData();
@@ -36,13 +37,13 @@ export function useVideoUpload() {
       setError(err as Error);
       throw err;
     } finally {
-      setIsUploading(false);
+      setLoading(false);
     }
   };
 
   return {
     uploadVideo,
-    isUploading,
+    isUploading: loading,
     error,
   };
 }

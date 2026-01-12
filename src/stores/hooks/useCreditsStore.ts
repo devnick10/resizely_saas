@@ -1,6 +1,6 @@
 "use client";
 
-import { RootStoreContext } from "@/components/core/storeProvider";
+import { RootStoreContext } from "@/components/core/StoreProvider";
 import { useContext } from "react";
 import { CreditsStore } from "../creditStore";
 import { useStore } from "zustand";

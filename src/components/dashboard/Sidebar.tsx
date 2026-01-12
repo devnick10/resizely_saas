@@ -14,10 +14,10 @@ import { usePathname, useRouter } from "next/navigation";
 import { useCreditsStore, useNavbarStore } from "@/stores/hooks";
 
 const sidebarItems = [
-  { href: "/home", icon: LayoutDashboardIcon, label: "Home Page" },
-  { href: "/social-share", icon: Share2Icon, label: "Resize Image" },
-  { href: "/video-upload", icon: UploadIcon, label: "Compress Video" },
-  { href: "/bg-remover", icon: ImageIcon, label: "Background Remover" },
+  { href: "/dashboard", icon: LayoutDashboardIcon, label: "Dashboard" },
+  { href: "/tools/resize", icon: Share2Icon, label: "Image Resize" },
+  { href: "/tools/video-compress", icon: UploadIcon, label: "Video Compress" },
+  { href: "/tools/bg-removal", icon: ImageIcon, label: "Background Removal" },
 ];
 
 export const Sidebar: React.FC = () => {

@@ -2,7 +2,7 @@
 
 import { useContext } from "react";
 import { NavbarStore } from "../navbarStore";
-import { RootStoreContext } from "@/components/core/storeProvider";
+import { RootStoreContext } from "@/components/core/StoreProvider";
 import { useStore } from "zustand";
 
 export function useNavbarStore<T>(selector: (s: NavbarStore) => T) {

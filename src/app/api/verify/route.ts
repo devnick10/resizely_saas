@@ -5,7 +5,7 @@ import { getUser } from "@/lib/data/user/getUser";
 import { Plan } from "@/types";
 import { throwServerError } from "@/helper/serverError";
 import { revalidateTag } from "next/cache";
-import { verifyRequestValidation } from "@/schema";
+import { verifyPaymentRequestValidation } from "@/schema";
 
 const generatedSignature = (
   razorpayOrderId: string,
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
   const user = await getUser();
   const requestBody = await request.json();
   const { razorpayOrderId, razorpayPaymentId, razorpaySignature, plan } =
-    verifyRequestValidation(requestBody);
+    verifyPaymentRequestValidation(requestBody);
 
   const signature = generatedSignature(razorpayOrderId, razorpayPaymentId);
   if (signature !== razorpaySignature) {

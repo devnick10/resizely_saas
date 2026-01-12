@@ -8,9 +8,9 @@ import { useState, FormEvent } from "react";
 import toast from "react-hot-toast";
 import { EyeOff, Eye } from "lucide-react";
 
-import { Header } from "@/components/core/header";
+import { Header } from "@/components/core/Header";
 import { Loader } from "@/components/core/Loader";
-import { useLoader } from "@/hooks/useLoader";
+import { useLoading } from "@/hooks/useLoading";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -24,7 +24,7 @@ export const Signin: React.FC = () => {
   const [error, setError] = useState<unknown>();
 
   const router = useRouter();
-  const { loading, setLoading } = useLoader();
+  const { loading, setLoading } = useLoading();
 
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -48,7 +48,7 @@ export const Signin: React.FC = () => {
 
       if (result?.ok) {
         toast.success("Signed in successfully.");
-        router.push("/home");
+        router.push("/dashboard");
       }
     } catch (err) {
       setError(err);
@@ -130,7 +130,7 @@ export const Signin: React.FC = () => {
             <Button
               variant="outline"
               className="text-md flex w-full gap-2"
-              onClick={() => signIn("google", { callbackUrl: "/home" })}
+              onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
             >
               <Image
                 src="https://res.cloudinary.com/dnr1sgjrx/image/upload/v1744802382/google_ysyp3i.png"

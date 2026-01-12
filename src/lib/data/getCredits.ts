@@ -2,7 +2,7 @@ import "server-only";
 import prisma from "@/db";
 import { throwServerError } from "@/helper/serverError";
 import { unstable_cache } from "next/cache";
-import { getUser } from "./getUser";
+import { getUser } from "./user/getUser";
 
 export const getCredits = async () => {
   const user = await getUser();

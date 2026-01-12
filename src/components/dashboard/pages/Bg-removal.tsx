@@ -13,10 +13,15 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import { Loader } from "@/components/core/Loader";
+import { saveTransformation } from "@/actions/saveTransformations";
+import { persistBgRemovedImage } from "@/actions/uploadIrreversibleTransformations";
+import { useLoading } from "@/hooks/useLoading";
+import { Spinner } from "@/components/core/Spinner";
 
 export const BgRemover: React.FC = () => {
   const { error, uploadImage, isUploading } = useImageUpload();
   const { credits } = useCreditsStore((state) => state);
+  const { setLoading, loading } = useLoading();
 
   const [originalImage, setOriginalImage] = useState<string>("");
   const [uploadedImage, setUploadedImage] = useState<string>("");
@@ -55,6 +60,36 @@ export const BgRemover: React.FC = () => {
     } catch (error: unknown) {
       setIsTransforming(false);
       throwClientError(error, "Failed to upload image.");
+    }
+  };
+
+  const saveImage = async () => {
+    if (!imageRef.current) {
+      toast.error("Image not ready yet.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      //  generate final image URL
+      const transformedUrl = imageRef.current.src;
+
+      // upload irreversible asset
+      const { publicId: transformedPublicId } =
+        await persistBgRemovedImage(transformedUrl);
+
+      //save to DB
+      await saveTransformation({
+        imagePublicId: uploadedImage,
+        transformedPublicId,
+        type: "IRREVERSIBLE",
+      });
+
+      toast.success("Transformed image saved successfully!");
+    } catch (error) {
+      throwClientError(error, "Failed to save image.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -135,6 +170,8 @@ export const BgRemover: React.FC = () => {
                       sizes="100vw"
                       alt="Transformed Image"
                       removeBackground
+                      format="png"
+                      background="transparent"
                       ref={imageRef}
                       onLoad={() => setIsTransforming(false)}
                       onError={() => {
@@ -155,7 +192,10 @@ export const BgRemover: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex justify-end">
+              <div className="flex gap-2">
+                <Button onClick={() => saveImage()} className="">
+                  Save {loading && <Spinner />}
+                </Button>
                 <Button onClick={handleDownload}>Download</Button>
               </div>
             </div>

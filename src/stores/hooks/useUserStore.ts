@@ -3,7 +3,7 @@
 import { useStore } from "zustand";
 import { UserStore } from "../userStore";
 import { useContext } from "react";
-import { RootStoreContext } from "@/components/core/storeProvider";
+import { RootStoreContext } from "@/components/core/StoreProvider";
 
 export function useUserStore<T>(selector: (s: UserStore) => T) {
   const ctx = useContext(RootStoreContext);
