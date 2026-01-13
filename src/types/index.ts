@@ -1,15 +1,23 @@
-import { TransformationType } from "@prisma/client";
+import { ROLE, TransformationType } from "@prisma/client";
 
 export enum Plan {
   Pro = 49900, //INR 499RS
   Standard = 19900, //INR 199RS
 }
 
-export interface User {
+export interface SessionUser {
   id?: string;
   name?: string | null;
   email?: string | null;
   image?: string | null;
+}
+
+export interface User {
+  id: string;
+  username: string;
+  email: string;
+  profileImage: string | null;
+  role: ROLE;
 }
 
 export interface Video {

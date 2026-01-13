@@ -1,74 +1,91 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import {
-  CoinsIcon,
-  ImageIcon,
-  LayoutDashboardIcon,
-  LogOutIcon,
-  Share2Icon,
-  UploadIcon,
-} from "lucide-react";
+import { USER_SIDEBAR_ITEMS } from "@/lib/sidebar.config";
+import { useCreditsStore, useNavbarStore } from "@/stores/hooks";
+import { CoinsIcon, LogOutIcon, ShieldCheck } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
-import { useCreditsStore, useNavbarStore } from "@/stores/hooks";
-
-const sidebarItems = [
-  { href: "/dashboard", icon: LayoutDashboardIcon, label: "Dashboard" },
-  { href: "/tools/resize", icon: Share2Icon, label: "Image Resize" },
-  { href: "/tools/video-compress", icon: UploadIcon, label: "Video Compress" },
-  { href: "/tools/bg-removal", icon: ImageIcon, label: "Background Removal" },
-];
+import clsx from "clsx";
 
 export const Sidebar: React.FC = () => {
   const { setIsOpen } = useNavbarStore((state) => state);
   const { credits } = useCreditsStore((state) => state);
-
   const router = useRouter();
   const pathname = usePathname();
 
   return (
-    <div className="flex h-full flex-col justify-between overflow-hidden pt-8 font-poppins sm:pt-2">
-      <nav className="flex flex-col gap-2 p-4">
-        {sidebarItems.map((item) => (
-          <Button
-            key={item.href}
-            variant={pathname === item.href ? "default" : "ghost"}
-            className="w-full justify-start gap-2"
-            onClick={() => {
-              setIsOpen(false);
-              router.push(item.href);
-            }}
-          >
-            <item.icon className="h-5 w-5" />
-            {item.label}
-          </Button>
-        ))}
-      </nav>
-      <div className="p-4">
+    <aside className="flex h-full flex-col justify-between bg-muted/40">
+      {/* Top */}
+      <div>
+        {/* Brand */}
+        <div className="flex items-center gap-2 px-6 py-5">
+          <ShieldCheck className="h-5 w-5 text-primary" />
+          <span className="text-lg font-semibold">Dashboard</span>
+        </div>
+
+        <Separator />
+
+        {/* Navigation */}
+        <nav className="space-y-2 px-3 py-4">
+          <p className="px-3 text-xs font-medium uppercase text-muted-foreground">
+            Tools
+          </p>
+
+          {USER_SIDEBAR_ITEMS.map((item) => {
+            const isActive = pathname === item.href;
+
+            return (
+              <Button
+                key={item.href}
+                variant="ghost"
+                className={clsx(
+                  "w-full justify-start gap-3 px-3",
+                  isActive && "bg-primary/10 text-primary hover:bg-primary/15",
+                )}
+                onClick={() => {
+                  setIsOpen(false);
+                  router.push(item.href);
+                }}
+              >
+                <item.icon className="h-4 w-4" />
+                {item.label}
+              </Button>
+            );
+          })}
+        </nav>
+      </div>
+
+      {/* Footer */}
+      <div className="px-4 py-4">
         <Separator className="mb-4" />
-        <div className="flex w-full items-center gap-4 sm:hidden">
-          <div className="flex w-full items-center justify-center gap-2 rounded-md border border-black p-2 text-yellow-500 dark:border-gray-700">
-            <CoinsIcon className="h-5 w-5" />
+
+        {/* Credits */}
+        <div className="mb-4 rounded-md border bg-background px-3 py-2 text-sm text-yellow-500">
+          <div className="flex items-center gap-2">
+            <CoinsIcon className="h-4 w-4" />
             <span>{credits ?? 0} Credits</span>
           </div>
         </div>
-        <Separator className="mb-4" />
+
         <Button
           onClick={() => router.push("/payment")}
-          className="mb-2 w-full border dark:border-gray-700"
+          className="mb-2 w-full"
           variant="secondary"
         >
-          <CoinsIcon className="mr-2 h-4 w-4 text-yellow-500" /> Buy Credits
+          Buy Credits
         </Button>
+
         <Button
           onClick={() => signOut({ callbackUrl: "/" })}
           className="w-full"
           variant="destructive"
         >
-          <LogOutIcon className="mr-2 h-4 w-4" /> Sign Out
+          <LogOutIcon className="mr-2 h-4 w-4" />
+          Sign Out
         </Button>
       </div>
-    </div>
+    </aside>
   );
 };

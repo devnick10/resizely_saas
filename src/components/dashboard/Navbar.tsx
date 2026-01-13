@@ -19,7 +19,7 @@ export const Navbar: React.FC = () => {
   const { isOpen, setIsOpen } = useNavbarStore((state) => state);
   const { credits } = useCreditsStore((state) => state);
   const { user } = useUserStore((state) => state);
-
+  console.log(user);
   const handleSignOut = async () => {
     await signOut({ callbackUrl: "/" });
   };
@@ -58,27 +58,29 @@ export const Navbar: React.FC = () => {
       <div className="flex">
         <div className="ml-auto flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
           <div className="hidden items-center gap-4 sm:flex">
-            <div className="flex items-center gap-2 rounded-md border border-black p-2 text-yellow-500 dark:border-gray-700">
-              <CoinsIcon className="h-5 w-5" />
-              <span>{credits ?? 0} Credits</span>
-            </div>
+            {user?.role === "USER" && (
+              <div className="flex items-center gap-2 rounded-md border border-black p-2 text-yellow-500 dark:border-gray-700">
+                <CoinsIcon className="h-5 w-5" />
+                <span>{credits ?? 0} Credits</span>
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-2">
-            {user?.image ? (
+            {user?.profileImage ? (
               <Image
-                src={user.image}
-                alt={user.name || "Avatar"}
+                src={user.profileImage}
+                alt={user.username || "Avatar"}
                 width={32}
                 height={32}
                 className="rounded-full"
               />
             ) : (
               <div className="flex h-4 w-4 items-center justify-center rounded-full border border-gray-300 bg-gray-200 p-2.5 font-bold dark:border-gray-600 dark:bg-gray-600 sm:p-4">
-                {user?.name?.charAt(0).toUpperCase()}
+                {user?.email?.charAt(0).toUpperCase()}
               </div>
             )}
             <span className="max-w-[100px] truncate text-sm font-medium dark:text-gray-200 sm:max-w-[150px]">
-              {user?.name || user?.email?.split("@")[0]}
+              {user?.username || user?.email?.split("@")[0]}
             </span>
             <div className="hidden sm:block">
               <Button

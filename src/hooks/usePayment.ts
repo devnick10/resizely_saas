@@ -107,7 +107,7 @@ export function usePayment(
             order_id: orderId,
             handler: verifyPaymentHandler,
             prefill: {
-              name: user?.name ?? "Guest",
+              name: user?.username ?? "Guest",
               email: user?.email ?? "guest@example.com",
             },
             theme: { color: "#3399cc" },

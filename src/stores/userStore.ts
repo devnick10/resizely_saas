@@ -1,4 +1,5 @@
 import { User } from "@/types";
+import { ROLE } from "@prisma/client";
 import { createStore } from "zustand/vanilla";
 
 export interface UserState {

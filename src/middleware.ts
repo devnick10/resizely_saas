@@ -8,6 +8,7 @@ export async function middleware(request: NextRequest) {
   // Routes that REQUIRE authentication
   const privateRoutes = [
     "/dashboard",
+    "/admin/dashboard",
     "/tools/path:*",
     "/order",
     "/verify",
@@ -42,6 +43,7 @@ export const config = {
     "/sign-up",
 
     "/dashboard/:path*",
+    "/admin/:path*",
     "/tools/:path*",
     "/order/:path*",
     "/verify/:path*",

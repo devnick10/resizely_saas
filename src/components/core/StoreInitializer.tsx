@@ -12,6 +12,7 @@ export const StoreInitializer: React.FC<StoreInitializerProps> = (props) => {
   const initialized = useRef<boolean>(false);
   const { setUser } = useUserStore((s) => s);
   const { setCredits } = useCreditsStore((s) => s);
+
   useEffect(() => {
     if (!initialized.current) {
       setUser(props.user);
