@@ -59,7 +59,7 @@ export const Navbar: React.FC = () => {
         <div className="ml-auto flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
           <div className="hidden items-center gap-4 sm:flex">
             {user?.role === "USER" && (
-              <div className="flex items-center gap-2 rounded-md border border-black p-2 text-yellow-500 dark:border-gray-700">
+              <div className="flex items-center gap-2 rounded-md border border-black bg-yellow-500 p-2 font-bold text-neutral-800 dark:border-gray-700">
                 <CoinsIcon className="h-5 w-5" />
                 <span>{credits ?? 0} Credits</span>
               </div>

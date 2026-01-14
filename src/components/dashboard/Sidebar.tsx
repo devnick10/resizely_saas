@@ -62,7 +62,7 @@ export const Sidebar: React.FC = () => {
         <Separator className="mb-4" />
 
         {/* Credits */}
-        <div className="mb-4 rounded-md border bg-background px-3 py-2 text-sm text-yellow-500">
+        <div className="mb-4 rounded-md border bg-yellow-500 px-3 py-2 text-sm font-bold text-neutral-900 dark:bg-background dark:bg-yellow-500">
           <div className="flex items-center gap-2">
             <CoinsIcon className="h-4 w-4" />
             <span>{credits ?? 0} Credits</span>
