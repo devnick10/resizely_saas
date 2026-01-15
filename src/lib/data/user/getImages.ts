@@ -1,7 +1,7 @@
 import "server-only";
 import prisma from "@/db";
 import { unstable_cache } from "next/cache";
-import { getUser } from "./user/getUser";
+import { getUser } from "./getUser";
 import { Image, Transformation } from "@/types";
 
 export async function getImages(): Promise<Image[]> {
