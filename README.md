@@ -1,41 +1,90 @@
-# 📸 Resizely - Media Processing SaaS 🚀
+# 📸 Resizely – Media Processing SaaS 🚀
 
-Resizely is a **credit-based** SaaS application designed to make media processing easy and efficient. Users can **resize images**, **compress videos**, and **remove backgrounds**, with a **credit system** that provides free credits and a seamless **Razorpay integration** for purchasing more.
+Resizely is a **credit-based SaaS platform** for modern media processing.  
+Users can **resize images**, **compress videos**, and **remove backgrounds**, while admins get full **platform control & analytics** via a dedicated **Admin Dashboard**.
 
-##### The app will be live at **https://resizely.devnikhil.xyz**
+🌐 **Live:** https://resizely.devnikhil.xyz
 
 ---
 
 ## 🌟 Features
 
-✅ **Image Resizing** – Optimize images for social media & web  
-✅ **Video Compression** – Reduce video sizes without quality loss  
-✅ **Background Removal** – AI-powered background remover  
-✅ **Credit-Based System** – Users get **2 free credits**, then can buy more  
-✅ **Payment Integration** – Razorpay for secure transactions  
-✅ **Authentication** – Secure login with **NextAuth** (Google + Credentials)  
-✅ **Optimized Performance** – Cloudinary for fast media processing  
-✅ **Modern UI with ShadCN** – Accessible and beautiful components  
-✅ **Containerized Deployment** – Docker support for easy setup
+### 👤 User Features
+✅ **Image Resizing** – Optimize images for web & social platforms  
+✅ **Video Compression** – Reduce size without noticeable quality loss  
+✅ **Background Removal** – AI-powered subject extraction  
+✅ **Credit-Based System** – 2 free credits, pay-as-you-go after  
+✅ **Secure Payments** – Razorpay integration  
+✅ **Authentication** – NextAuth (Google + Credentials)  
+✅ **Fast Media Delivery** – Powered by Cloudinary  
+✅ **Modern UI** – ShadCN UI + TailwindCSS  
+
+---
+
+### 🛡️ Admin Dashboard
+
+Accessible **only to ADMIN users** with role-based protection.
+
+✅ **User Management**
+- View all users
+- Block / Unblock users
+- Permanently delete users
+
+✅ **Role Management**
+- Promote / Demote users (USER ↔ ADMIN)
+
+✅ **Media Management**
+- View all images & videos across users
+- Delete media assets from DB & Cloudinary
+
+✅ **Analytics**
+- Cloudinary storage & bandwidth usage
+- Platform media statistics
+- Activity & admin action logs
+
+✅ **Security**
+- Protected admin routes
+- Destructive action confirmations
+- Server-side authorization checks
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Frontend & Backend:** Next.js (App Router)
-- **Database:** Prisma + NeonDB
-- **Media Processing:** Cloudinary
-- **Authentication:** NextAuth (Google & Credentials)
-- **Payments:** Razorpay
-- **Email (OTP, transactional):** Nodemailer (Mailtrap for dev)
-- **UI Framework:** **ShadCN UI + TailwindCSS**
-- **State Management:** React Context
-- **Containerization:** Docker + Docker Compose
+**Frontend & Backend**
+- Next.js (App Router)
+- TypeScript
+
+**Database**
+- Prisma ORM
+- NeonDB (PostgreSQL)
+
+**Media Processing**
+- Cloudinary
+
+**Authentication**
+- NextAuth (Google & Credentials)
+
+**Payments**
+- Razorpay
+
+**Email**
+- Nodemailer (Mailtrap for development)
+
+**UI / Styling**
+- ShadCN UI
+- TailwindCSS
+
+**State Management**
+- React Context / Zustand
+
+**Deployment**
+- Docker
+- Docker Compose
 
 ---
 
 ## 🚀 Getting Started
-
 ### 1️⃣ Clone the Repository
 
 ```sh
@@ -47,8 +96,6 @@ cd resizely_saas
 
 ```sh
 npm install
-# or
-yarn install
 ```
 
 ### 3️⃣ Set Up Environment Variables
@@ -114,16 +161,6 @@ docker compose --env-file ./.env -f docker/docker-compose.yml down -v
 3️⃣ Upload an image or video  
 4️⃣ Choose resizing/compression options  
 5️⃣ Process & download the optimized media
-
----
-
-## 📌 Roadmap
-
-🚀 **Upcoming Improvements:**
-
-- ✅ Add bulk upload support
-- ✅ Improve UX & loading speeds
-- ✅ More social media export options
 
 ---
 
