@@ -20,7 +20,7 @@ import { Spinner } from "@/components/core/Spinner";
 
 export const BgRemover: React.FC = () => {
   const { error, uploadImage, isUploading } = useImageUpload();
-  const { credits } = useCreditsStore((state) => state);
+  const { credits, setCredits } = useCreditsStore((state) => state);
   const { setLoading, loading } = useLoading();
 
   const [originalImage, setOriginalImage] = useState<string>("");
@@ -56,6 +56,7 @@ export const BgRemover: React.FC = () => {
       setOriginalImage(URL.createObjectURL(file));
       setFileName(file.name);
       setUploadedImage(response.publicId!);
+      setCredits(credits - 1);
       toast.success("Image uploaded successfully!");
     } catch (error: unknown) {
       setIsTransforming(false);

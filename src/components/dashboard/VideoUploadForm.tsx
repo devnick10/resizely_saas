@@ -14,7 +14,7 @@ const ERROR = null;
 
 export const VIdeoUploadForm: React.FC = () => {
   const { isUploading, uploadVideo, error } = useVideoUpload();
-  const { credits } = useCreditsStore((state) => state);
+  const { credits, setCredits } = useCreditsStore((state) => state);
 
   const [payload, setPayload] = useState<VideoUploadPayload>({
     title: "",
@@ -46,6 +46,7 @@ export const VIdeoUploadForm: React.FC = () => {
         description: "",
         file: null,
       });
+      setCredits(credits - 1);
       toast.success("Video uploaded successfully");
     } catch (error: unknown) {
       throwClientError(error);

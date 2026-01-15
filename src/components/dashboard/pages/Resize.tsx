@@ -30,7 +30,7 @@ const MIN_DIMENSION = 1;
 
 export const Resize: React.FC = () => {
   const { error, isUploading, uploadImage } = useImageUpload();
-  const { credits } = useCreditsStore((state) => state);
+  const { credits, setCredits } = useCreditsStore((state) => state);
   const { loading, setLoading } = useLoading();
 
   const [mode, setMode] = useState<"social" | "custom">("social");
@@ -87,6 +87,7 @@ export const Resize: React.FC = () => {
       const response = await uploadImage(file);
       setUploadedImage(response.publicId!);
       setFileName(file.name);
+      setCredits(credits - 1);
       toast.success("Image uploaded successfully!");
     } catch (error: unknown) {
       throwClientError(error, "Failed to upload image.");
@@ -101,6 +102,7 @@ export const Resize: React.FC = () => {
         type: "DERIVED",
         transformation: { resize: { ...transformConfig } },
       });
+
       toast.success("Image saved successfully!");
     } catch (error) {
       throwClientError(error, "Failed to save image.");

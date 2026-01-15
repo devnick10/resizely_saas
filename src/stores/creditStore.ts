@@ -19,6 +19,6 @@ export const createCreditsStore = (
 ) => {
   return createStore<CreditsStore>()((set) => ({
     ...initState,
-    setCredits: (val: number) => set(() => ({ credits: val })),
+    setCredits: (val: number) => set(() => ({ credits: val <= 0 ? 0 : val })),
   }));
 };
