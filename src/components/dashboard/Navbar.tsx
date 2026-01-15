@@ -19,7 +19,6 @@ export const Navbar: React.FC = () => {
   const { isOpen, setIsOpen } = useNavbarStore((state) => state);
   const { credits } = useCreditsStore((state) => state);
   const { user } = useUserStore((state) => state);
-  console.log(user);
   const handleSignOut = async () => {
     await signOut({ callbackUrl: "/" });
   };
