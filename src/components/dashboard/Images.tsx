@@ -1,4 +1,4 @@
-import { getImages } from "@/lib/data/getImages";
+import { getImages } from "@/lib/data/user/getImages";
 import { ImageCard } from "./ImageCard";
 
 export const Images: React.FC = async () => {

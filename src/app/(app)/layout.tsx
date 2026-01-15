@@ -1,5 +1,5 @@
 import { StoreInitializer } from "@/components/core/StoreInitializer";
-import { getCredits } from "@/lib/data/getCredits";
+import { getCredits } from "@/lib/data/user/getCredits";
 import { getUser } from "@/lib/data/user/getUser";
 import { redirect } from "next/navigation";
 

@@ -1,4 +1,4 @@
-import { getVideos } from "@/lib/data/getVideos";
+import { getVideos } from "@/lib/data/user/getVideos";
 import { VideoCard } from "@/components/core/VideoCard";
 
 export const Videos: React.FC = async () => {
