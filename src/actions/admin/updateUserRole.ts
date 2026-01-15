@@ -11,10 +11,19 @@ export async function changeUserRole(userId: string, role: ROLE) {
   }
 
   try {
-    await prisma.user.update({
-      where: { id: userId },
-      data: { role },
-    });
+    await prisma.$transaction([
+      prisma.user.update({
+        where: { id: userId },
+        data: { role },
+      }),
+      prisma.auditLog.create({
+        data: {
+          action: "ROLE_CHANGE",
+          adminId: admin.id,
+          targetId: userId,
+        },
+      }),
+    ]);
   } catch (error) {
     throw error;
   }

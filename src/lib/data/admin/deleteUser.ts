@@ -37,12 +37,12 @@ export async function deleteUserWithAssets(userId: string) {
   ]);
 
   await prisma.$transaction(async (txn) => {
-    //  Delete user (CASCADE handles DB cleanup)
+    //  Delete user
     await txn.user.delete({
       where: { id: userId },
     });
 
-    //  Audit log (optional but recommended)
+    //  Audit log
     await txn.auditLog.create({
       data: {
         adminId: admin.id,
