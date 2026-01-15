@@ -13,22 +13,23 @@ enum ROLE {
 }
 
 model User {
-  id           String  @id @default(uuid())
+  id           String     @id @default(uuid())
   username     String
-  email        String  @unique
+  email        String     @unique
   password     String?
-  profileImage String? @default("")
-  role         ROLE    @default(USER)
-  isBlocked    Boolean   @default(false)
+  profileImage String?    @default("")
+  role         ROLE       @default(USER)
+  isBlocked    Boolean    @default(false)
   blockedAt    DateTime?
   blockedBy    String?
   otp          String?
   otpExpiresAt DateTime?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
   Credit       Credit?
   images       Image[]
   videos       Video[]
+  auditLogs    AuditLog[]
 }
 
 model Credit {
@@ -46,6 +47,8 @@ model Image {
   userId          String
   user            User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt       DateTime           @default(now())
+  deletedAt       DateTime?
+  deletedBy       String?
   transformations TransformedImage[]
 }
 
@@ -69,15 +72,40 @@ model TransformedImage {
 }
 
 model Video {
-  id           String   @id @default(uuid())
+  id           String    @id @default(uuid())
   title        String
   description  String?
   publicId     String
   originalSize String
   compressSize String
   duration     Float
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
   userId       String
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deletedAt    DateTime?
+  deletedBy    String?
+}
+
+enum AuditAction {
+  USER_BLOCK
+  USER_UNBLOCK
+  ROLE_CHANGE
+  USER_DELETE
+  MEDIA_DELETE
+  MEDIA_RESTORE
+  CREDIT_ADJUST
+}
+
+model AuditLog {
+  id        String      @id @default(uuid())
+  adminId   String
+  admin     User        @relation(fields: [adminId], references: [id])
+  action    AuditAction
+  targetId  String?
+  meta      Json?
+  createdAt DateTime    @default(now())
+
+  @@index([action])
+  @@index([createdAt])
 }
