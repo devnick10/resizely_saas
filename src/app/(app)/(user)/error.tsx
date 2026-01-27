@@ -1,15 +1,22 @@
-"use client";
-import { useEffect } from "react";
-import toast from "react-hot-toast";
+'use client';
 
-export default function Error({ error }: { error: Error }) {
-  useEffect(() => {
-    toast.error(error.message);
-  }, [error]);
+import { Button } from "@/components/ui/button";
+
+
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
 
   return (
-    <div className="flex h-full items-center justify-center">
-      <p className="text-lg font-semibold">Something went wrong</p>
+    <div className="bg-background text-primary-foreground flex justify-center items-center h-screen w-full flex-col gap-4">
+      <h2>{error.message ?? "Something went wrong!"}</h2>
+      <Button onClick={() => reset()}>
+        Home
+      </Button>
     </div>
   );
 }
