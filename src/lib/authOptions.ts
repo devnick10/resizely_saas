@@ -107,6 +107,10 @@ export const authOptions: AuthOptions = {
             where: { email: user.email! },
           });
 
+          if (existingUser && existingUser.isBlocked) {
+            return false;
+          }
+
           if (!existingUser) {
             const createdUser = await prisma.$transaction(async (tx) => {
               const dbUser = await tx.user.create({
@@ -141,5 +145,6 @@ export const authOptions: AuthOptions = {
   pages: {
     signIn: "/sign-in",
     newUser: "/sign-up",
+    error:"/error",
   },
 };
