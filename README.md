@@ -10,6 +10,7 @@ Users can **resize images**, **compress videos**, and **remove backgrounds**, wh
 ## 🌟 Features
 
 ### 👤 User Features
+
 ✅ **Image Resizing** – Optimize images for web & social platforms  
 ✅ **Video Compression** – Reduce size without noticeable quality loss  
 ✅ **Background Removal** – AI-powered subject extraction  
@@ -17,7 +18,7 @@ Users can **resize images**, **compress videos**, and **remove backgrounds**, wh
 ✅ **Secure Payments** – Razorpay integration  
 ✅ **Authentication** – NextAuth (Google + Credentials)  
 ✅ **Fast Media Delivery** – Powered by Cloudinary  
-✅ **Modern UI** – ShadCN UI + TailwindCSS  
+✅ **Modern UI** – ShadCN UI + TailwindCSS
 
 ---
 
@@ -26,23 +27,28 @@ Users can **resize images**, **compress videos**, and **remove backgrounds**, wh
 Accessible **only to ADMIN users** with role-based protection.
 
 ✅ **User Management**
+
 - View all users
 - Block / Unblock users
 - Permanently delete users
 
 ✅ **Role Management**
+
 - Promote / Demote users (USER ↔ ADMIN)
 
 ✅ **Media Management**
+
 - View all images & videos across users
 - Delete media assets from DB & Cloudinary
 
 ✅ **Analytics**
+
 - Cloudinary storage & bandwidth usage
 - Platform media statistics
 - Activity & admin action logs
 
 ✅ **Security**
+
 - Protected admin routes
 - Destructive action confirmations
 - Server-side authorization checks
@@ -52,39 +58,49 @@ Accessible **only to ADMIN users** with role-based protection.
 ## 🛠️ Tech Stack
 
 **Frontend & Backend**
+
 - Next.js (App Router)
 - TypeScript
 
 **Database**
+
 - Prisma ORM
 - NeonDB (PostgreSQL)
 
 **Media Processing**
+
 - Cloudinary
 
 **Authentication**
+
 - NextAuth (Google & Credentials)
 
 **Payments**
+
 - Razorpay
 
 **Email**
+
 - Nodemailer (Mailtrap for development)
 
 **UI / Styling**
+
 - ShadCN UI
 - TailwindCSS
 
 **State Management**
+
 - React Context / Zustand
 
 **Deployment**
+
 - Docker
 - Docker Compose
 
 ---
 
 ## 🚀 Getting Started
+
 ### 1️⃣ Clone the Repository
 
 ```sh

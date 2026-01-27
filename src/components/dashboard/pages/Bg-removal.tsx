@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { throwClientError } from "@/helper/clientError";
 import { downloadFile } from "@/helper/downloadFile";
-import { useImageUpload } from "@/hooks/useImageUpload";
+import { useFileUpload } from "@/hooks/useFileUpload";
 import { useCreditsStore } from "@/stores/hooks";
 import { CldImage } from "next-cloudinary";
 import React, { useCallback, useEffect, useRef, useState } from "react";
@@ -19,7 +19,7 @@ import { useLoading } from "@/hooks/useLoading";
 import { Spinner } from "@/components/core/Spinner";
 
 export const BgRemover: React.FC = () => {
-  const { error, uploadImage, isUploading } = useImageUpload();
+  const { error, handleFileUpload, isUploading } = useFileUpload();
   const { credits, setCredits } = useCreditsStore((state) => state);
   const { setLoading, loading } = useLoading();
 
@@ -52,10 +52,10 @@ export const BgRemover: React.FC = () => {
     }
 
     try {
-      const response = await uploadImage(file);
+      const response = await handleFileUpload({ file, type: "image" });
       setOriginalImage(URL.createObjectURL(file));
       setFileName(file.name);
-      setUploadedImage(response.publicId!);
+      setUploadedImage(response?.publicId!);
       setCredits(credits - 1);
       toast.success("Image uploaded successfully!");
     } catch (error: unknown) {

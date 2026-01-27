@@ -77,3 +77,17 @@ export interface VerifyPaymentHandler {
   razorpay_order_id: string;
   razorpay_signature: string;
 }
+
+export type UploadFilePaylolad =
+  | {
+      type: "image";
+      file: File;
+    }
+  | {
+      type: "video";
+      title: string;
+      description: string;
+      originalSize: string;
+      file: File;
+    };
+

@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { throwClientError } from "@/helper/clientError";
-import { useVideoUpload } from "@/hooks/useVideoUpload";
+import { useFileUpload } from "@/hooks/useFileUpload";
 import { useCreditsStore } from "@/stores/hooks";
 import { VideoUploadPayload } from "@/types";
 import React, { ChangeEvent, useEffect, useState } from "react";
@@ -13,7 +13,7 @@ import { Loader } from "../core/Loader";
 const ERROR = null;
 
 export const VIdeoUploadForm: React.FC = () => {
-  const { isUploading, uploadVideo, error } = useVideoUpload();
+  const { isUploading, handleFileUpload, error } = useFileUpload();
   const { credits, setCredits } = useCreditsStore((state) => state);
 
   const [payload, setPayload] = useState<VideoUploadPayload>({
@@ -40,7 +40,13 @@ export const VIdeoUploadForm: React.FC = () => {
     }
 
     try {
-      await uploadVideo(payload);
+      await handleFileUpload({
+        type: "video",
+        file: payload.file,
+        title: payload.title,
+        description: payload.description,
+        originalSize: payload.file.size.toString()
+      });
       setPayload({
         title: "",
         description: "",

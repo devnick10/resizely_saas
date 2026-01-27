@@ -17,7 +17,7 @@ import {
 import { socialFormats } from "@/constants";
 import { throwClientError } from "@/helper/clientError";
 import { downloadFile } from "@/helper/downloadFile";
-import { useImageUpload } from "@/hooks/useImageUpload";
+import { useFileUpload } from "@/hooks/useFileUpload";
 import { useLoading } from "@/hooks/useLoading";
 import { useCreditsStore } from "@/stores/hooks";
 import { CldImage } from "next-cloudinary";
@@ -29,7 +29,7 @@ const MAX_DIMENSION = 65500;
 const MIN_DIMENSION = 1;
 
 export const Resize: React.FC = () => {
-  const { error, isUploading, uploadImage } = useImageUpload();
+  const { error, isUploading, handleFileUpload } = useFileUpload();
   const { credits, setCredits } = useCreditsStore((state) => state);
   const { loading, setLoading } = useLoading();
 
@@ -56,15 +56,15 @@ export const Resize: React.FC = () => {
   const transformConfig =
     mode === "social"
       ? {
-          width: socialFormats[selectedFormat].width,
-          height: socialFormats[selectedFormat].height,
-          aspectRatio: socialFormats[selectedFormat].aspectRatio,
-        }
+        width: socialFormats[selectedFormat].width,
+        height: socialFormats[selectedFormat].height,
+        aspectRatio: socialFormats[selectedFormat].aspectRatio,
+      }
       : {
-          width: customWidth,
-          height: customHeight,
-          aspectRatio: undefined,
-        };
+        width: customWidth,
+        height: customHeight,
+        aspectRatio: undefined,
+      };
 
   const isValidSize =
     transformConfig.width <= MAX_DIMENSION &&
@@ -84,8 +84,8 @@ export const Resize: React.FC = () => {
     }
 
     try {
-      const response = await uploadImage(file);
-      setUploadedImage(response.publicId!);
+      const response = await handleFileUpload({ file: file, type: "image" });
+      setUploadedImage(response?.publicId!)
       setFileName(file.name);
       setCredits(credits - 1);
       toast.success("Image uploaded successfully!");
