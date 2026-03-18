@@ -3,7 +3,7 @@
 Resizely is a **credit-based SaaS platform** for modern media processing.  
 Users can **resize images**, **compress videos**, and **remove backgrounds**, while admins get full **platform control & analytics** via a dedicated **Admin Dashboard**.
 
-🌐 **Live:** https://resizely.devnikhil.xyz
+🌐 **Live:** https://resizely.nikhilbhoyar.info
 
 ---
 
