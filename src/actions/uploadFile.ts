@@ -88,7 +88,7 @@ export async function uploadFile(
             },
           });
 
-          const creadit = await txn.credit.update({
+          await txn.credit.update({
             where: { userId: user.id },
             data: {
               credits: {

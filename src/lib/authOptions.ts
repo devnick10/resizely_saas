@@ -145,6 +145,6 @@ export const authOptions: AuthOptions = {
   pages: {
     signIn: "/sign-in",
     newUser: "/sign-up",
-    error:"/error",
+    error: "/error",
   },
 };

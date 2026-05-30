@@ -19,7 +19,7 @@ import { useLoading } from "@/hooks/useLoading";
 import { Spinner } from "@/components/core/Spinner";
 
 export const BgRemover: React.FC = () => {
-  const { error, handleFileUpload, isUploading } = useFileUpload();
+  const { handleFileUpload, isUploading } = useFileUpload();
   const { credits, setCredits } = useCreditsStore((state) => state);
   const { setLoading, loading } = useLoading();
 
@@ -33,10 +33,7 @@ export const BgRemover: React.FC = () => {
 
   useEffect(() => {
     if (uploadedImage) setIsTransforming(true);
-    if (error) {
-      throwClientError(error);
-    }
-  }, [error, uploadedImage]);
+  }, [uploadedImage]);
 
   const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -53,14 +50,20 @@ export const BgRemover: React.FC = () => {
 
     try {
       const response = await handleFileUpload({ file, type: "image" });
+      if (!response.success) {
+        toast.error(response.error);
+        return;
+      }
+
       setOriginalImage(URL.createObjectURL(file));
       setFileName(file.name);
-      setUploadedImage(response?.publicId!);
-      setCredits(credits - 1);
+      setUploadedImage(response.publicId!);
+      setCredits(response.remainingCredits);
       toast.success("Image uploaded successfully!");
     } catch (error: unknown) {
       setIsTransforming(false);
-      throwClientError(error, "Failed to upload image.");
+      console.error("Unexpected upload error:", error);
+      toast.error("Something unexpected went wrong!");
     }
   };
 

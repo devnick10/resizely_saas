@@ -7,13 +7,13 @@ import { throwClientError } from "@/helper/clientError";
 import { useFileUpload } from "@/hooks/useFileUpload";
 import { useCreditsStore } from "@/stores/hooks";
 import { VideoUploadPayload } from "@/types";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import toast from "react-hot-toast";
 import { Loader } from "../core/Loader";
 const ERROR = null;
 
 export const VIdeoUploadForm: React.FC = () => {
-  const { isUploading, handleFileUpload, error } = useFileUpload();
+  const { isUploading, handleFileUpload } = useFileUpload();
   const { credits, setCredits } = useCreditsStore((state) => state);
 
   const [payload, setPayload] = useState<VideoUploadPayload>({
@@ -21,12 +21,6 @@ export const VIdeoUploadForm: React.FC = () => {
     description: "",
     file: null,
   });
-
-  useEffect(() => {
-    if (error) {
-      throwClientError(error);
-    }
-  }, [error]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,22 +34,29 @@ export const VIdeoUploadForm: React.FC = () => {
     }
 
     try {
-      await handleFileUpload({
+      const response = await handleFileUpload({
         type: "video",
         file: payload.file,
         title: payload.title,
         description: payload.description,
-        originalSize: payload.file.size.toString()
+        originalSize: payload.file.size.toString(),
       });
+
+      if (!response.success) {
+        toast.error(response.error);
+        return;
+      }
+
       setPayload({
         title: "",
         description: "",
         file: null,
       });
-      setCredits(credits - 1);
+      setCredits(response.remainingCredits);
       toast.success("Video uploaded successfully");
     } catch (error: unknown) {
-      throwClientError(error);
+      console.error("Unexpected upload error:", error);
+      toast.error("Something unexpected went wrong!");
     }
   };
 
