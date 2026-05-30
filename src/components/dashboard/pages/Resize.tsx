@@ -97,17 +97,22 @@ export const Resize: React.FC = () => {
   };
 
   const saveImage = async () => {
+    if (loading) return;
     setLoading(true);
     try {
-      await saveTransformation({
+      const response = await saveTransformation({
         imagePublicId: uploadedImage,
         type: "DERIVED",
         transformation: { resize: { ...transformConfig } },
       });
-
+      if (!response.success) {
+        toast.error(response.error);
+        return;
+      }
       toast.success("Image saved successfully!");
     } catch (error) {
-      throwClientError(error, "Failed to save image.");
+      console.log(error);
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -233,7 +238,11 @@ export const Resize: React.FC = () => {
                     </div>
                   </div>
                 )}
-                <Button onClick={saveImage} className="w-full">
+                <Button
+                  onClick={saveImage}
+                  className="w-full"
+                  disabled={loading}
+                >
                   Save{" "}
                   {!loading ? (
                     mode === "custom" ? (

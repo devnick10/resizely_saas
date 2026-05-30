@@ -74,6 +74,7 @@ export const BgRemover: React.FC = () => {
     }
 
     try {
+      if (loading) return;
       setLoading(true);
       //  generate final image URL
       const transformedUrl = imageRef.current.src;
@@ -83,15 +84,21 @@ export const BgRemover: React.FC = () => {
         await persistBgRemovedImage(transformedUrl);
 
       //save to DB
-      await saveTransformation({
+      const response = await saveTransformation({
         imagePublicId: uploadedImage,
         transformedPublicId,
         type: "IRREVERSIBLE",
       });
 
+      if (!response.success) {
+        toast.error(response.error);
+        return;
+      }
+
       toast.success("Transformed image saved successfully!");
     } catch (error) {
-      throwClientError(error, "Failed to save image.");
+      console.error("Unexpected error while save irreversible asset:", error);
+      toast.error("Something went wrong!");
     } finally {
       setLoading(false);
     }
@@ -197,7 +204,11 @@ export const BgRemover: React.FC = () => {
               </div>
 
               <div className="flex gap-2">
-                <Button onClick={() => saveImage()} className="">
+                <Button
+                  onClick={() => saveImage()}
+                  className=""
+                  disabled={loading}
+                >
                   Save {loading && <Spinner />}
                 </Button>
                 <Button onClick={handleDownload}>Download</Button>

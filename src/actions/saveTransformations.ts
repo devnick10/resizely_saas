@@ -19,7 +19,13 @@ type SaveTransformationPayload =
       transformedPublicId: string;
     };
 
-export async function saveTransformation(payload: SaveTransformationPayload) {
+type SaveTransformationResponse =
+  | { success: true }
+  | { success: false; error: string };
+
+export async function saveTransformation(
+  payload: SaveTransformationPayload,
+): Promise<SaveTransformationResponse> {
   const user = await getUser();
 
   const transformationHash =
@@ -58,10 +64,11 @@ export async function saveTransformation(payload: SaveTransformationPayload) {
     });
 
     revalidateTag(`images_${user.id}`);
+    return { success: true };
   } catch (err: any) {
     if (err.code === "P2002") {
-      throw new Error("Transformation already exists");
+      return { success: false, error: "Transformation already exists" };
     }
-    throw err;
+    return { success: false, error: "Something went wrong!" };
   }
 }
