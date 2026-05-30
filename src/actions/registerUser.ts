@@ -1,26 +1,33 @@
 "use server";
 
 import prisma from "@/db";
-import { registerUserValidation } from "@/schema";
+import { credentialsSchema } from "@/schema";
 import { RegisterUserInput } from "@/types";
 import bcrypt from "bcrypt";
+
+type RegisterUserResponse =
+  | { success: true }
+  | { success: false; error: string };
 
 export async function registerUser({
   email,
   password,
   username,
-}: RegisterUserInput) {
-  registerUserValidation({ email, password, username });
+}: RegisterUserInput): Promise<RegisterUserResponse> {
+  const result = credentialsSchema.safeParse({ email, password, username });
+  if (!result.success) {
+    return { success: false, error: "Invalid inputs" };
+  }
 
   const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser) {
-    throw new Error("User already exists");
+    return { success: false, error: "User already exists" };
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
-    const user = await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx) => {
       const user = await tx.user.create({
         data: {
           email: email,
@@ -33,13 +40,11 @@ export async function registerUser({
           userId: user.id,
         },
       });
-
-      return user;
     });
 
-    return { success: true, user };
+    return { success: true };
   } catch (error) {
-    console.error("Signup failed:", error);
-    throw new Error("Signup failed");
+    console.error(error);
+    return { success: false, error: "Registration failed" };
   }
 }

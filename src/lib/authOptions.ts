@@ -48,28 +48,33 @@ export const authOptions: AuthOptions = {
           return null;
         }
 
-        const existingUser = await prisma.user.findUnique({
-          where: { email: data.email },
-        });
+        try {
+          const existingUser = await prisma.user.findUnique({
+            where: { email: data.email },
+          });
 
-        if (!existingUser || !existingUser.password) {
-          throw new Error("User not found or invalid password setup");
+          if (!existingUser || !existingUser.password) {
+            throw new Error("User not found or invalid password setup");
+          }
+
+          const isPasswordValid = await bcrypt.compare(
+            data.password,
+            existingUser.password,
+          );
+
+          if (!isPasswordValid) {
+            return null;
+          }
+
+          return {
+            id: existingUser.id,
+            name: existingUser.username || existingUser.email.split("@")[0],
+            email: existingUser.email,
+          };
+        } catch (error) {
+          console.error("Database error during login:", error);
+          throw new Error("Authentication service unavailable");
         }
-
-        const isPasswordValid = await bcrypt.compare(
-          data.password,
-          existingUser.password,
-        );
-
-        if (!isPasswordValid) {
-          return null;
-        }
-
-        return {
-          id: existingUser.id,
-          name: existingUser.username || existingUser.email.split("@")[0],
-          email: existingUser.email,
-        };
       },
     }),
     GoogleProvider({

@@ -1,25 +1,26 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
 import { signIn } from "next-auth/react";
-import toast from "react-hot-toast";
 import Image from "next/image";
 import Link from "next/link";
-import { Eye, EyeOff } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { FormEvent, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 import { sendOTP } from "@/actions/sendOtp";
 import { verifyOtp } from "@/actions/verifyOtp";
 
 import { Header } from "@/components/core/Header";
-import { Loader } from "@/components/core/Loader";
 import { useLoading } from "@/hooks/useLoading";
 
-import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { Label } from "../ui/label";
 import { registerUser } from "@/actions/registerUser";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { credentialsSchema } from "@/schema";
+import { Spinner } from "../core/Spinner";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
 export const Signup: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -30,26 +31,48 @@ export const Signup: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { loading, setLoading } = useLoading();
   const router = useRouter();
+  const [resendTimer, setResendTimer] = useState(0);
 
-  if (loading) return <Loader />;
+  useEffect(() => {
+    if (resendTimer <= 0) return;
+
+    const interval = setInterval(() => {
+      setResendTimer((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [resendTimer]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
     if (!emailAddress || !password || !username) {
       return toast.error("Please provide all fields.");
     }
 
+    const { success, error } = credentialsSchema.safeParse({
+      email: emailAddress,
+      password,
+      username,
+    });
+
+    if (!success) {
+      error.issues.forEach((i) => {
+        toast.error(i.message);
+      });
+      return;
+    }
+
     setLoading(true);
     try {
-      const { success } = await registerUser({
+      const response = await registerUser({
         email: emailAddress,
         password,
         username,
       });
 
-      if (!success) {
-        throw new Error("Registration failed");
+      if (!response.success) {
+        toast.error(response.error);
+        return;
       }
 
       await signIn("credentials", {
@@ -58,14 +81,18 @@ export const Signup: React.FC = () => {
         redirect: false,
       });
 
-      await sendOTP(emailAddress);
-      toast.success("OTP sent to your email.");
+      const otpResponse = await sendOTP(emailAddress);
+      if (!otpResponse.success) {
+        toast.error(otpResponse.error);
+        return;
+      }
+
       setVerification(true);
+      setResendTimer(60);
+      toast.success("OTP sent to your email.");
     } catch (err) {
       console.error(err);
-      const errorMessage =
-        err instanceof Error ? err.message : "Something went wrong";
-      toast.error(errorMessage);
+      toast.error("Signup Failed!");
     } finally {
       setLoading(false);
     }
@@ -88,6 +115,19 @@ export const Signup: React.FC = () => {
       setLoading(false);
     }
   };
+
+  async function resendOTP() {
+    if (resendTimer > 0) return;
+    const otpResponse = await sendOTP(emailAddress);
+
+    if (!otpResponse.success) {
+      toast.error(otpResponse.error);
+      return;
+    }
+
+    toast.success("OTP sent to your email.");
+    setResendTimer(60);
+  }
 
   return (
     <>
@@ -165,26 +205,48 @@ export const Signup: React.FC = () => {
                   </div>
                 </div>
 
-                <Button type="submit" className="text-md w-full">
-                  Sign Up
+                <Button
+                  type="submit"
+                  className="text-md w-full"
+                  disabled={loading}
+                >
+                  Sign Up {loading && <Spinner />}
                 </Button>
               </form>
             ) : (
-              <form onSubmit={handleVerify} className="space-y-4">
-                <div className="space-y-1">
-                  <Label>Enter Verification Code</Label>
-                  <Input
-                    type="text"
-                    value={code}
-                    onChange={(e) => setCode(e.target.value)}
-                    placeholder="Enter the code sent to your email"
-                    required
-                  />
+              <>
+                <form onSubmit={handleVerify} className="space-y-4">
+                  <div className="space-y-1">
+                    <Label>Enter Verification Code</Label>
+                    <Input
+                      type="text"
+                      value={code}
+                      onChange={(e) => setCode(e.target.value)}
+                      placeholder="Enter the code sent to your email"
+                      required
+                    />
+                  </div>
+                  <Button type="submit" className="w-full">
+                    Continue
+                  </Button>
+                </form>
+                <div className="flex items-center justify-center gap-2">
+                  <button
+                    type="button"
+                    className="cursor-pointer text-sm underline disabled:cursor-not-allowed disabled:opacity-50"
+                    onClick={resendOTP}
+                    disabled={resendTimer > 0}
+                  >
+                    Resend OTP
+                  </button>
+
+                  {resendTimer > 0 && (
+                    <span className="text-sm text-muted-foreground">
+                      ({resendTimer}s)
+                    </span>
+                  )}
                 </div>
-                <Button type="submit" className="w-full">
-                  Continue
-                </Button>
-              </form>
+              </>
             )}
 
             {!verification && (
@@ -202,7 +264,6 @@ export const Signup: React.FC = () => {
                 Sign Up with Google
               </Button>
             )}
-
             <p className="text-center text-sm">
               Already have an account?
               <Link

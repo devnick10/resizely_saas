@@ -1,27 +1,27 @@
 "use client";
 
+import { Eye, EyeOff } from "lucide-react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 import Image from "next/image";
-import { useState, FormEvent } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
-import { EyeOff, Eye } from "lucide-react";
 
 import { Header } from "@/components/core/Header";
-import { Loader } from "@/components/core/Loader";
 import { useLoading } from "@/hooks/useLoading";
 
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Spinner } from "../core/Spinner";
+import { credentialsSchema } from "@/schema";
 
 export const Signin: React.FC = () => {
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState<unknown>();
 
   const router = useRouter();
   const { loading, setLoading } = useLoading();
@@ -29,8 +29,15 @@ export const Signin: React.FC = () => {
   async function submit(e: FormEvent) {
     e.preventDefault();
 
-    if (!emailAddress || !password) {
-      toast.error("Please provide both fields.");
+    const { success, error } = credentialsSchema.safeParse({
+      email: emailAddress,
+      password,
+    });
+
+    if (!success) {
+      error.issues.forEach((i) => {
+        toast.error(i.message);
+      });
       return;
     }
 
@@ -42,23 +49,20 @@ export const Signin: React.FC = () => {
         redirect: false,
       });
 
-      if (result?.error) {
-        toast.error("Invalid email or password.");
+      if (!result?.ok) {
+        toast.error(result?.error || "Signin failed");
+        return;
       }
 
-      if (result?.ok) {
-        toast.success("Signed in successfully.");
-        router.push("/dashboard");
-      }
+      toast.success("Signed in successfully.");
+      router.push("/dashboard");
     } catch (err) {
-      setError(err);
+      console.error("Unexpected signin error:", err);
+      toast.error("Something went wrong!");
     } finally {
       setLoading(false);
     }
   }
-
-  if (error) toast.error("Something went wrong");
-  if (loading) return <Loader />;
 
   return (
     <>
@@ -122,8 +126,12 @@ export const Signin: React.FC = () => {
                 </div>
               </div>
 
-              <Button type="submit" className="text-md w-full">
-                Sign In
+              <Button
+                type="submit"
+                className="text-md w-full"
+                disabled={loading}
+              >
+                Sign In {loading && <Spinner />}
               </Button>
             </form>
 
