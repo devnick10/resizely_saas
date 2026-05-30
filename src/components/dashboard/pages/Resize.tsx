@@ -29,7 +29,7 @@ const MAX_DIMENSION = 65500;
 const MIN_DIMENSION = 1;
 
 export const Resize: React.FC = () => {
-  const { error, isUploading, handleFileUpload } = useFileUpload();
+  const { isUploading, handleFileUpload } = useFileUpload();
   const { credits, setCredits } = useCreditsStore((state) => state);
   const { loading, setLoading } = useLoading();
 
@@ -48,23 +48,20 @@ export const Resize: React.FC = () => {
 
   useEffect(() => {
     if (uploadedImage) setIsTransforming(true);
-    if (error) {
-      throwClientError(error);
-    }
-  }, [selectedFormat, uploadedImage, error]);
+  }, [selectedFormat, uploadedImage]);
 
   const transformConfig =
     mode === "social"
       ? {
-        width: socialFormats[selectedFormat].width,
-        height: socialFormats[selectedFormat].height,
-        aspectRatio: socialFormats[selectedFormat].aspectRatio,
-      }
+          width: socialFormats[selectedFormat].width,
+          height: socialFormats[selectedFormat].height,
+          aspectRatio: socialFormats[selectedFormat].aspectRatio,
+        }
       : {
-        width: customWidth,
-        height: customHeight,
-        aspectRatio: undefined,
-      };
+          width: customWidth,
+          height: customHeight,
+          aspectRatio: undefined,
+        };
 
   const isValidSize =
     transformConfig.width <= MAX_DIMENSION &&
@@ -85,12 +82,17 @@ export const Resize: React.FC = () => {
 
     try {
       const response = await handleFileUpload({ file: file, type: "image" });
-      setUploadedImage(response?.publicId!)
+      if (!response.success) {
+        toast.error(response.error);
+        return;
+      }
+      setUploadedImage(response.publicId);
       setFileName(file.name);
-      setCredits(credits - 1);
+      setCredits(response.remainingCredits);
       toast.success("Image uploaded successfully!");
     } catch (error: unknown) {
-      throwClientError(error, "Failed to upload image.");
+      console.error("Unexpected upload error:", error);
+      toast.error("Something unexpected went wrong!");
     }
   };
 

@@ -1,33 +1,33 @@
 "use client";
 
 import { uploadFile } from "@/actions/uploadFile";
-import { throwClientError } from "@/helper/clientError";
-import { UploadFilePaylolad } from "@/types";
-import { useState } from "react";
+import { UploadFilePaylolad, UploadFileResult } from "@/types";
 import { useLoading } from "./useLoading";
 
 export function useFileUpload() {
-    const { loading, setLoading } = useLoading();
-    const [error, setError] = useState<unknown>(null);
+  const { loading, setLoading } = useLoading();
 
-    const handleFileUpload = async (data:UploadFilePaylolad) => {
-        if (!data.file) throwClientError("File is required.");
+  const handleFileUpload = async (
+    data: UploadFilePaylolad,
+  ): Promise<UploadFileResult> => {
+    if (!data.file) {
+      return {
+        success: false,
+        error: "File is required.",
+      };
+    }
 
-        setLoading(true);
+    setLoading(true);
 
-        try {
-            return await uploadFile({...data});
-        } catch (err) {
-            setError(err);
-            throw err;
-        } finally {
-            setLoading(false);
-        }
-    };
+    try {
+      return await uploadFile(data);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    return {
-        handleFileUpload,
-        isUploading: loading,
-        error,
-    };
+  return {
+    handleFileUpload,
+    isUploading: loading,
+  };
 }

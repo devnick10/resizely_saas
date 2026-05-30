@@ -91,3 +91,13 @@ export type UploadFilePaylolad =
       file: File;
     };
 
+export type UploadFileResult =
+  | {
+      success: true;
+      publicId: string;
+      remainingCredits: number;
+    }
+  | {
+      success: false;
+      error: string;
+    };
